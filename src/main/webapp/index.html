@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ShareCar</title>
+<script src='js/jquery-1.8.3.js' type='text/javascript'></script>
+<script src='js/jquery-ui-1.9.2.custom.js' type='text/javascript'></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
+<script src='js/main.js' type='text/javascript'></script>
+<script>
+		$(function(){
+			carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
+	    var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
+	    var ptoChegada = new google.maps.places.Autocomplete($("#pto-chegada")[0]);
+					
+			google.maps.event.addListener(ptoChegada, 'place_changed', function() {
+				mostrarRotaNoMapa($("#pto-partida").val(), $("#pto-chegada").val());
+			});
+				 
+			$("#tabs").tabs({ active: 1 });
+
+			$("#btSalvar").click(function(){
+				mostrarRotaNoMapa($("#pto-partida").val(), $("#pto-chegada").val());  // Retirar, usado só para agilizar o click
+				pegarRota($("#pto-partida").val(), $("#pto-chegada").val(), function(aPontos){
+
+					var a = aPontos.toString().substring(1, aPontos.toString().length - 1).split('),('); 
+
+					$.ajax({	
+						  type: "POST",
+						  url: "http://localhost:8080/sharecar/api/rotas",
+						  data: {'idrota': 0, 'cpfusuario': '93579551515', 'descricao': $("#descricao").val(), 'geometria': a}					  
+						});
+				});
+			});
+
+			$("#btVer").click(function(){
+				$.ajax({	
+					  type: "GET",
+					  url: "http://localhost:8080/sharecar/api/rotas/10",
+					  dataType: "json",
+					  success: function(data){
+						  	console.log(data);
+						}
+				});
+
+			});
+		});
+</script>
+<link href="css/jquery-ui-1.9.2.custom.css" rel="stylesheet"	media="screen" />
+<style>
+html {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+#formulario {
+	width: 29.9%;
+	min-height: 100%;
+	float: left;
+	border-right: 1px solid #ccc;
+}
+
+#mapa {
+	width: 70%;
+	min-height: 100%;
+	float: right;
+}
+</style>
+</head>
+<body>
+	<div id="formulario">
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">Buscar Carona</a></li>
+				<li><a href="#tabs-2">Criar Rota</a></li>
+			</ul>
+			<div id="tabs-1">
+				<p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus
+					gravida ante, ut pharetra massa metus id nunc. Duis scelerisque
+					molestie turpis. Sed fringilla, massa eget luctus malesuada, metus
+					eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet
+					fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam.
+					Praesent in eros vestibulum mi adipiscing adipiscing. Morbi
+					facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut
+					posuere viverra nulla. Aliquam erat volutpat. Pellentesque
+					convallis. Maecenas feugiat, tellus pellentesque pretium posuere,
+					felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris
+					consectetur tortor et purus.</p>
+			</div>
+			<div id="tabs-2">
+				<label for="descricao">Descrição:</label><br/> 
+				<input id="descricao" style="width: 100%" value="teste"/>
+				<br/> 
+				<label for="pto-partida">Ponto de Partida:</label><br/> 
+				<input id="pto-partida" style="width: 100%" value="augusto lopes pontes, 170"/>
+				<br/> 
+				<label for="pto-chegada">Ponto de Chegada:</label><br/>
+				<input id="pto-chegada" style="width: 100%" value="augusto lopes pontes, 581"/>
+				<br/>
+				<input type="button" id="btSalvar" value="Salvar"/>
+				<input type="button" id="btVer" value="Ver Rota"/>
+			</div>
+		</div>
+	</div>
+	<div id="mapa"></div>
+</body>
+</html>
