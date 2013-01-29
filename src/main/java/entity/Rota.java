@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Embedded;
@@ -15,7 +16,9 @@ import org.hibernate.annotations.Type;
 import com.vividsolutions.jts.geom.LineString;
 
 @Entity
-public class Rota {
+public class Rota implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 

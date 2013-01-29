@@ -8,12 +8,12 @@ import entity.Rota;
 
 @RequestScoped
 @PersistenceController
-public class RotaDAO extends JPACrud<Rota, Integer> {
-
+public class RotaDAO extends JPACrud<Rota, Integer>{
+	
 	private static final long serialVersionUID = 1L;
 	
 	public Rota obterReferencia(Integer id) {
 		return getEntityManager().getReference(Rota.class, id);
 	}
-
+	
 }
