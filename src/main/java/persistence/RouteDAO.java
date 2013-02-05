@@ -3,6 +3,7 @@ package persistence;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import br.gov.frameworkdemoiselle.transaction.Transactional;
 import br.gov.frameworkdemoiselle.util.Beans;
 import entity.Coordenada;
 import entity.Route;
+import entity.User;
 
 @RequestScoped
 @PersistenceController
@@ -48,7 +50,40 @@ public class RouteDAO implements Serializable {
 	}
 
 	public Route load(Integer id) {
-		return null;
+		Route result = null;
+		
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("select id, description, username, ST_AsGeoJSON(geom) as geom from routes where id = ?");
+
+			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
+
+			pstmt.setInt(1, id);
+
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				/*
+				result = new Route();
+				result.setId(rs.getInt("id"));
+				result.setDescription(rs.getString("description"));
+				result.setUser(new User(rs.getString("username")));
+				result.setCoords(null)
+				*/
+				String geom = rs.getString("geom");
+				geom = geom.replace("LINESTRING", "");
+				geom = geom.substring(1, geom.length()-1);
+				System.out.println(geom);
+
+			}
+			
+			pstmt.close();
+
+		} catch (SQLException cause) {
+			throw new RuntimeException(cause);
+		}
+		
+		return result;
 	}
 
 	private String parse(List<Coordenada> coordenadas) {

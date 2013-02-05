@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.gov.frameworkdemoiselle.junit.DemoiselleRunner;
-import business.RotaBC;
+import business.RouteBC;
 
 @RunWith(DemoiselleRunner.class)
 public class RotaTest {
 
 	@Inject
-	RotaBC rotaBC;
+	RouteBC rotaBC;
 	
 	@Test
 	public void testInsert() {

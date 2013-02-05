@@ -8,15 +8,18 @@ import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Route;
 
-@RequestScoped
 @BusinessController
-public class RotaBC {
+public class RouteBC {
 
 	@Inject
 	private RouteDAO routeDAO;
 
 	public void insert(Route route) {
 		routeDAO.insert(route);
+	}
+	
+	public Route load(Integer id) {
+		return routeDAO.load(id);
 	}
 
 }
