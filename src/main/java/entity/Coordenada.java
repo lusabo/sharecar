@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-//@Embeddable
 @JsonPropertyOrder({ "latitude", "longitude" })
 public class Coordenada implements Serializable {
 

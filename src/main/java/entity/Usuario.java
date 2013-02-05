@@ -1,31 +1,32 @@
 package entity;
 
-import javax.persistence.Embeddable;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-@Embeddable
+@JsonPropertyOrder({ "username" })
 public class Usuario {
 
-	private String cpf;
+	private String username;
 
-	public String getCpf() {
-		return cpf;
+	public Usuario() {
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public Usuario(String username) {
+		this.username = username;
 	}
 
-	public Usuario() {}
-	
-	public Usuario(String cpf) {
-		this.cpf = cpf;
+	public String getUsername() {
+		return username;
 	}
-	
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -38,14 +39,11 @@ public class Usuario {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (cpf == null) {
-			if (other.cpf != null)
+		if (username == null) {
+			if (other.username != null)
 				return false;
-		} else if (!cpf.equals(other.cpf))
+		} else if (!username.equals(other.username))
 			return false;
 		return true;
 	}
-	
-	
-
 }

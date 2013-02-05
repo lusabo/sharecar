@@ -1,52 +1,41 @@
 package entity;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-//@MappedSuperclass
-// @Tuplizer(impl = XX.class)
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+@JsonPropertyOrder({ "id", "description", "coords", "user" })
 public class Route implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@JsonSerialize(include = NON_NULL)
 	private Integer id;
 
-	// @Embedded
-	private Usuario usuario;
+	private String description;
 
-	// @OneToMany(orphanRemoval = true, mappedBy = "rota", fetch = FetchType.EAGER)
+	private List<Coordenada> coords;
+
 	private Set<Periodo> periodos;
 
-	private String descricao;
-
-	// @Tuplizer(impl = X.class)
-	// @Transient
-	private List<Coordenada> caminho;
-
-	// @Tuplizer(impl = X.class)
-	private String x;
-
-	public String getX() {
-		return x;
-	}
-
-	public void setX(String x) {
-		this.x = x;
-	}
+	private Usuario user;
 
 	public Route() {
 	}
 
-	public Route(Integer id, Usuario usuario, String descricao, List<Coordenada> caminho) {
-		this.id = id;
-		this.usuario = usuario;
-		this.descricao = descricao;
-		this.caminho = caminho;
+	public Route(String description, List<Coordenada> coords, Usuario user) {
+		this.description = description;
+		this.coords = coords;
+		this.user = user;
 	}
 
+	@JsonSerialize(include = Inclusion.NON_NULL)
 	public Integer getId() {
 		return id;
 	}
@@ -56,21 +45,22 @@ public class Route implements Serializable {
 	}
 
 	public Usuario getUsuario() {
-		return usuario;
+		return user;
 	}
 
 	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+		this.user = usuario;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
+	@JsonSerialize(include = NON_NULL)
 	public Set<Periodo> getPeriodos() {
 		return periodos;
 	}
@@ -80,19 +70,19 @@ public class Route implements Serializable {
 	}
 
 	public List<Coordenada> getCaminho() {
-		return caminho;
+		return coords;
 	}
 
 	public void setCaminho(List<Coordenada> caminho) {
-		this.caminho = caminho;
+		this.coords = caminho;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -105,17 +95,16 @@ public class Route implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Route other = (Route) obj;
-		if (descricao == null) {
-			if (other.descricao != null)
+		if (description == null) {
+			if (other.description != null)
 				return false;
-		} else if (!descricao.equals(other.descricao))
+		} else if (!description.equals(other.description))
 			return false;
-		if (usuario == null) {
-			if (other.usuario != null)
+		if (user == null) {
+			if (other.user != null)
 				return false;
-		} else if (!usuario.equals(other.usuario))
+		} else if (!user.equals(other.user))
 			return false;
 		return true;
 	}
-
 }

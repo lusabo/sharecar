@@ -26,8 +26,8 @@ public class RouteDAO {
 			connection = dataSource.getConnection();
 			PreparedStatement pstmt = connection.prepareStatement("insert into routes (id, description, username, geom) values (?,?,?,geomfromtext(?))");
 			pstmt.setInt(1, rota.getId());
-			pstmt.setString(2, rota.getDescricao());
-			pstmt.setString(3, rota.getUsuario().getCpf());
+			pstmt.setString(2, rota.getDescription());
+			pstmt.setString(3, rota.getUsuario().getUsername());
 			pstmt.setString(4, parse(rota.getCaminho()));
 			pstmt.execute();
 			pstmt.close();
