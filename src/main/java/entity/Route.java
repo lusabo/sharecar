@@ -16,7 +16,6 @@ public class Route implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonSerialize(include = NON_NULL)
 	private Integer id;
 
 	private String description;
