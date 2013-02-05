@@ -29,9 +29,9 @@ public class RotaBC {
 			rotaSalva = rotaDAO.load(rota.getId());
 		}
 
-		rotaSalva.setUsuario(rota.getUsuario());
+		rotaSalva.setUser(rota.getUser());
 		rotaSalva.setDescription(rota.getDescription());
-		rotaSalva.setCaminho(rota.getCaminho());
+		rotaSalva.setCoords(rota.getCoords());
 
 		rotaDAO.insert(rotaSalva);
 	}

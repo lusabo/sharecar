@@ -33,8 +33,8 @@ public class RouteDAO {
 
 			pstmt.setInt(1, rota.getId());
 			pstmt.setString(2, rota.getDescription());
-			pstmt.setString(3, rota.getUsuario().getUsername());
-			pstmt.setString(4, parse(rota.getCaminho()));
+			pstmt.setString(3, rota.getUser().getUsername());
+			pstmt.setString(4, parse(rota.getCoords()));
 
 			pstmt.execute();
 
