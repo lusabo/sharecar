@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
+import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Coordenada;
 import entity.Route;
 
@@ -20,21 +21,21 @@ public class RouteDAO {
 	@Inject
 	private DataSource dataSource;
 
+	@Transactional
 	public void insert(Route rota) {
 		Connection connection;
 		try {
 			connection = dataSource.getConnection();
 
 			StringBuffer sql = new StringBuffer();
-			sql.append("insert into routes (id, description, username, geom) ");
-			sql.append("values (?, ?, ?, geomfromtext(?))");
+			sql.append("insert into routes (description, username, geom) ");
+			sql.append("values (?, ?, geomfromtext(?))");
 
 			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 
-			pstmt.setInt(1, rota.getId());
-			pstmt.setString(2, rota.getDescription());
-			pstmt.setString(3, rota.getUser().getUsername());
-			pstmt.setString(4, parse(rota.getCoords()));
+			pstmt.setString(1, rota.getDescription());
+			pstmt.setString(2, rota.getUser().getUsername());
+			pstmt.setString(3, parse(rota.getCoords()));
 
 			pstmt.execute();
 

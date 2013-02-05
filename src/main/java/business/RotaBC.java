@@ -13,27 +13,10 @@ import entity.Route;
 public class RotaBC {
 
 	@Inject
-	private RouteDAO rotaDAO;
+	private RouteDAO routeDAO;
 
-	/*
-	 * Insere/Atualiza uma Rota
-	 */
-	@Transactional
-	public void salvar(Route rota) {
-
-		Route rotaSalva;
-
-		if (rota.getId() == null || rota.getId() == 0) {
-			rotaSalva = new Route();
-		} else {
-			rotaSalva = rotaDAO.load(rota.getId());
-		}
-
-		rotaSalva.setUser(rota.getUser());
-		rotaSalva.setDescription(rota.getDescription());
-		rotaSalva.setCoords(rota.getCoords());
-
-		rotaDAO.insert(rotaSalva);
+	public void insert(Route route) {
+		routeDAO.insert(route);
 	}
 
 }

@@ -29,14 +29,14 @@ public class RouteService {
 	@PUT
 	@Consumes(JSON_MEDIA_TYPE)
 	public void create(Route route) {
-		routeBC.salvar(route);
+		routeBC.insert(route);
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes("application/json;charset=UTF-8")
 	public void update(@FormParam("id") String id, Route route) {
-		routeBC.salvar(route);
+		routeBC.insert(route);
 	}
 
 	@GET
