@@ -1,44 +1,49 @@
 package br.gov.frameworkdemoiselle.internal.producer;
 
+import java.io.Serializable;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class DataSourceProducer {
+import br.gov.frameworkdemoiselle.configuration.ConfigurationException;
+import br.gov.frameworkdemoiselle.internal.configuration.DataSourceConfig;
+import br.gov.frameworkdemoiselle.util.Beans;
+
+@ApplicationScoped
+public class DataSourceProducer implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private transient DataSource dataSource;
 
 	@Produces
-	@ApplicationScoped
 	public DataSource create() {
+		if (this.dataSource == null) {
+			this.dataSource = init();
+		}
+
+		return this.dataSource;
+	}
+
+	private DataSource init() {
 		DataSource result;
 
 		try {
-			Context ctx = new InitialContext();
-			result = (DataSource) ctx.lookup("java:jboss/datasources/sharecarDS");
+			DataSourceConfig config = Beans.getReference(DataSourceConfig.class);
+			String jndi = config.getJndi();
 
-			/*
-			 * if (ctx == null) throw new Exception("Boom - No Context");
-			 */
+			// TODO Lançar exceção caso o JNDI esteja vazio ou nulo.
 
-			// if (ds != null) {
-			// Connection conn = ds.getConnection();
-			// //
-			// // if(conn != null) {
-			// // foo = "Got Connection "+conn.toString();
-			// // Statement stmt = conn.createStatement();
-			// // ResultSet rst =
-			// // stmt.executeQuery(
-			// // "select id, foo, bar from testdata");
-			// // if(rst.next()) {
-			// // foo=rst.getString(2);
-			// // bar=rst.getInt(3);
-			// // }
-			// conn.close();
-			// // }
-			// }
-		} catch (Exception e) {
-			result = null;
+			Context context = new InitialContext();
+			result = (DataSource) context.lookup(jndi);
+
+		} catch (Exception cause) {
+			// TODO Colocar uma mensagem amigável
+
+			throw new ConfigurationException("", cause);
 		}
 
 		return result;
