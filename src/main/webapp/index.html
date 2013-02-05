@@ -46,12 +46,13 @@
 				}
 
 				var rota = new Rota("Rota 1", user, coordenadas);
+
 				console.log(JSON.stringify(rota));
 
 				$.ajax({	
-						  type: "POST",
+						  type: "PUT",
 						  url: "http://localhost:8080/sharecar/api/route",
-						  data: JSON.stringify(coordenadas),
+						  data: JSON.stringify(rota),
 						  dataType: "json",
 						  contentType: "application/json;charset=UTF-8"
 						});

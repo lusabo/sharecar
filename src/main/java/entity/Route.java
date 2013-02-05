@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -40,6 +41,7 @@ public class Route implements Serializable {
 		return id;
 	}
 
+	@JsonIgnore
 	public void setId(Integer id) {
 		this.id = id;
 	}
