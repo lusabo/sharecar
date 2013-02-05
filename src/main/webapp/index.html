@@ -8,11 +8,23 @@
 <script src='js/main.js' type='text/javascript'></script>
 <script>
 
-		function Coordenada(lat, lng){
+		function Usuario(username){
+			this.username = username;
+		}
+		
+		function Coord(lat, lng){
 			this.lat = lat;
 			this.lng = lng;
 		}
 
+		function Rota(description, user, coords){
+			this.description = description;
+			this.user = user;
+			this.coords = coords;
+		}
+
+		var user = new Usuario("93579551515");
+		
 		$(function(){
 			carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
 	    var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
@@ -30,10 +42,11 @@
 
 				var coordenadas = new Array();
 				for (var i = 0; i < aPontos.length; i++){
-					coordenadas.push(new Coordenada(aPontos[i].Ya, aPontos[i].Za));
+					coordenadas.push(new Coord(aPontos[i].Ya, aPontos[i].Za));
 				}
 
-				console.log(JSON.stringify(coordenadas));
+				var rota = new Rota("Rota 1", user, coordenadas);
+				console.log(JSON.stringify(rota));
 
 				$.ajax({	
 						  type: "POST",
