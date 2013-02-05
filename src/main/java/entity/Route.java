@@ -44,12 +44,12 @@ public class Route implements Serializable {
 		this.id = id;
 	}
 
-	public User getUsuario() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUsuario(User usuario) {
-		this.user = usuario;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getDescription() {
@@ -69,12 +69,12 @@ public class Route implements Serializable {
 		this.periodos = periodos;
 	}
 
-	public List<Coordenada> getCaminho() {
+	public List<Coordenada> getCoords() {
 		return coords;
 	}
 
-	public void setCaminho(List<Coordenada> caminho) {
-		this.coords = caminho;
+	public void setCoords(List<Coordenada> coords) {
+		this.coords = coords;
 	}
 
 	@Override
