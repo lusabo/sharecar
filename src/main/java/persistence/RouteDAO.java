@@ -24,18 +24,27 @@ public class RouteDAO {
 		Connection connection;
 		try {
 			connection = dataSource.getConnection();
-			PreparedStatement pstmt = connection.prepareStatement("insert into routes (id, description, username, geom) values (?,?,?,geomfromtext(?))");
+
+			StringBuffer sql = new StringBuffer();
+			sql.append("insert into routes (id, description, username, geom) ");
+			sql.append("values (?, ?, ?, geomfromtext(?))");
+
+			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+
 			pstmt.setInt(1, rota.getId());
 			pstmt.setString(2, rota.getDescription());
 			pstmt.setString(3, rota.getUsuario().getUsername());
 			pstmt.setString(4, parse(rota.getCaminho()));
+
 			pstmt.execute();
+
 			pstmt.close();
 			connection.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public List<Route> find(Coordenada coordenada) {
@@ -45,12 +54,12 @@ public class RouteDAO {
 	public Route load(Integer id) {
 		return null;
 	}
-	
+
 	private String parse(List<Coordenada> coordenadas) {
 		String geometria = "LINESTRING(";
 		int count = 0;
-		for(Coordenada coordenada : coordenadas) {
-			if(count != 0) {
+		for (Coordenada coordenada : coordenadas) {
+			if (count != 0) {
 				geometria += ", ";
 			}
 			geometria += coordenada.getLatitude() + " " + coordenada.getLongitude();
