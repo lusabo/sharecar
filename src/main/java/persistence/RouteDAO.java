@@ -5,9 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.enterprise.context.RequestScoped;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
@@ -16,7 +18,6 @@ import entity.Coordenada;
 import entity.Route;
 import entity.User;
 
-@RequestScoped
 @PersistenceController
 public class RouteDAO implements Serializable {
 
@@ -51,7 +52,7 @@ public class RouteDAO implements Serializable {
 
 	public Route load(Integer id) {
 		Route result = null;
-		
+
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append("select id, description, username, ST_AsGeoJSON(geom) as geom from routes where id = ?");
@@ -61,35 +62,30 @@ public class RouteDAO implements Serializable {
 			pstmt.setInt(1, id);
 
 			ResultSet rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				/*
+
+			if (rs.next()) {
 				result = new Route();
+
 				result.setId(rs.getInt("id"));
 				result.setDescription(rs.getString("description"));
 				result.setUser(new User(rs.getString("username")));
-				result.setCoords(null)
-				*/
-				String geom = rs.getString("geom");
-				geom = geom.replace("LINESTRING", "");
-				geom = geom.substring(1, geom.length()-1);
-				System.out.println(geom);
-
+				result.setCoords(parse(rs.getString("geom")));
 			}
-			
+
+			rs.close();
 			pstmt.close();
 
 		} catch (SQLException cause) {
 			throw new RuntimeException(cause);
 		}
-		
+
 		return result;
 	}
 
-	private String parse(List<Coordenada> coordenadas) {
+	private String parse(List<Coordenada> coords) {
 		String geometria = "LINESTRING(";
 		int count = 0;
-		for (Coordenada coordenada : coordenadas) {
+		for (Coordenada coordenada : coords) {
 			if (count != 0) {
 				geometria += ", ";
 			}
@@ -98,6 +94,24 @@ public class RouteDAO implements Serializable {
 		}
 		geometria += ")";
 		return geometria;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Coordenada> parse(String json) {
+		List<Coordenada> result = new ArrayList<Coordenada>();
+
+		try {
+			Map<String, Object> map = new ObjectMapper().readValue(json, Map.class);
+
+			for (List<Double> coords : (List<List<Double>>) map.get("coordinates")) {
+				result.add(new Coordenada(coords.get(0), coords.get(1)));
+			}
+
+		} catch (Exception cause) {
+			throw new RuntimeException(cause);
+		}
+
+		return result;
 	}
 
 	private Connection getConnection() {
