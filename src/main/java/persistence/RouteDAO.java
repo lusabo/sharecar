@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
