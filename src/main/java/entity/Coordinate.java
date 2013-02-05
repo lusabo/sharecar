@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "latitude", "longitude" })
-public class Coordenada implements Serializable {
+public class Coordinate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,10 +14,10 @@ public class Coordenada implements Serializable {
 
 	private Double longitude;
 
-	public Coordenada() {
+	public Coordinate() {
 	}
 
-	public Coordenada(Double latitude, Double longitude) {
+	public Coordinate(Double latitude, Double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -57,7 +57,7 @@ public class Coordenada implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Coordenada other = (Coordenada) obj;
+		Coordinate other = (Coordinate) obj;
 		if (latitude == null) {
 			if (other.latitude != null)
 				return false;
@@ -70,5 +70,4 @@ public class Coordenada implements Serializable {
 			return false;
 		return true;
 	}
-
 }

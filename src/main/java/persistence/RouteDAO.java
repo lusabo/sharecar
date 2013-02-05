@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
 import br.gov.frameworkdemoiselle.util.Beans;
-import entity.Coordenada;
+import entity.Coordinate;
 import entity.Route;
 import entity.User;
 
@@ -46,7 +46,7 @@ public class RouteDAO implements Serializable {
 		}
 	}
 
-	public List<Route> find(Coordenada coordenada) {
+	public List<Route> find(Coordinate coordenada) {
 		return null;
 	}
 
@@ -55,7 +55,8 @@ public class RouteDAO implements Serializable {
 
 		try {
 			StringBuffer sql = new StringBuffer();
-			sql.append("select id, description, username, ST_AsGeoJSON(geom) as geom from routes where id = ?");
+			sql.append("select id, description, username, ST_AsGeoJSON(geom) as json ");
+			sql.append("from routes where id = ?");
 
 			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
 
@@ -69,7 +70,7 @@ public class RouteDAO implements Serializable {
 				result.setId(rs.getInt("id"));
 				result.setDescription(rs.getString("description"));
 				result.setUser(new User(rs.getString("username")));
-				result.setCoords(parse(rs.getString("geom")));
+				result.setCoords(parse(rs.getString("json")));
 			}
 
 			rs.close();
@@ -82,10 +83,10 @@ public class RouteDAO implements Serializable {
 		return result;
 	}
 
-	private String parse(List<Coordenada> coords) {
+	private String parse(List<Coordinate> coords) {
 		String geometria = "LINESTRING(";
 		int count = 0;
-		for (Coordenada coordenada : coords) {
+		for (Coordinate coordenada : coords) {
 			if (count != 0) {
 				geometria += ", ";
 			}
@@ -97,14 +98,14 @@ public class RouteDAO implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Coordenada> parse(String json) {
-		List<Coordenada> result = new ArrayList<Coordenada>();
+	private List<Coordinate> parse(String json) {
+		List<Coordinate> result = new ArrayList<Coordinate>();
 
 		try {
 			Map<String, Object> map = new ObjectMapper().readValue(json, Map.class);
 
 			for (List<Double> coords : (List<List<Double>>) map.get("coordinates")) {
-				result.add(new Coordenada(coords.get(0), coords.get(1)));
+				result.add(new Coordinate(coords.get(0), coords.get(1)));
 			}
 
 		} catch (Exception cause) {
