@@ -7,8 +7,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
 <script src='js/main.js' type='text/javascript'></script>
 <script>
-		function parse(coordenadasGoogle){
-			
+
+		function Coordenada(lat, lng){
+			this.lat = lat;
+			this.lng = lng;
 		}
 
 		$(function(){
@@ -26,16 +28,19 @@
 				mostrarRotaNoMapa($("#pto-partida").val(), $("#pto-chegada").val());  // Retirar, usado só para agilizar o click
 				pegarRota($("#pto-partida").val(), $("#pto-chegada").val(), function(aPontos){
 
-				var data = new FormData();
-				data.append("id", 0);
-				data.append("description", "Rota 1");
-				data.append("username", "93579551515");
-				data.append("coords", JSON.stringify(aPontos));
+				var coordenadas = new Array();
+				for (var i = 0; i < aPontos.length; i++){
+					coordenadas.push(new Coordenada(aPontos[i].Ya, aPontos[i].Za));
+				}
+
+				console.log(JSON.stringify(coordenadas));
 
 				$.ajax({	
 						  type: "POST",
 						  url: "http://localhost:8080/sharecar/api/route",
-						  data: data			  
+						  data: JSON.stringify(coordenadas),
+						  dataType: "json",
+						  contentType: "application/json;charset=UTF-8"
 						});
 				});
 			});
