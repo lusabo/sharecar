@@ -3,14 +3,14 @@ package entity;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "username" })
-public class Usuario {
+public class User {
 
 	private String username;
 
-	public Usuario() {
+	public User() {
 	}
 
-	public Usuario(String username) {
+	public User(String username) {
 		this.username = username;
 	}
 
@@ -38,7 +38,7 @@ public class Usuario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Usuario other = (Usuario) obj;
+		User other = (User) obj;
 		if (username == null) {
 			if (other.username != null)
 				return false;

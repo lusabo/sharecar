@@ -6,11 +6,11 @@ import javax.enterprise.context.RequestScoped;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.template.Crud;
-import entity.Periodo;
+import entity.Schedule;
 
 @RequestScoped
 @PersistenceController
-public class PeriodoDAO implements Crud<Periodo, Integer> {
+public class PeriodoDAO implements Crud<Schedule, Integer> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,24 +20,24 @@ public class PeriodoDAO implements Crud<Periodo, Integer> {
 	}
 
 	@Override
-	public List<Periodo> findAll() {
+	public List<Schedule> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void insert(Periodo bean) {
+	public void insert(Schedule bean) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public Periodo load(Integer id) {
+	public Schedule load(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void update(Periodo bean) {
+	public void update(Schedule bean) {
 		// TODO Auto-generated method stub
 	}
 }

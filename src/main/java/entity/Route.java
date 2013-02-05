@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-@JsonPropertyOrder({ "id", "description", "coords", "user" })
+@JsonPropertyOrder({ "id", "description", "user", "coords" })
 public class Route implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -20,16 +20,16 @@ public class Route implements Serializable {
 
 	private String description;
 
+	private User user;
+
 	private List<Coordenada> coords;
 
-	private Set<Periodo> periodos;
-
-	private Usuario user;
+	private Set<Schedule> periodos;
 
 	public Route() {
 	}
 
-	public Route(String description, List<Coordenada> coords, Usuario user) {
+	public Route(String description, List<Coordenada> coords, User user) {
 		this.description = description;
 		this.coords = coords;
 		this.user = user;
@@ -44,11 +44,11 @@ public class Route implements Serializable {
 		this.id = id;
 	}
 
-	public Usuario getUsuario() {
+	public User getUsuario() {
 		return user;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(User usuario) {
 		this.user = usuario;
 	}
 
@@ -61,11 +61,11 @@ public class Route implements Serializable {
 	}
 
 	@JsonSerialize(include = NON_NULL)
-	public Set<Periodo> getPeriodos() {
+	public Set<Schedule> getPeriodos() {
 		return periodos;
 	}
 
-	public void setPeriodos(Set<Periodo> periodos) {
+	public void setPeriodos(Set<Schedule> periodos) {
 		this.periodos = periodos;
 	}
 
