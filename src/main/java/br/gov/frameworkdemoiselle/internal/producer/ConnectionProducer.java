@@ -53,6 +53,7 @@ public class ConnectionProducer implements Serializable {
 
 				} else {
 					this.connection.close();
+					// TODO Logar um info informando que a conexão foi finalizada.
 				}
 
 			} catch (Exception cause) {

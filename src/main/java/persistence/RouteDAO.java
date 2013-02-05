@@ -1,51 +1,46 @@
 package persistence;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.sql.DataSource;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
+import br.gov.frameworkdemoiselle.util.Beans;
 import entity.Coordenada;
 import entity.Route;
 
 @RequestScoped
 @PersistenceController
-public class RouteDAO {
+public class RouteDAO implements Serializable {
 
-	@Inject
-	private DataSource dataSource;
+	private static final long serialVersionUID = 1L;
+
+	private transient Connection connection;
 
 	@Transactional
 	public void insert(Route rota) {
-		Connection connection;
 		try {
-			connection = dataSource.getConnection();
-
 			StringBuffer sql = new StringBuffer();
 			sql.append("insert into routes (description, username, geom) ");
 			sql.append("values (?, ?, geomfromtext(?))");
 
-			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
 
 			pstmt.setString(1, rota.getDescription());
 			pstmt.setString(2, rota.getUser().getUsername());
 			pstmt.setString(3, parse(rota.getCoords()));
 
 			pstmt.execute();
-
 			pstmt.close();
-			connection.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException cause) {
+			throw new RuntimeException(cause);
 		}
-
 	}
 
 	public List<Route> find(Coordenada coordenada) {
@@ -68,5 +63,13 @@ public class RouteDAO {
 		}
 		geometria += ")";
 		return geometria;
+	}
+
+	private Connection getConnection() {
+		if (this.connection == null) {
+			this.connection = Beans.getReference(Connection.class);
+		}
+
+		return this.connection;
 	}
 }
