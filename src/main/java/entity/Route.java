@@ -1,47 +1,52 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Type;
-
-import com.vividsolutions.jts.geom.LineString;
-
-@Entity
-public class Rota implements Serializable{
+//@MappedSuperclass
+// @Tuplizer(impl = XX.class)
+public class Route implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
+	// @Embedded
 	private Usuario usuario;
 
+	// @OneToMany(orphanRemoval = true, mappedBy = "rota", fetch = FetchType.EAGER)
 	private Set<Periodo> periodos;
 
 	private String descricao;
 
-	private LineString caminho;
+	// @Tuplizer(impl = X.class)
+	// @Transient
+	private List<Coordenada> caminho;
 
-	public Rota() {
+	// @Tuplizer(impl = X.class)
+	private String x;
+
+	public String getX() {
+		return x;
 	}
 
-	public Rota(Integer id, Usuario usuario, String descricao, LineString lineString) {
+	public void setX(String x) {
+		this.x = x;
+	}
+
+	public Route() {
+	}
+
+	public Route(Integer id, Usuario usuario, String descricao, List<Coordenada> caminho) {
 		this.id = id;
 		this.usuario = usuario;
 		this.descricao = descricao;
-		this.caminho = lineString;
+		this.caminho = caminho;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	public Integer getId() {
 		return id;
 	}
@@ -50,7 +55,6 @@ public class Rota implements Serializable{
 		this.id = id;
 	}
 
-	@Embedded
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -67,7 +71,6 @@ public class Rota implements Serializable{
 		this.descricao = descricao;
 	}
 
-	@OneToMany(orphanRemoval = true, mappedBy = "rota", fetch = FetchType.EAGER)
 	public Set<Periodo> getPeriodos() {
 		return periodos;
 	}
@@ -76,12 +79,11 @@ public class Rota implements Serializable{
 		this.periodos = periodos;
 	}
 
-	@Type(type = "org.hibernate.spatial.GeometryType")
-	public LineString getCaminho() {
+	public List<Coordenada> getCaminho() {
 		return caminho;
 	}
 
-	public void setCaminho(LineString caminho) {
+	public void setCaminho(List<Coordenada> caminho) {
 		this.caminho = caminho;
 	}
 
@@ -102,7 +104,7 @@ public class Rota implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Rota other = (Rota) obj;
+		Route other = (Route) obj;
 		if (descricao == null) {
 			if (other.descricao != null)
 				return false;

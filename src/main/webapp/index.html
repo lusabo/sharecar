@@ -7,6 +7,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
 <script src='js/main.js' type='text/javascript'></script>
 <script>
+		function parse(coordenadasGoogle){
+			
+		}
+
 		$(function(){
 			carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
 	    var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
@@ -22,12 +26,16 @@
 				mostrarRotaNoMapa($("#pto-partida").val(), $("#pto-chegada").val());  // Retirar, usado só para agilizar o click
 				pegarRota($("#pto-partida").val(), $("#pto-chegada").val(), function(aPontos){
 
-					var a = aPontos.toString().substring(1, aPontos.toString().length - 1).split('),('); 
+				var data = new FormData();
+				data.append("id", 0);
+				data.append("description", "Rota 1");
+				data.append("username", "93579551515");
+				data.append("coords", JSON.stringify(aPontos));
 
-					$.ajax({	
+				$.ajax({	
 						  type: "POST",
-						  url: "http://localhost:8080/sharecar/api/rotas",
-						  data: {'idrota': 0, 'cpfusuario': '93579551515', 'descricao': $("#descricao").val(), 'geometria': a}					  
+						  url: "http://localhost:8080/sharecar/api/route",
+						  data: data			  
 						});
 				});
 			});
@@ -35,7 +43,7 @@
 			$("#btVer").click(function(){
 				$.ajax({	
 					  type: "GET",
-					  url: "http://localhost:8080/sharecar/api/rotas/10",
+					  url: "http://localhost:8080/sharecar/api/route",
 					  dataType: "json",
 					  success: function(data){
 						  	console.log(data);

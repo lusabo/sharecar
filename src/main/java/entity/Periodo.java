@@ -2,36 +2,24 @@ package entity;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ForeignKey;
-
-@Entity
+//@Entity
 public class Periodo {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 
-	@NotNull
+	// @NotNull
 	private DiaSemana diaSemana;
 
-	@Temporal(TemporalType.TIME)
-	@NotNull
+	// @Temporal(TemporalType.TIME)
+	// @NotNull
 	private Date hora;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "id_rota", referencedColumnName = "id")
-	@ForeignKey(name = "rota_periodo_fk")
-	private Rota rota;
+	// @ManyToOne(optional = false)
+	// @JoinColumn(name = "id_rota", referencedColumnName = "id")
+	// @ForeignKey(name = "rota_periodo_fk")
+	private Route rota;
 
 	public Periodo() {
 	}
@@ -57,11 +45,11 @@ public class Periodo {
 		this.diaSemana = diaSemana;
 	}
 
-	public Rota getRota() {
+	public Route getRota() {
 		return rota;
 	}
 
-	public void setRota(Rota rota) {
+	public void setRota(Route rota) {
 		this.rota = rota;
 	}
 

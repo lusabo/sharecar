@@ -6,7 +6,7 @@
 		<jta-data-source>java:jboss/datasources/sharecarDS</jta-data-source>
 
 		<class>entity.Periodo</class>
-		<class>entity.Rota</class>
+		<class>persistence.RotaX</class>
 
 		<properties>
 			<property name="hibernate.show_sql" value="true" />
