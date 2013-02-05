@@ -30,7 +30,7 @@ public class RotaBC {
 		}
 
 		rotaSalva.setUsuario(rota.getUsuario());
-		rotaSalva.setDescricao(rota.getDescricao());
+		rotaSalva.setDescription(rota.getDescription());
 		rotaSalva.setCaminho(rota.getCaminho());
 
 		rotaDAO.insert(rotaSalva);
