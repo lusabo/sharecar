@@ -38,7 +38,7 @@ public class RouteService {
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> findAll() {
-		return null;
+		return routeBC.findAll();
 	}
 
 	@GET

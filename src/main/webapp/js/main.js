@@ -61,3 +61,17 @@ function pegarRota(ptoPartida, ptoChegada, callback){
         }
     });
 }
+
+function carregarRotasDoUsuarioNaTabela() {
+	$.ajax({
+		type : "GET",
+		url : "http://localhost:8080/sharecar/api/route",
+		dataType : "json",
+		success: function(data){
+			$.each(data, function (key, val) {
+				$('#table-rotas > tbody:last').append('<tr><td>'+val.description+'</td></tr>');
+                console.log(val);
+            });
+		}
+	});
+}

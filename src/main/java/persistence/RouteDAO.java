@@ -49,6 +49,38 @@ public class RouteDAO implements Serializable {
 	public List<Route> find(Coordinate coordenada) {
 		return null;
 	}
+	
+	public List<Route> findAll(){
+		
+		List<Route> result = new ArrayList();
+		
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("select id, description, username, ST_AsGeoJSON(geom) as json from routes");
+			
+			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
+			
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				Route route = new Route();
+				
+				route.setId(rs.getInt("id"));
+				route.setDescription(rs.getString("description"));
+				route.setUser(new User(rs.getString("username")));
+				route.setCoords(parse(rs.getString("json")));
+				
+				result.add(route);
+			}
+			rs.close();
+			pstmt.close();
+			
+		} catch (SQLException cause) {
+			throw new RuntimeException(cause);
+		}
+
+		return result;
+	}
 
 	public Route load(Integer id) {
 		Route result = null;

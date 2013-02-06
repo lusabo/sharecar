@@ -11,6 +11,7 @@
 <script>
 		$(function(){
 			carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
+			carregarRotasDoUsuarioNaTabela();
 	    var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
 	    var ptoChegada = new google.maps.places.Autocomplete($("#pto-chegada")[0]);
 					
@@ -120,16 +121,24 @@ body {
 					consectetur tortor et purus.</p>
 			</div>
 			<div id="tabs-2">
-				<label for="descricao">Descrição:</label><br /> <input
-					id="descricao" style="width: 100%" value="teste" /> <br /> <label
-					for="pto-partida">Ponto de Partida:</label><br /> <input
-					id="pto-partida" style="width: 100%"
-					value="augusto lopes pontes, 170" /> <br /> <label
-					for="pto-chegada">Ponto de Chegada:</label><br /> <input
-					id="pto-chegada" style="width: 100%"
-					value="augusto lopes pontes, 581" /> <br /> <input type="button"
-					id="btSalvar" value="Salvar" /> <input type="button" id="btVer"
-					value="Ver Rota" />
+				<label for="descricao">Descrição:</label><br /> 
+				<input id="descricao" style="width: 100%" value="teste"/><br/> 
+				<label for="pto-partida">Ponto de Partida:</label><br/> 
+				<input id="pto-partida" style="width: 100%" value="augusto lopes pontes, 170"/><br/> 
+				<label for="pto-chegada">Ponto de Chegada:</label><br/> 
+				<input id="pto-chegada" style="width: 100%"	value="augusto lopes pontes, 581"/><br/>
+				<input type="button" id="btSalvar" value="Salvar"/>
+				<input type="button" id="btVer" value="Ver Rota"/>
+				<br/><br/>
+				<table id="table-rotas" border="1" cellpadding="0" cellspacing="0" width="100%"> 
+					<thead>
+						<tr>
+							<th>Minhas Rotas</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,7 @@
 package business;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import persistence.RouteDAO;
@@ -18,5 +20,9 @@ public class RouteBC {
 
 	public Route load(Integer id) {
 		return routeDAO.load(id);
+	}
+	
+	public List<Route> findAll(){
+		return routeDAO.findAll();
 	}
 }
