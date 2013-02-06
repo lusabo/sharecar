@@ -4,27 +4,11 @@
 <title>ShareCar</title>
 <script src='js/jquery-1.8.3.js' type='text/javascript'></script>
 <script src='js/jquery-ui-1.9.2.custom.js' type='text/javascript'></script>
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
+<script
+	src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places"
+	type="text/javascript"></script>
 <script src='js/main.js' type='text/javascript'></script>
 <script>
-
-		function Usuario(username){
-			this.username = username;
-		}
-		
-		function Coord(lat, lng){
-			this.lat = lat;
-			this.lng = lng;
-		}
-
-		function Rota(description, user, coords){
-			this.description = description;
-			this.user = user;
-			this.coords = coords;
-		}
-
-		var user = new Usuario("93579551515");
-		
 		$(function(){
 			carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
 	    var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
@@ -47,8 +31,6 @@
 
 				var rota = new Rota("Rota 1", user, coordenadas);
 
-				console.log(JSON.stringify(rota));
-
 				$.ajax({	
 						  type: "PUT",
 						  url: "http://localhost:8080/sharecar/api/route",
@@ -59,20 +41,39 @@
 				});
 			});
 
-			$("#btVer").click(function(){
-				$.ajax({	
-					  type: "GET",
-					  url: "http://localhost:8080/sharecar/api/route",
-					  dataType: "json",
-					  success: function(data){
-						  	console.log(data);
-						}
-				});
+			$("#btVer").click(function () {
+			    $.ajax({
+			        type: "GET",
+			        url: "http://localhost:8080/sharecar/api/route/5",
+			        dataType: "json",
+			        success: function (data) {
+			            var polyOptions = {
+			                strokeColor: '#8D8DFF',
+			                strokeOpacity: 1.0,
+			                strokeWeight: 4
+			            }
+			            var poly = new google.maps.Polyline(polyOptions);
+			            var path = new Array();
 
+			            var bounds = new google.maps.LatLngBounds();
+
+			          
+			            $.each(data.coords, function (key, val) {
+			                path.push(new google.maps.LatLng(val.lat, val.lng));
+			                bounds.extend(new google.maps.LatLng(val.lat, val.lng));
+			            });
+			            poly.setPath(path);
+			            poly.setMap(map);
+			            map.fitBounds(bounds);
+	
+			        }
+			    });
 			});
+			
 		});
 </script>
-<link href="css/jquery-ui-1.9.2.custom.css" rel="stylesheet"	media="screen" />
+<link href="css/jquery-ui-1.9.2.custom.css" rel="stylesheet"
+	media="screen" />
 <style>
 html {
 	height: 100%;
@@ -119,17 +120,16 @@ body {
 					consectetur tortor et purus.</p>
 			</div>
 			<div id="tabs-2">
-				<label for="descricao">Descrição:</label><br/> 
-				<input id="descricao" style="width: 100%" value="teste"/>
-				<br/> 
-				<label for="pto-partida">Ponto de Partida:</label><br/> 
-				<input id="pto-partida" style="width: 100%" value="augusto lopes pontes, 170"/>
-				<br/> 
-				<label for="pto-chegada">Ponto de Chegada:</label><br/>
-				<input id="pto-chegada" style="width: 100%" value="augusto lopes pontes, 581"/>
-				<br/>
-				<input type="button" id="btSalvar" value="Salvar"/>
-				<input type="button" id="btVer" value="Ver Rota"/>
+				<label for="descricao">Descrição:</label><br /> <input
+					id="descricao" style="width: 100%" value="teste" /> <br /> <label
+					for="pto-partida">Ponto de Partida:</label><br /> <input
+					id="pto-partida" style="width: 100%"
+					value="augusto lopes pontes, 170" /> <br /> <label
+					for="pto-chegada">Ponto de Chegada:</label><br /> <input
+					id="pto-chegada" style="width: 100%"
+					value="augusto lopes pontes, 581" /> <br /> <input type="button"
+					id="btSalvar" value="Salvar" /> <input type="button" id="btVer"
+					value="Ver Rota" />
 			</div>
 		</div>
 	</div>

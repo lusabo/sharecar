@@ -1,10 +1,28 @@
+var user = new Usuario("93579551515");
+
+function Usuario(username){
+	this.username = username;
+}
+
+function Coord(lat, lng){
+	this.lat = lat;
+	this.lng = lng;
+}
+
+function Rota(description, user, coords){
+	this.description = description;
+	this.user = user;
+	this.coords = coords;
+}
+
 function carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario() {
 	var mapOptions = {
-		zoom : 6,
-		mapTypeId : google.maps.MapTypeId.ROADMAP
-	};
-	var map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
-
+			zoom : 6,
+			mapTypeId : google.maps.MapTypeId.ROADMAP
+		};
+	// map é uma variável global - está sem o var
+	map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+	
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -14,18 +32,13 @@ function carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario() {
 }
 
 function mostrarRotaNoMapa(ptoPartida, ptoChegada){
-	var mapOptions = {
-			zoom : 6,
-			mapTypeId : google.maps.MapTypeId.ROADMAP
-	};
-	var map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
 	var directionsService = new google.maps.DirectionsService();
 	var directionsDisplay = new google.maps.DirectionsRenderer();
 	directionsDisplay.setMap(map);
 	var request = {
-    		origin: ptoPartida,
-            destination: ptoChegada,
-            travelMode: google.maps.DirectionsTravelMode.DRIVING
+    	origin: ptoPartida,
+        destination: ptoChegada,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
 	directionsService.route(request, function(response, status) {
 		if (status == google.maps.DirectionsStatus.OK) {
