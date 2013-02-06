@@ -52,11 +52,11 @@ public class RouteDAO implements Serializable {
 	
 	public List<Route> findAll(){
 		
-		List<Route> result = new ArrayList();
+		List<Route> result = new ArrayList<Route>();
 		
 		try {
 			StringBuffer sql = new StringBuffer();
-			sql.append("select id, description, username, ST_AsGeoJSON(geom) as json from routes");
+			sql.append("select id, description from routes");
 			
 			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
 			
@@ -67,8 +67,6 @@ public class RouteDAO implements Serializable {
 				
 				route.setId(rs.getInt("id"));
 				route.setDescription(rs.getString("description"));
-				route.setUser(new User(rs.getString("username")));
-				route.setCoords(parse(rs.getString("json")));
 				
 				result.add(route);
 			}

@@ -1,12 +1,12 @@
 package entity;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -40,7 +40,7 @@ public class Route implements Serializable {
 		return id;
 	}
 
-	@JsonIgnore
+	// @JsonIgnore
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -70,6 +70,7 @@ public class Route implements Serializable {
 		this.periodos = periodos;
 	}
 
+	@JsonSerialize(include = NON_NULL)
 	public List<Coordinate> getCoords() {
 		return coords;
 	}
