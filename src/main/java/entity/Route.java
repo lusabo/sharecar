@@ -22,14 +22,14 @@ public class Route implements Serializable {
 
 	private User user;
 
-	private List<Coordenada> coords;
+	private List<Coordinate> coords;
 
 	private Set<Schedule> periodos;
 
 	public Route() {
 	}
 
-	public Route(String description, List<Coordenada> coords, User user) {
+	public Route(String description, List<Coordinate> coords, User user) {
 		this.description = description;
 		this.coords = coords;
 		this.user = user;
@@ -70,11 +70,11 @@ public class Route implements Serializable {
 		this.periodos = periodos;
 	}
 
-	public List<Coordenada> getCoords() {
+	public List<Coordinate> getCoords() {
 		return coords;
 	}
 
-	public void setCoords(List<Coordenada> coords) {
+	public void setCoords(List<Coordinate> coords) {
 		this.coords = coords;
 	}
 
