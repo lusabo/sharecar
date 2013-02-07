@@ -1,4 +1,11 @@
+var rendererOptions = {
+  draggable: true
+};
+var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+var directionsService = new google.maps.DirectionsService();
 var map;
+var pathsArray = [];
+
 var user = new Usuario("93579551515");
 
 function Usuario(username) {
@@ -55,12 +62,24 @@ function carregarTabelaDeRotas() {
     });
 }
 
+function removeRotasDoMapa() {
+	  if (pathsArray) {
+	    for (i in pathsArray) {
+	    	pathsArray[i].setMap(null);
+	    }
+	    pathsArray.length = 0;
+	  }
+	}
+
 function mostrarRota(rotaId){
+	removeRotasDoMapa();
+	directionsDisplay.setMap(null);
 	$.ajax({
         type: "GET",
         url: "http://localhost:8080/sharecar/api/route/" + rotaId,
         dataType: "json",
         success: function(data){
+
         	var polyOptions = {
 	                strokeColor: "#8D8DFF",
 	                strokeOpacity: 1.0,
@@ -68,10 +87,7 @@ function mostrarRota(rotaId){
 	            };
             var poly = new google.maps.Polyline(polyOptions);
             var path = new Array();
-
-            poly.setMap(null);									
-	            
-            var bounds = new google.maps.LatLngBounds();
+	        var bounds = new google.maps.LatLngBounds();
 
             $.each(data.coords, function (key, val) {
                 path.push(new google.maps.LatLng(val.lat, val.lng));
@@ -79,15 +95,14 @@ function mostrarRota(rotaId){
             });
             poly.setPath(path);
             poly.setMap(map);
+            pathsArray.push(poly);
             map.fitBounds(bounds);
         }
 	});
 }
 
 function mostrarRotaNoMapa(ptoPartida, ptoChegada) {
-	var directionsService = new google.maps.DirectionsService();
-	var directionsDisplay = new google.maps.DirectionsRenderer();
-
+	
     directionsDisplay.setMap(map);
 
     var request = {
