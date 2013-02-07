@@ -29,19 +29,4 @@ Configuração de Conexão - Ex: <JBOSS7_HOME>/standalone/configuration/standalo
 
 Instalação do Driver JDBC
 -------------------------
-1. Criar a estrutura de diretório: <JBOSS7_HOME>/modules/org/postgresql/main
-2. Download do driver JDBC em http://jdbc.postgresql.org/download.html (baixar o driver para a versão do seu PostgreSQL) 
-   e colocá-lo diretório criado acima 
-3. Criar o arquivo module.xml dentro do diretório criado no passo 1 com o conteúdo abaixo:
-
-<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="urn:jboss:module:1.0" name="org.postgresql">
-	<resources>
-		<resource-root path="postgresql-8.4-703.jdbc4.jar"/>
-	</resources>
-	<dependencies>
-		<module name="javax.api"/>
-		<module name="javax.transaction.api"/>
-	</dependencies>
-</module>
- 
+Copiar o conteúdo da pasta conf/jboss7/modules para <JBOSS7_HOME>/modules
