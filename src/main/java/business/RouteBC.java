@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import persistence.RouteDAO;
 import br.gov.frameworkdemoiselle.stereotype.BusinessController;
+import entity.Coordinate;
 import entity.Route;
 
 @BusinessController
@@ -24,5 +25,9 @@ public class RouteBC {
 
 	public List<Route> findAll() {
 		return routeDAO.findAll();
+	}
+	
+	public List<Route> find(Coordinate coord, Integer radius) {
+		return routeDAO.find(coord, radius);
 	}
 }

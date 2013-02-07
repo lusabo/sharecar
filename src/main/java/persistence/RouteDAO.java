@@ -33,7 +33,7 @@ public class RouteDAO implements Serializable {
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append("insert into routes (description, username, geom) ");
-			sql.append("values (?, ?, geomfromtext(?))");
+			sql.append("values (?, ?, geomfromtext(?,4326))");
 
 			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 
@@ -82,6 +82,43 @@ public class RouteDAO implements Serializable {
 
 		return result;
 	}
+	
+	public List<Route> find(Coordinate coord, Integer radius) {
+
+		List<Route> result = new ArrayList<Route>();
+
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("select id, description, username from routes ");
+			sql.append("where intersects(geom,buffer(geomfromtext('POINT(? ?)',4326),round(((? * 0.00001)/1.11),5),8)");
+
+			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+
+			pstmt.setDouble(1, coord.getLatitude());
+			pstmt.setDouble(2, coord.getLongitude());
+			pstmt.setInt(3, radius);
+
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				Route route = new Route();
+
+				route.setId(rs.getInt("id"));
+				route.setDescription(rs.getString("description"));
+				route.setUser(new User(rs.getString("username")));
+
+				result.add(route);
+			}
+			rs.close();
+			pstmt.close();
+
+		} catch (SQLException cause) {
+			throw new RuntimeException(cause);
+		}
+
+		return result;
+	}
+		
 
 	public Route load(Integer id) {
 		Route result = null;

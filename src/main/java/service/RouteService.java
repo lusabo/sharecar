@@ -12,8 +12,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import business.RouteBC;
+import entity.Coordinate;
 import entity.Route;
 
 @Path("/route")
@@ -46,5 +48,11 @@ public class RouteService {
 	@Produces(JSON_MEDIA_TYPE)
 	public Route find(@PathParam("id") Integer id) {
 		return routeBC.load(id);
+	}
+	
+	@GET
+	@Produces(JSON_MEDIA_TYPE)
+	public List<Route> find(@QueryParam("lat") Double latitude, @QueryParam("lng") Double longitude, @QueryParam("radius") Integer radius){
+		return routeBC.find(new Coordinate(latitude, longitude), radius);
 	}
 }

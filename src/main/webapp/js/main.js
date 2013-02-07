@@ -5,6 +5,8 @@ var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
 var directionsService = new google.maps.DirectionsService();
 var map;
 var pathsArray = [];
+var markersArray = [];
+var circlesArray = [];
 
 var user = new Usuario("93579551515");
 
@@ -43,13 +45,46 @@ function carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario() {
     });
 }
 
+function deleteOverlays() {
+	  if (markersArray) {
+	    for (i in markersArray) {
+	      markersArray[i].setMap(null);
+	    }
+	    markersArray.length = 0;
+	  }
+	  if (circlesArray) {
+		    for (i in circlesArray) {
+		    	circlesArray[i].setMap(null);
+		    }
+		    circlesArray.length = 0;
+		  }	  
+	}
+
 function addMarker(location) {
-  marker.setMap(null);
+  deleteOverlays();
   marker = new google.maps.Marker({
     position: location,
     map: map,
     draggable: true
   });
+  
+  
+  var circleOptions = {
+	      strokeColor: "#FF0000",
+	      strokeOpacity: 0.8,
+	      strokeWeight: 2,
+	      fillColor: "#FF0000",
+	      fillOpacity: 0.35,
+	      map: map,
+	      center: location,
+	      radius: 200
+	    };
+  circle = new google.maps.Circle(circleOptions);
+  
+  console.log(marker.getPosition().toString());	
+  console.log(circle.getBounds().toString());
+  markersArray.push(marker);
+  circlesArray.push(circle);
 }
 
 function carregarTabelaDeRotas() {
