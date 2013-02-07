@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.gov.frameworkdemoiselle.internal.configuration.DataSourceConfig;
+import br.gov.frameworkdemoiselle.internal.configuration.JdbcConfig;
 import br.gov.frameworkdemoiselle.junit.DemoiselleRunner;
 import br.gov.frameworkdemoiselle.util.Beans;
 import business.RouteBC;
@@ -46,10 +46,11 @@ public class RotaTest {
 	// }
 	
 	@Test
-	public void x() {
-		DataSourceConfig config = Beans.getReference(DataSourceConfig.class);
-		
-		System.out.println(config.getJndiName());
+	public void xxxxxx() {
+		JdbcConfig config = Beans.getReference(JdbcConfig.class);
+		Map<String, String> map = config.getJndiName();
+
+		System.out.println(map);
 	}
 
 	@Test
