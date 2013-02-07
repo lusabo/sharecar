@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.codehaus.jackson.map.ObjectMapper;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
-import br.gov.frameworkdemoiselle.util.Beans;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
@@ -23,7 +24,9 @@ public class RouteDAO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private transient Connection connection;
+	@Inject
+	// @Name("default")
+	private Connection connection;
 
 	@Transactional
 	public void insert(Route rota) {
@@ -32,7 +35,7 @@ public class RouteDAO implements Serializable {
 			sql.append("insert into routes (description, username, geom) ");
 			sql.append("values (?, ?, geomfromtext(?))");
 
-			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
+			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 
 			pstmt.setString(1, rota.getDescription());
 			pstmt.setString(2, rota.getUser().getUsername());
@@ -49,30 +52,30 @@ public class RouteDAO implements Serializable {
 	public List<Route> find(Coordinate coordenada) {
 		return null;
 	}
-	
-	public List<Route> findAll(){
-		
+
+	public List<Route> findAll() {
+
 		List<Route> result = new ArrayList<Route>();
-		
+
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append("select id, description from routes");
-			
-			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
-			
+
+			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				Route route = new Route();
-				
+
 				route.setId(rs.getInt("id"));
 				route.setDescription(rs.getString("description"));
-				
+
 				result.add(route);
 			}
 			rs.close();
 			pstmt.close();
-			
+
 		} catch (SQLException cause) {
 			throw new RuntimeException(cause);
 		}
@@ -88,7 +91,7 @@ public class RouteDAO implements Serializable {
 			sql.append("select id, description, username, ST_AsGeoJSON(geom) as json ");
 			sql.append("from routes where id = ?");
 
-			PreparedStatement pstmt = getConnection().prepareStatement(sql.toString());
+			PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 
 			pstmt.setInt(1, id);
 
@@ -143,13 +146,5 @@ public class RouteDAO implements Serializable {
 		}
 
 		return result;
-	}
-
-	private Connection getConnection() {
-		if (this.connection == null) {
-			this.connection = Beans.getReference(Connection.class);
-		}
-
-		return this.connection;
 	}
 }
