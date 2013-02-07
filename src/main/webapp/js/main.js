@@ -37,6 +37,19 @@ function carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario() {
             map.setCenter(pos);
         });
     }
+    
+    google.maps.event.addListener(map, 'click', function(event) {
+        addMarker(event.latLng);
+    });
+}
+
+function addMarker(location) {
+  marker.setMap(null);
+  marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    draggable: true
+  });
 }
 
 function carregarTabelaDeRotas() {
@@ -63,13 +76,13 @@ function carregarTabelaDeRotas() {
 }
 
 function removeRotasDoMapa() {
-	  if (pathsArray) {
-	    for (i in pathsArray) {
-	    	pathsArray[i].setMap(null);
-	    }
-	    pathsArray.length = 0;
-	  }
-	}
+  if (pathsArray) {
+    for (i in pathsArray) {
+    	pathsArray[i].setMap(null);
+    }
+    pathsArray.length = 0;
+  }  
+}
 
 function mostrarRota(rotaId){
 	removeRotasDoMapa();
