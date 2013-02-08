@@ -15,19 +15,19 @@ public class RouteBC {
 	@Inject
 	private RouteDAO routeDAO;
 
-	public void insert(Route route) {
+	public void insert(Route route) throws Exception {
 		routeDAO.insert(route);
 	}
 
-	public Route load(Integer id) {
+	public Route load(Integer id) throws Exception {
 		return routeDAO.load(id);
 	}
 
-	public List<Route> findAll() {
+	public List<Route> findAll() throws Exception {
 		return routeDAO.findAll();
 	}
-	
-	public List<Route> find(Coordinate coord, Integer radius) {
+
+	public List<Route> find(Coordinate coord, Integer radius) throws Exception {
 		return routeDAO.find(coord, radius);
 	}
 }

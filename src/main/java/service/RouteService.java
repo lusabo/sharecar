@@ -26,33 +26,34 @@ public class RouteService {
 
 	@PUT
 	@Consumes(JSON_MEDIA_TYPE)
-	public void create(Route route) {
+	public void create(Route route) throws Exception {
 		routeBC.insert(route);
 	}
 
 	@POST
 	@Path("/{id}")
 	@Consumes(JSON_MEDIA_TYPE)
-	public void update(@PathParam("id") Integer id, Route route) {
+	public void update(@PathParam("id") Integer id, Route route) throws Exception {
 		routeBC.insert(route);
 	}
 
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
-	public List<Route> findAll() {
+	public List<Route> findAll() throws Exception {
 		return routeBC.findAll();
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces(JSON_MEDIA_TYPE)
-	public Route find(@PathParam("id") Integer id) {
+	public Route find(@PathParam("id") Integer id) throws Exception {
 		return routeBC.load(id);
 	}
-	
+
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
-	public List<Route> find(@QueryParam("lat") Double latitude, @QueryParam("lng") Double longitude, @QueryParam("radius") Integer radius){
+	public List<Route> find(@QueryParam("lat") Double latitude, @QueryParam("lng") Double longitude,
+			@QueryParam("radius") Integer radius) throws Exception {
 		return routeBC.find(new Coordinate(latitude, longitude), radius);
 	}
 }
