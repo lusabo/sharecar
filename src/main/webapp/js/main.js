@@ -61,30 +61,37 @@ function deleteOverlays() {
 	}
 
 function addMarker(location) {
-  deleteOverlays();
-  marker = new google.maps.Marker({
-    position: location,
-    map: map,
-    draggable: true
-  });
+	deleteOverlays();
   
+	marker = new google.maps.Marker({
+		position: location,
+		map: map,
+		draggable: true
+	});
   
-  var circleOptions = {
-	      strokeColor: "#FF0000",
-	      strokeOpacity: 0.8,
-	      strokeWeight: 2,
-	      fillColor: "#FF0000",
-	      fillOpacity: 0.35,
-	      map: map,
-	      center: location,
-	      radius: 200
+	var circleOptions = {
+			strokeColor: "#FF0000",
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: "#FF0000",
+			fillOpacity: 0.35,
+			map: map,
+			center: location,
+			radius: 200
 	    };
-  circle = new google.maps.Circle(circleOptions);
+	
+	circle = new google.maps.Circle(circleOptions);
   
-  console.log(marker.getPosition().toString());	
-  console.log(circle.getBounds().toString());
-  markersArray.push(marker);
-  circlesArray.push(circle);
+	markersArray.push(marker);
+	circlesArray.push(circle);
+	
+	$.ajax({
+		url: "http://localhost:8080/sharecar/api/route/" + location.Ya + "/" + location.Za + "/" + 200,
+		success: function(data){
+			console.log(data);
+		},
+		dataType: 'json'
+	});
 }
 
 function carregarTabelaDeRotas() {
