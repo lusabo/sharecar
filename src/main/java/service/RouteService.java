@@ -51,6 +51,7 @@ public class RouteService {
 	}
 
 	@GET
+	@Path("/{lat}/{lng}/{radius}")
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
 			@PathParam("radius") Integer radius) throws Exception {

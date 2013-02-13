@@ -15,7 +15,7 @@ public class DDL {
 	private Connection connection;
 
 	@Startup
-	@Transactional
+	//@Transactional
 	public void dropAndCreate() throws Exception {
 		dropTableIfExists("routes");
 		createTableRoutes();
