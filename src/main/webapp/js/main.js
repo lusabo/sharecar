@@ -27,7 +27,7 @@ function Rota(description, user, coords) {
 
 function carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario() {
     var mapOptions = {
-        zoom: 6,
+        zoom: 15,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
@@ -60,6 +60,16 @@ function deleteOverlays() {
 		  }	  
 	}
 
+function obterEndereco(lat, lng){
+	var geocoder = new google.maps.Geocoder();
+	var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+        	$("#endereco").val(results[0].formatted_address);
+        }
+    });
+}
+
 function addMarker(location) {
 	deleteOverlays();
   
@@ -68,7 +78,9 @@ function addMarker(location) {
 		map: map,
 		draggable: true
 	});
-  
+	
+	obterEndereco(location.Ya, location.Za);
+	
 	var circleOptions = {
 			strokeColor: "#FF0000",
 			strokeOpacity: 0.8,
