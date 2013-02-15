@@ -38,6 +38,7 @@
     	  $("#radio").buttonset();
 
     	  $("#bt-pesquisar").button().click(function(){
+    		  $('#table-pesquisa tbody > tr').remove();
 					var lat = markersArray[0].position.Ya;
     	  	var lng = markersArray[0].position.Za;
 					var radius = $("#radius").val();
@@ -45,7 +46,19 @@
 		    	$.ajax({
     				url : "http://localhost:8080/sharecar/api/route/" + lat + "/" + lng + "/" + radius,
     				success : function(data) {
-    					console.log(data);
+    					 $.each(data,
+    					        function (key, val) {
+    					                var tr = '';
+    					                tr += '<tr>';
+    					                tr += '<td width="24px">';
+    					                tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
+    					                tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+    					                tr += '</a>';
+    					                tr += '</td>';
+    					                tr += '<td>' + val.description + '</td>';
+    					                tr += '</tr>';
+    					                $("#table-pesquisa > tbody:last").append(tr);
+    					            });
     				},
     				dataType : 'json'
     			});
@@ -85,7 +98,7 @@
     	  });
     	  
     	  // Mostra a rota no mapa após clicar no ícone da tabela de rotas
-    	  $("#table-rotas").delegate("a[name^='route-']", "click", function () {
+    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
     		  loadRoute($(this).attr("route"))
     	  });
     	  
@@ -160,7 +173,15 @@
                </p>
                
                <input id="bt-pesquisar" type="button" value="Pesquisar" />
-               
+               <br/><br/>
+               <table id="table-pesquisa" class="table table-bordered">
+                  <thead>
+                     <tr>
+                        <th class="ui-widget-header" colspan="2">Rotas Encontradas</th>
+                     </tr>
+                  </thead>
+                  <tbody></tbody>
+               </table>
             </div>
          </div>
       </div>
