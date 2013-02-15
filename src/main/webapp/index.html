@@ -11,88 +11,99 @@
       <script src="js/globalize-de.js" type="text/javascript"></script>
       <script src="js/main.js" type="text/javascript"></script>
       <script>
-         $(function(){
-       		carregarMapaCentralizadoConformeGeolocalizacaoDoUsuario();
-         	carregarTabelaDeRotas();
-            $( "#accordion" ).accordion({
-                heightStyle: "fill",
-                active: 1
-            });
-            $( "#slider" ).slider({
-                value:100,
-                min: 50,
-                max: 1000,
-                step: 50,
-                slide: function( event, ui ) {
-                  $("#raio").val(ui.value);
-                  
-                }
-             });
-             $( "#raio" ).val( $( "#slider" ).slider( "value" ) );
-             $( "#radio" ).buttonset();
-             $("#bt-pesquisar").button();
-         
-             $.widget( "ui.timespinner", $.ui.spinner, {
-            	    options: {
-            	      // 30 minutos
-            	      step: 1800 * 1000,
-            	      // 1 hora
-            	      page: 60
-            	    },
-            	 
-            	    _parse: function( value ) {
-            	      if ( typeof value === "string" ) {
-            	        // already a timestamp
-            	        if ( Number( value ) == value ) {
-            	          return Number( value );
-            	        }
-            	        return +Globalize.parseDate( value );
-            	      }
-            	      return value;
-            	    },
-            	 
-            	    _format: function( value ) {
-            	      return Globalize.format( new Date(value), "t" );
-            	    }
-            	  });
-             		Globalize.culture("de-DE");
-            	 	$( "#hora-ini, #hora-fim" ).timespinner();
-            	 
-         	// Mostra a rota no mapa após clicar no ícone da tabela de rotas
-         	$("#table-rotas").delegate("a[name^='route-']", "click", function(){ mostrarRota($(this).attr("route")) });
-         
-         	// Alterando o ponto de partida a rota é mostrada a nova rota
-         	var ptoPartida = new google.maps.places.Autocomplete($("#pto-partida")[0]);
-            var ptoChegada = new google.maps.places.Autocomplete($("#pto-chegada")[0]);
-         	google.maps.event.addListener(ptoChegada, 'place_changed', function() {
-         		mostrarRotaNoMapa($("#pto-partida").val(), $("#pto-chegada").val());
-         	});
-         
-         	// Salva a rota
-         	// TODO: Ajustar para quando o usuário alterar a rota
-         	$("#btSalvar").click(function(){
-         		pegarRota($("#pto-partida").val(), $("#pto-chegada").val(), function(coords){
-         			var coordenadas = new Array();
-         			for (var i = 0; i < coords.length; i++){
-         				coordenadas.push(new Coord(coords[i].Ya, coords[i].Za));
-         			}
-         
-         			var rota = new Rota("Rota " + (new Date()).getTime(), user, coordenadas);
-         			$.ajax({	
-         					  type: "PUT",
-         					  url: "http://localhost:8080/sharecar/api/route",
-         					  data: JSON.stringify(rota),
-         					  dataType: "json",
-         					  contentType: "application/json;charset=UTF-8",
-         					  success: function(){
-         							alert('Rota salva com sucesso.');
-         							carregarTabelaDeRotas();
-         						}
-         					});
-         			});
-         	});
-         	    
-         });
+      $(function () {
+
+    	  loadMapCenteredWithUserGeolocation();
+
+    	  loadRoutesTable();
+    	  
+    	  $("#accordion").accordion({
+    	    heightStyle: "fill",
+    	    active: 1
+    	  });
+    	  
+    	  $("#slider").slider({
+    	    value: 100,
+    	    min: 50,
+    	    max: 1000,
+    	    step: 50,
+    	    slide: function (event, ui) {
+    	      $("#radius").val(ui.value);
+    	      circlesArray[0].setRadius(ui.value);
+    	    }
+    	  });
+    	  
+    	  $("#radius").val($("#slider").slider("value"));
+
+    	  $("#radio").buttonset();
+
+    	  $("#bt-pesquisar").button().click(function(){
+					var lat = markersArray[0].position.Ya;
+    	  	var lng = markersArray[0].position.Za;
+					var radius = $("#radius").val();
+
+		    	$.ajax({
+    				url : "http://localhost:8080/sharecar/api/route/" + lat + "/" + lng + "/" + radius,
+    				success : function(data) {
+    					console.log(data);
+    				},
+    				dataType : 'json'
+    			});
+				});
+    	  
+    	  $.widget("ui.timespinner", $.ui.spinner, {
+    	    options: {
+    	      // 30 minutos
+    	      step: 1800 * 1000,
+    	      // 1 hora
+    	      page: 60
+    	    },
+    	    
+    	    _parse: function (value) {
+    	      if (typeof value === "string") {
+    	        // already a timestamp
+    	        if (Number(value) == value) {
+    	          return Number(value);
+    	        }
+    	        return +Globalize.parseDate(value);
+    	      }
+    	      return value;
+    	    },
+    	    
+    	    _format: function (value) {
+    	      return Globalize.format(new Date(value), "t");
+    	    }
+    	  });
+    	  Globalize.culture("de-DE");
+    	  $("#hora-ini, #hora-fim").timespinner();
+
+    		//Gatilhos
+    		
+    		// Ao clicar no mapa é adicionado um marcador
+    	  google.maps.event.addListener(map, 'click', function(event) {
+    	  	addMarker(event.latLng, $("#radius").val());
+    	  });
+    	  
+    	  // Mostra a rota no mapa após clicar no ícone da tabela de rotas
+    	  $("#table-rotas").delegate("a[name^='route-']", "click", function () {
+    		  loadRoute($(this).attr("route"))
+    	  });
+    	  
+    	  // Alterando o ponto de chegada a rota é renderizada
+    	  var ptoPartida = new google.maps.places.Autocomplete($("#start")[0]);
+    	  var ptoChegada = new google.maps.places.Autocomplete($("#end")[0]);
+    	  google.maps.event.addListener(ptoChegada, 'place_changed', function () {
+    		  showRouteBetweenPoints($("#start").val(), $("#end").val());
+    	  });
+    	  
+    	  // Salva a rota
+    	  // TODO: Ajustar para quando o usuário alterar a rota
+    	  // TODO: Verificar campos obrigatórios
+    	  $("#btSalvar").click(function () {
+					saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
+				});
+          
+    	});
       </script>
    </head>
    <body>
@@ -100,12 +111,12 @@
          <div id="accordion">
             <h3>Criar Rota</h3>
             <div>
-               <label for="descricao">Descrição:</label><br /> 
-               <input id="descricao" style="width: 100%" value="teste" /><br /> 
-               <label for="pto-partida">Ponto de Partida:</label><br /> 
-               <input id="pto-partida" style="width: 100%" value="augusto lopes pontes, 170" /><br /> 
-               <label for="pto-chegada">Ponto de Chegada:</label><br /> 
-               <input id="pto-chegada" style="width: 100%" value="augusto lopes pontes, 581" /><br />
+               <label for="route-name">Nome:</label><br /> 
+               <input id="route-name" style="width: 100%" value="" required/><br /> 
+               <label for="start">Ponto de Partida:</label><br /> 
+               <input id="start" style="width: 100%" value=""  required /><br /> 
+               <label for="end">Ponto de Chegada:</label><br /> 
+               <input id="end" style="width: 100%" value="" required /><br />
                <input type="button" id="btSalvar" value="Salvar" />
                <br /><br />
                <table id="table-rotas" class="table table-bordered">
@@ -126,7 +137,7 @@
                
                <p>
                   <label for="raio">Raio</label>
-                  <input type="text" id="raio" name="raio" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
+                  <input type="text" id="radius" name="radius" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
                </p>
                <div id="slider"></div>
                
