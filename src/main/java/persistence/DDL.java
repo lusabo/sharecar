@@ -24,7 +24,7 @@ public class DDL {
 	private void dropTableIfExists(String tableName) throws Exception {
 		PreparedStatement pstmt;
 
-		String sql = "select (count(*) > 0) from information_schema.tables where table_name = ? ";
+		String sql = "select (count(*) > 0) from information_schema.tables where table_name = ?; ";
 		pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setString(1, tableName);
 
@@ -35,7 +35,7 @@ public class DDL {
 		pstmt.close();
 
 		if (exists) {
-			pstmt = connection.prepareStatement("DROP TABLE " + tableName);
+			pstmt = connection.prepareStatement("DROP TABLE " + tableName + "; ");
 			pstmt.execute();
 			pstmt.close();
 		}

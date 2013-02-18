@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.gov.frameworkdemoiselle.internal.configuration.JdbcConfig;
+import br.gov.frameworkdemoiselle.internal.configuration.JDBCConfig;
 import br.gov.frameworkdemoiselle.junit.DemoiselleRunner;
 import br.gov.frameworkdemoiselle.util.Beans;
 import business.RouteBC;
@@ -23,7 +23,7 @@ import business.RouteBC;
 public class RotaTest {
 
 	@Inject
-	RouteBC rotaBC;
+	private RouteBC rotaBC;
 
 	// @Test
 	// public void xx() {
@@ -44,13 +44,30 @@ public class RotaTest {
 	// // }
 	//
 	// }
-	
+
+	class H {
+
+		private String x;
+
+		public H(String x) {
+			this.x = x;
+		}
+
+		public String getX() {
+			return x;
+		}
+
+		public void setX(String x) {
+			this.x = x;
+		}
+	}
+
 	@Test
 	public void xxxxxx() {
-		JdbcConfig config = Beans.getReference(JdbcConfig.class);
+		JDBCConfig config = Beans.getReference(JDBCConfig.class);
 		Map<String, String> map = config.getJndiName();
 
-		System.out.println(map);
+		// System.out.println(map);
 	}
 
 	@Test
@@ -62,6 +79,6 @@ public class RotaTest {
 		Map<String, String> map = new HashMap<String, String>();
 		map = mapper.readValue("{\"nome\": \"valor\"}", map.getClass());
 
-		System.out.println(map.get("nome"));
+		// System.out.println(map.get("nome"));
 	}
 }
