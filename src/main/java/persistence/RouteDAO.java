@@ -27,7 +27,7 @@ public class RouteDAO implements Serializable {
 	// @Name("default")
 	private Connection connection;
 
-	@Transactional
+	//@Transactional
 	public void insert(Route rota) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into routes (description, username, geom) ");
@@ -73,13 +73,10 @@ public class RouteDAO implements Serializable {
 	public List<Route> find(Coordinate coord, Integer radius) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id, description, username from routes ");
-		sql.append("where intersects(geom,buffer(geomfromtext('POINT(? ?)', 4326), round(((? * 0.00001) / 1.11),5), 8)");
-
+		sql.append("where intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " " + coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 
-		pstmt.setDouble(1, coord.getLatitude());
-		pstmt.setDouble(2, coord.getLongitude());
-		pstmt.setInt(3, radius);
+		pstmt.setInt(1, radius);
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();
