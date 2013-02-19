@@ -92,7 +92,7 @@ function addMarker(location, _radius) {
 		draggable : true
 	});
 
-	getAddress(location.Ya, location.Za);
+	getAddress(location.lat(), location.lng());
 
 	var circleOptions = {
 		strokeColor : "#FF0000",
@@ -180,8 +180,7 @@ function getCoordsFromRouteBetweenPoints(start, end, callback) {
 	directionsService.route(request, function(response, status) {
 		var coords;
 		if (status == google.maps.DirectionsStatus.OK) {
-			coords = google.maps.geometry.encoding
-					.decodePath(response.routes[0].overview_polyline.points);
+			coords = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline.points);
 			callback(coords);
 		}
 	});
@@ -192,7 +191,7 @@ function saveRoute(name, start, end){
 	getCoordsFromRouteBetweenPoints(start, end, function (coords) {
     var coordenadas = new Array();
     for (var i = 0; i < coords.length; i++) {
-      coordenadas.push(new Coord(coords[i].Ya, coords[i].Za));
+      coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
     }
     
     var rota = new Route(name, user, coordenadas);

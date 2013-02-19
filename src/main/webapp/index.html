@@ -39,8 +39,8 @@
 
     	  $("#bt-pesquisar").button().click(function(){
     		  $('#table-pesquisa tbody > tr').remove();
-					var lat = markersArray[0].position.Ya;
-    	  	var lng = markersArray[0].position.Za;
+					var lat = markersArray[0].position.lat();
+    	  	var lng = markersArray[0].position.lng();
 					var radius = $("#radius").val();
 
 		    	$.ajax({
