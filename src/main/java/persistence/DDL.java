@@ -15,10 +15,12 @@ public class DDL {
 	private Connection connection;
 
 	@Startup
-	//@Transactional
+	@Transactional
 	public void dropAndCreate() throws Exception {
 		dropTableIfExists("routes");
+		dropTableIfExists("schedules");
 		createTableRoutes();
+		createTableSchedules();
 	}
 
 	private void dropTableIfExists(String tableName) throws Exception {
@@ -52,6 +54,22 @@ public class DDL {
 		sql.append("CONSTRAINT routes_pk PRIMARY KEY (id) ");
 		sql.append("); ");
 
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.execute();
+		pstmt.close();
+	}
+	
+	private void createTableSchedules() throws Exception {
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("CREATE TABLE schedules ( ");
+		sql.append("	id serial NOT NULL, ");
+		sql.append("	route_id integer NOT NULL, ");
+		sql.append("	weekday integer NOT NULL, ");
+		sql.append("	hour time NOT NULL, ");
+		sql.append("CONSTRAINT schedules_pk PRIMARY KEY (id) ");
+		sql.append("); ");
+		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.execute();
 		pstmt.close();

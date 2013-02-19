@@ -27,7 +27,7 @@ public class RouteDAO implements Serializable {
 	// @Name("default")
 	private Connection connection;
 
-	//@Transactional
+	@Transactional
 	public void insert(Route rota) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into routes (description, username, geom) ");
