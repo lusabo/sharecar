@@ -190,6 +190,7 @@ function loadRoute(routeId) {
  */
 function showRouteBetweenPoints(start, end) {
 
+	deleteOverlays(pathsArray);
 	directionsDisplay.setMap(map);
 
 	var request = {
@@ -205,57 +206,28 @@ function showRouteBetweenPoints(start, end) {
 	});
 }
 
-/*
- * Retorna as coordenadas da rota entre dois pontos
- */
-function getCoordsFromRouteBetweenPoints(start, end, callback) {
-	
-	var directionsService = new google.maps.DirectionsService();
-	
-	var request = {
-		origin : start,
-		destination : end,
-		travelMode : google.maps.DirectionsTravelMode.DRIVING
-	};
-	
-	directionsService.route(request, function(response, status) {
-		var coords;
-		if (status == google.maps.DirectionsStatus.OK) {
-			coords = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline.points);
-			callback(coords);
-		}
-	});
-}
+function saveRoute(name){
 
-//function saveRoute(name, start, end, weekdays, hour){
-function saveRoute(name, start, end){
-	getCoordsFromRouteBetweenPoints(start, end, function (coords) {
-    
-		var coordenadas = new Array();
-		//var _weekdays = new Array();
-		
-		for (var i = 0; i < coords.length; i++) {
-			coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
+	// Pega a rota atual, mesmo depois de ter sido mudada manualmente
+	var coords = google.maps.geometry.encoding.decodePath(directionsDisplay.getDirections().routes[0].overview_polyline.points);
+	var coordenadas = new Array();
+	
+	for (var i = 0; i < coords.length; i++) {
+		coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
+	}
+	
+	var route = new Route(name, user, coordenadas);
+
+	$.ajax({
+		type: "PUT",
+		url: "http://localhost:8080/sharecar/api/route",
+		data: JSON.stringify(route),
+		dataType: "json",
+		contentType: "application/json;charset=UTF-8",
+		success: function () {
+			alert('Rota salva com sucesso.');
+			loadRoutesTable();
 		}
-    
-		//for (var i = 0; i < weekdays.length; i++) {
-		//	_weekdays.push(weekdays[i].value);
-		//}
-		
-		//var route = new Route(name, user, coordenadas, _weekdays, hour);
-		var route = new Route(name, user, coordenadas);
-    	
-	    $.ajax({
-	      type: "PUT",
-	      url: "http://localhost:8080/sharecar/api/route",
-	      data: JSON.stringify(route),
-	      dataType: "json",
-	      contentType: "application/json;charset=UTF-8",
-	      success: function () {
-	        alert('Rota salva com sucesso.');
-	        loadRoutesTable();
-	      }
-	    });
 	});
 }
 

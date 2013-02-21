@@ -9,13 +9,15 @@
       <script src="js/jquery-ui-1.9.2.custom.js" type="text/javascript"></script>
       <script src="js/globalize.js" type="text/javascript"></script>
       <script src="js/globalize-de.js" type="text/javascript"></script>
+      <script src="js/timespinner.js" type="text/javascript"></script>
       <script src="js/main.js" type="text/javascript"></script>
       <script>
       $(function () {
 
     	  loadMapCenteredWithUserGeolocation();
-
     	  loadRoutesTable();
+
+    	  // JQuery
     	  
     	  $("#accordion").accordion({
     	    heightStyle: "fill",
@@ -44,40 +46,21 @@
     	  $("#bt-pesquisar").button().click(function(){
     		  loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
 				});
-    	  
-    	  $.widget("ui.timespinner", $.ui.spinner, {
-    	    options: {
-    	      // 30 minutos
-    	      step: 1800 * 1000,
-    	      // 1 hora
-    	      page: 60
-    	    },
-    	    
-    	    _parse: function (value) {
-    	      if (typeof value === "string") {
-    	        // already a timestamp
-    	        if (Number(value) == value) {
-    	          return Number(value);
-    	        }
-    	        return +Globalize.parseDate(value);
-    	      }
-    	      return value;
-    	    },
-    	    
-    	    _format: function (value) {
-    	      return Globalize.format(new Date(value), "t");
-    	    }
-    	  });
+
     	  Globalize.culture("de-DE");
     	  $("#hora-ini, #hora-fim, #hour").timespinner();
 
-    		//Gatilhos
     		
     		// Ao clicar no mapa é adicionado um marcador
     	  google.maps.event.addListener(map, 'click', function(event) {
     	  	addMarker(event.latLng, $("#radius").val());
     	  });
-    	  
+
+				// Ao alterar a rota
+    		google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+//    	  	console.log(directionsDisplay.getDirections());
+    	  });
+
     	  // Mostra a rota no mapa após clicar no ícone da tabela de rotas
     	  $("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
     		  loadRoute($(this).attr("route"))
