@@ -28,40 +28,21 @@
     	    max: 1000,
     	    step: 50,
     	    slide: function (event, ui) {
-    	      $("#radius").val(ui.value);
-    	      circlesArray[0].setRadius(ui.value);
+        	  if(circlesArray.length > 0){
+    	      	$("#radius").val(ui.value);
+    	      	circlesArray[0].setRadius(ui.value);
+        	  } else {
+							return false;
+            }
     	    }
     	  });
     	  
     	  $("#radius").val($("#slider").slider("value"));
 
-    	  $("#radio").buttonset();
+    	  $("#radio, #weekday").buttonset();
 
     	  $("#bt-pesquisar").button().click(function(){
-    		  $('#table-pesquisa tbody > tr').remove();
-					var lat = markersArray[0].position.lat();
-    	  	var lng = markersArray[0].position.lng();
-					var radius = $("#radius").val();
-
-		    	$.ajax({
-    				url : "http://localhost:8080/sharecar/api/route/" + lat + "/" + lng + "/" + radius,
-    				success : function(data) {
-    					 $.each(data,
-    					        function (key, val) {
-    					                var tr = '';
-    					                tr += '<tr>';
-    					                tr += '<td width="24px">';
-    					                tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-    					                tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
-    					                tr += '</a>';
-    					                tr += '</td>';
-    					                tr += '<td>' + val.description + '</td>';
-    					                tr += '</tr>';
-    					                $("#table-pesquisa > tbody:last").append(tr);
-    					            });
-    				},
-    				dataType : 'json'
-    			});
+    		  loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
 				});
     	  
     	  $.widget("ui.timespinner", $.ui.spinner, {
@@ -88,7 +69,7 @@
     	    }
     	  });
     	  Globalize.culture("de-DE");
-    	  $("#hora-ini, #hora-fim").timespinner();
+    	  $("#hora-ini, #hora-fim, #hour").timespinner();
 
     		//Gatilhos
     		
@@ -108,12 +89,13 @@
     	  google.maps.event.addListener(ptoChegada, 'place_changed', function () {
     		  showRouteBetweenPoints($("#start").val(), $("#end").val());
     	  });
-    	  
+
     	  // Salva a rota
     	  // TODO: Ajustar para quando o usuário alterar a rota
     	  // TODO: Verificar campos obrigatórios
     	  $("#btSalvar").click(function () {
-					saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
+        	 //saveRoute($("#route-name").val(), $("#start").val(), $("#end").val(), $("input:checked[name=weekday]"), $("#hour").val());
+    		  saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
 				});
           
     	});
@@ -130,25 +112,26 @@
                <input id="start" style="width: 100%" value=""  required /><br /> 
                <label for="end">Ponto de Chegada:</label><br /> 
                <input id="end" style="width: 100%" value="" required /><br />
-               <input type="button" id="btSalvar" value="Salvar" />
 
-               <!--p>
-                  <label for="radio">Dia da Semana</label><br/>
-               		<div id="radio">
-                  	<input type="radio" id="radio1" name="radio" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
-                  	<input type="radio" id="radio2" name="radio" /><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
-                  	<input type="radio" id="radio3" name="radio" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
-                  	<input type="radio" id="radio4" name="radio" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
-                  	<input type="radio" id="radio5" name="radio" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
-                  	<input type="radio" id="radio6" name="radio" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
-                  	<input type="radio" id="radio7" name="radio" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
+               <p>
+                  <label for="weekday">Dia da Semana</label><br/>
+               		<div id="weekday">
+                  	<input type="checkbox" id="weekday1" name="weekday" value="1"/><label for="weekday1" style="font-size:10pt; width:50px;">Dom</label>
+                  	<input type="checkbox" id="weekday2" name="weekday" value="2"/><label for="weekday2" style="font-size:10pt; width:50px;">Seg</label>
+                  	<input type="checkbox" id="weekday3" name="weekday" value="3"/><label for="weekday3" style="font-size:10pt; width:50px;">Ter</label>
+                  	<input type="checkbox" id="weekday4" name="weekday" value="4"/><label for="weekday4" style="font-size:10pt; width:50px;">Qua</label>
+                  	<input type="checkbox" id="weekday5" name="weekday" value="5"/><label for="weekday5" style="font-size:10pt; width:50px;">Qui</label>
+                  	<input type="checkbox" id="weekday6" name="weekday" value="6"/><label for="weekday6" style="font-size:10pt; width:50px;">Sex</label>
+                  	<input type="checkbox" id="weekday7" name="weekday" value="7"/><label for="weekday7" style="font-size:10pt; width:50px;">Sáb</label>
                		</div>
                </p>
                
                <p>
                   <label>Horário</label><br/>	
                   <input id="hour" name="hour" value="08:00" style="width: 60px" readonly />
-               </p-->
+               </p>
+               
+               <input type="button" id="btSalvar" value="Salvar" />
                
                <br /><br />
                <table id="table-rotas" class="table table-bordered">

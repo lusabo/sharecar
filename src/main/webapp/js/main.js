@@ -8,22 +8,24 @@ function Coord(lat, lng) {
 	this.lng = lng;
 }
 
-function Route(description, user, coords) {
+function Route(description, user, coords, weekday, hour) {
 	this.description = description;
 	this.user = user;
 	this.coords = coords;
+	this.weekday = weekday;
+	this.hour = hour;
 }
 
 // Variávei Globais
 var circlesArray = new Array();
+var rendererOptions = {
+	draggable : true
+};
 var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
 var directionsService = new google.maps.DirectionsService();
 var map;
 var markersArray = new Array();
 var pathsArray = new Array();
-var rendererOptions = {
-		draggable : true
-};
 var user = new User("93579551515");
 
 // Funções de Negócio
@@ -34,7 +36,8 @@ var user = new User("93579551515");
 function loadMapCenteredWithUserGeolocation() {
     var mapOptions = {
         zoom: 14,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        draggable: true
     };
     var pos;
 
@@ -58,8 +61,7 @@ function loadRoutesTable() {
         url: "http://localhost:8080/sharecar/api/route",
         dataType: "json",
         success: function (data) {
-            $.each(
-            data,
+            $.each( data,
             function (key, val) {
                 var tr = '';
                 tr += '<tr>';
@@ -77,23 +79,64 @@ function loadRoutesTable() {
     });
 }
 
+function loadSearchRoutesTable(lat, lng, radius){
+	$('#table-pesquisa tbody > tr').remove();
+	$.ajax({
+		type: "GET",
+		url : "http://localhost:8080/sharecar/api/route/" + lat + "/" + lng + "/" + radius,
+		dataType : 'json',
+		success : function(data) {
+			 $.each(data,
+			        function (key, val) {
+			                var tr = '';
+			                tr += '<tr>';
+			                tr += '<td width="24px">';
+			                tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
+			                tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+			                tr += '</a>';
+			                tr += '</td>';
+			                tr += '<td>' + val.description + '</td>';
+			                tr += '</tr>';
+			                $("#table-pesquisa > tbody:last").append(tr);
+			            });
+		}
+	});
+}
 /*
  * Adiciona um marcador no mapa com o raio definido pelo usuário
  */
 function addMarker(location, _radius) {
 	// Remove todas as marcações
 	deleteOverlays(markersArray);
-	deleteOverlays(circlesArray);
 	deleteOverlays(pathsArray);
 
-	marker = new google.maps.Marker({
+	var marker = new google.maps.Marker({
 		position : location,
 		map : map,
 		draggable : true
 	});
-
+	
+	var radius = _radius;
+	
 	getAddress(location.lat(), location.lng());
+	addCircle(location, radius);
+	markersArray.push(marker);
+	
+	google.maps.event.addListener(marker, 'dragstart', function () {
+		radius =  circlesArray[0].getRadius();
+		deleteOverlays(pathsArray);
+		deleteOverlays(circlesArray);
+	});
 
+	google.maps.event.addListener(marker, 'dragend', function (position) {
+		addCircle(position.latLng, radius);
+		getAddress(position.latLng.lat(), position.latLng.lng());
+		loadSearchRoutesTable(position.latLng.lat(), position.latLng.lng(), radius);
+	});
+}
+
+function addCircle(location, _radius){
+	deleteOverlays(circlesArray);
 	var circleOptions = {
 		strokeColor : "#FF0000",
 		strokeOpacity : 0.8,
@@ -106,8 +149,6 @@ function addMarker(location, _radius) {
 	};
 
 	circle = new google.maps.Circle(circleOptions);
-
-	markersArray.push(marker);
 	circlesArray.push(circle);
 }
 
@@ -186,27 +227,36 @@ function getCoordsFromRouteBetweenPoints(start, end, callback) {
 	});
 }
 
+//function saveRoute(name, start, end, weekdays, hour){
 function saveRoute(name, start, end){
-  	
 	getCoordsFromRouteBetweenPoints(start, end, function (coords) {
-    var coordenadas = new Array();
-    for (var i = 0; i < coords.length; i++) {
-      coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
-    }
     
-    var rota = new Route(name, user, coordenadas);
-    $.ajax({
-      type: "PUT",
-      url: "http://localhost:8080/sharecar/api/route",
-      data: JSON.stringify(rota),
-      dataType: "json",
-      contentType: "application/json;charset=UTF-8",
-      success: function () {
-        alert('Rota salva com sucesso.');
-        loadRoutesTable();
-      }
-    });
-  });
+		var coordenadas = new Array();
+		//var _weekdays = new Array();
+		
+		for (var i = 0; i < coords.length; i++) {
+			coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
+		}
+    
+		//for (var i = 0; i < weekdays.length; i++) {
+		//	_weekdays.push(weekdays[i].value);
+		//}
+		
+		//var route = new Route(name, user, coordenadas, _weekdays, hour);
+		var route = new Route(name, user, coordenadas);
+    	
+	    $.ajax({
+	      type: "PUT",
+	      url: "http://localhost:8080/sharecar/api/route",
+	      data: JSON.stringify(route),
+	      dataType: "json",
+	      contentType: "application/json;charset=UTF-8",
+	      success: function () {
+	        alert('Rota salva com sucesso.');
+	        loadRoutesTable();
+	      }
+	    });
+	});
 }
 
 // Funções Utilitárias
