@@ -12,11 +12,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
+import br.gov.frameworkdemoiselle.security.SecurityContext;
+import br.gov.frameworkdemoiselle.util.Beans;
 import business.RouteBC;
 import entity.Coordinate;
 import entity.Route;
+import entity.User;
 
 @Path("/route")
 public class RouteService {
@@ -40,7 +42,7 @@ public class RouteService {
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> findAll() throws Exception {
-		return routeBC.findAll();
+		return routeBC.find(getCurrentUser());
 	}
 
 	@GET
@@ -56,5 +58,10 @@ public class RouteService {
 	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
 			@PathParam("radius") Integer radius) throws Exception {
 		return routeBC.find(new Coordinate(latitude, longitude), radius);
+	}
+
+	private User getCurrentUser() {
+		SecurityContext securityContext = Beans.getReference(SecurityContext.class);
+		return new User(securityContext.getUser().getId());
 	}
 }

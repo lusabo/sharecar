@@ -34,7 +34,6 @@ public class RouteDAO implements Serializable {
 		sql.append("values (?, ?, geomfromtext(?, 4326))");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-
 		pstmt.setString(1, rota.getDescription());
 		pstmt.setString(2, rota.getUser().getUsername());
 		pstmt.setString(3, parse(rota.getCoords()));
@@ -47,11 +46,13 @@ public class RouteDAO implements Serializable {
 		return null;
 	}
 
-	public List<Route> findAll() throws Exception {
+	public List<Route> find(User user) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select id, description from routes");
+		sql.append("select id, description from routes ");
+		sql.append("where username = ? ");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setString(1, user.getUsername());
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();
@@ -70,12 +71,36 @@ public class RouteDAO implements Serializable {
 		return result;
 	}
 
+	// public List<Route> findAll() throws Exception {
+	// StringBuffer sql = new StringBuffer();
+	// sql.append("select id, description from routes");
+	//
+	// PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+	//
+	// ResultSet rs = pstmt.executeQuery();
+	// List<Route> result = new ArrayList<Route>();
+	//
+	// while (rs.next()) {
+	// Route route = new Route();
+	//
+	// route.setId(rs.getInt("id"));
+	// route.setDescription(rs.getString("description"));
+	//
+	// result.add(route);
+	// }
+	// rs.close();
+	// pstmt.close();
+	//
+	// return result;
+	// }
+
 	public List<Route> find(Coordinate coord, Integer radius) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id, description, username from routes ");
-		sql.append("where intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " " + coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
+		sql.append("where intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " "
+				+ coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
+		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-
 		pstmt.setInt(1, radius);
 
 		ResultSet rs = pstmt.executeQuery();
@@ -102,7 +127,6 @@ public class RouteDAO implements Serializable {
 		sql.append("from routes where id = ?");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-
 		pstmt.setInt(1, id);
 
 		ResultSet rs = pstmt.executeQuery();

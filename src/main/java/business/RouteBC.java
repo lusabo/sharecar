@@ -8,6 +8,7 @@ import persistence.RouteDAO;
 import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 import entity.Coordinate;
 import entity.Route;
+import entity.User;
 
 @BusinessController
 public class RouteBC {
@@ -23,8 +24,12 @@ public class RouteBC {
 		return routeDAO.load(id);
 	}
 
-	public List<Route> findAll() throws Exception {
-		return routeDAO.findAll();
+	// public List<Route> findAll() throws Exception {
+	// return routeDAO.findAll();
+	// }
+
+	public List<Route> find(User user) throws Exception {
+		return routeDAO.find(user);
 	}
 
 	public List<Route> find(Coordinate coord, Integer radius) throws Exception {

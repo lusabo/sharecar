@@ -4,7 +4,7 @@
     <title>Google Maps JavaScript API v3 Example: Map Simple</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
- 		<link rel="stylesheet" type="text/css" href="css/login.css" />    
+ 	<link rel="stylesheet" type="text/css" href="css/login.css" />
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
       var map;
@@ -30,11 +30,11 @@
   </head>
   <body>
 		<div id="mapa"></div>
-		<form class="form" action="home.html">
+		<form class="form" action="api/auth" method="POST">
 			<h1><span class="log-in">Log in</span></h1>
 		    <p class="float">
 		        <label for="login"><i class="icon-user"></i>CPF</label>
-		        <input type="text" name="login" placeholder="CPF" maxlength="11">
+		        <input type="text" name="username" placeholder="CPF" maxlength="11">
 		    </p>
 		    <p class="float">
 		        <label for="password"><i class="icon-lock"></i>Senha</label>
