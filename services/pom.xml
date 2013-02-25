@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.gov.serpro</groupId>
-	<artifactId>sharecar</artifactId>
+	<artifactId>sharecar-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
