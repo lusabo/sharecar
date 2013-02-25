@@ -22,31 +22,8 @@
 
 	<filter-mapping>
 		<filter-name>Resteasy Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-		<init-param>
-			<param-name>logLevel</param-name>
-			<param-value>DEBUG</param-value>
-		</init-param>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-		<!--
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-		-->
 	</filter-mapping>
-
-	<context-param>
-		<param-name>resteasy.servlet.mapping.prefix</param-name>
-		<param-value>/api</param-value>
-	</context-param>
 
 	<context-param>
 		<param-name>resteasy.scan</param-name>
@@ -56,8 +33,7 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>restricted area</web-resource-name>
-			<url-pattern>/home</url-pattern>
-			<url-pattern>/api/route</url-pattern>
+			<url-pattern>/route</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>*</role-name>
@@ -65,12 +41,8 @@
 	</security-constraint>
 
 	<login-config>
-		<auth-method>FORM</auth-method>
+		<auth-method>BASIC</auth-method>
 		<realm-name>other</realm-name>
-		<form-login-config>
-			<form-login-page>/login.html</form-login-page>
-			<form-error-page>/login.html</form-error-page>
-		</form-login-config>
 	</login-config>
 
 	<security-role>

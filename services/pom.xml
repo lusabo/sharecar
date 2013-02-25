@@ -39,22 +39,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.tuckey</groupId>
-			<artifactId>urlrewritefilter</artifactId>
-			<version>4.0.3</version>
+			<groupId>org.jboss.spec.javax.ws.rs</groupId>
+			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+			<scope>provided</scope>
 		</dependency>
-
-		<!-- 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<scope>provided</scope>
-		</dependency>
- 		-->
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.ws.rs</groupId>
-			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
