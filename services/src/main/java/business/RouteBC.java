@@ -16,8 +16,8 @@ public class RouteBC {
 	@Inject
 	private RouteDAO routeDAO;
 
-	public void insert(Route route) throws Exception {
-		routeDAO.insert(route);
+	public void insert(Route route, User user) throws Exception {
+		routeDAO.insert(route, user);
 	}
 
 	public Route load(Integer id) throws Exception {
@@ -32,7 +32,7 @@ public class RouteBC {
 		return routeDAO.find(user);
 	}
 
-	public List<Route> find(Coordinate coord, Integer radius) throws Exception {
-		return routeDAO.find(coord, radius);
+	public List<Route> find(Coordinate coord, Integer radius, User user) throws Exception {
+		return routeDAO.find(coord, radius, user);
 	}
 }

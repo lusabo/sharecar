@@ -39,6 +39,7 @@
 		<web-resource-collection>
 			<web-resource-name>restricted area</web-resource-name>
 			<url-pattern>/api/route</url-pattern>
+			<url-pattern>/api/route/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>*</role-name>

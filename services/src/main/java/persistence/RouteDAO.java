@@ -28,14 +28,14 @@ public class RouteDAO implements Serializable {
 	private Connection connection;
 
 	@Transactional
-	public void insert(Route rota) throws Exception {
+	public void insert(Route rota, User user) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into routes (description, username, geom) ");
 		sql.append("values (?, ?, geomfromtext(?, 4326))");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setString(1, rota.getDescription());
-		pstmt.setString(2, rota.getUser().getUsername());
+		pstmt.setString(2, user.getUsername());
 		pstmt.setString(3, parse(rota.getCoords()));
 
 		pstmt.execute();
@@ -94,14 +94,15 @@ public class RouteDAO implements Serializable {
 	// return result;
 	// }
 
-	public List<Route> find(Coordinate coord, Integer radius) throws Exception {
+	public List<Route> find(Coordinate coord, Integer radius, User user) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id, description, username from routes ");
-		sql.append("where intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " "
-				+ coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
+		sql.append("where username != ? and ");
+		sql.append("intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " " + coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
 		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-		pstmt.setInt(1, radius);
+		pstmt.setString(1, user.getUsername());
+		pstmt.setInt(2, radius);
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();

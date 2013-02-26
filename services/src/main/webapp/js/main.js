@@ -1,16 +1,11 @@
 // Classes
-function User(username) {
-	this.username = username;
-}
-
 function Coord(lat, lng) {
 	this.lat = lat;
 	this.lng = lng;
 }
 
-function Route(description, user, coords, weekday, hour) {
+function Route(description, coords, weekday, hour) {
 	this.description = description;
-	this.user = user;
 	this.coords = coords;
 	this.weekday = weekday;
 	this.hour = hour;
@@ -26,7 +21,6 @@ var directionsService = new google.maps.DirectionsService();
 var map;
 var markersArray = new Array();
 var pathsArray = new Array();
-var user = new User("93579551515");
 
 // Funções de Negócio
 
@@ -58,7 +52,7 @@ function loadRoutesTable() {
     $('#table-rotas tbody > tr').remove();
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/sharecar/api/route",
+        url: "api/route",
         dataType: "json",
         success: function (data) {
             $.each( data,
@@ -72,8 +66,7 @@ function loadRoutesTable() {
                 tr += '</td>';
                 tr += '<td>' + val.description + '</td>';
                 tr += '</tr>';
-                $("#table-rotas > tbody:last").append(
-                tr);
+                $("#table-rotas > tbody:last").append(tr);
             });
         }
     });
@@ -83,7 +76,7 @@ function loadSearchRoutesTable(lat, lng, radius){
 	$('#table-pesquisa tbody > tr').remove();
 	$.ajax({
 		type: "GET",
-		url : "http://localhost:8080/sharecar/api/route/" + lat + "/" + lng + "/" + radius,
+		url : "api/route/" + lat + "/" + lng + "/" + radius,
 		dataType : 'json',
 		success : function(data) {
 			 $.each(data,
@@ -96,6 +89,7 @@ function loadSearchRoutesTable(lat, lng, radius){
 			                tr += '</a>';
 			                tr += '</td>';
 			                tr += '<td>' + val.description + '</td>';
+			                tr += '<td>' + val.user.username + '</td>';
 			                tr += '</tr>';
 			                $("#table-pesquisa > tbody:last").append(tr);
 			            });
@@ -160,7 +154,7 @@ function loadRoute(routeId) {
 	directionsDisplay.setMap(null);
 	$.ajax({
 		type : "GET",
-		url : "http://localhost:8080/sharecar/api/route/" + routeId,
+		url : "api/route/" + routeId,
 		dataType : "json",
 		success : function(data) {
 
@@ -216,11 +210,11 @@ function saveRoute(name){
 		coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
 	}
 	
-	var route = new Route(name, user, coordenadas);
+	var route = new Route(name, coordenadas);
 
 	$.ajax({
 		type: "PUT",
-		url: "http://localhost:8080/sharecar/api/route",
+		url: "api/route",
 		data: JSON.stringify(route),
 		dataType: "json",
 		contentType: "application/json;charset=UTF-8",

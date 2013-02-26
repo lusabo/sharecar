@@ -58,7 +58,7 @@
 
 				// Ao alterar a rota
     		google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
-//    	  	console.log(directionsDisplay.getDirections());
+				// console.log(directionsDisplay.getDirections());
     	  });
 
     	  // Mostra a rota no mapa após clicar no ícone da tabela de rotas
@@ -162,10 +162,14 @@
                <table id="table-pesquisa" class="table table-bordered">
                   <thead>
                      <tr>
-                        <th class="ui-widget-header" colspan="2">Rotas Encontradas</th>
+                        <th class="ui-widget-header" colspan="3">Rotas Encontradas</th>
                      </tr>
                   </thead>
-                  <tbody></tbody>
+                  <tbody>
+                 		<tr>
+                       <td colspan="3">Nenhuma rota</th>
+                    </tr>
+                  </tbody>
                </table>
             </div>
          </div>

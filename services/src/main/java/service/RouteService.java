@@ -29,15 +29,15 @@ public class RouteService {
 	@PUT
 	@Consumes(JSON_MEDIA_TYPE)
 	public void create(Route route) throws Exception {
-		routeBC.insert(route);
+		routeBC.insert(route, getCurrentUser());
 	}
 
-	@POST
-	@Path("/{id}")
-	@Consumes(JSON_MEDIA_TYPE)
-	public void update(@PathParam("id") Integer id, Route route) throws Exception {
-		routeBC.insert(route);
-	}
+//	@POST
+//	@Path("/{id}")
+//	@Consumes(JSON_MEDIA_TYPE)
+//	public void update(@PathParam("id") Integer id, Route route) throws Exception {
+//		routeBC.insert(route, getCurrentUser());
+//	}
 
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
@@ -57,7 +57,7 @@ public class RouteService {
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
 			@PathParam("radius") Integer radius) throws Exception {
-		return routeBC.find(new Coordinate(latitude, longitude), radius);
+		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser());
 	}
 
 	private User getCurrentUser() {
