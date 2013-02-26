@@ -6,6 +6,7 @@
 <script>
 
 	$(document).ready(function(){
+		
 		$("#b1").click(function(){
 			$.ajax({
 				url: "api/auth",
@@ -23,15 +24,25 @@
 		});
 		
 		$("#b2").click(function(){
+			$.ajaxSetup({
+				headers: {
+					'Authorization': "Basic XXXXX"
+				}
+			});
+
 			$.ajax({
 				url: "api/route",
 				type: "get",
-				username: "aaaaa",
-				password: "bbbbb",
+				//username: "80342167553",
+				//password: "123456",
 				//data: null,
+				assync: false,
 				success: function(){
 					alert("success");
 				},
+		        beforeSend : function(req) {
+		            req.setRequestHeader('Authorization', 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='); // <<<<----- USED HERE
+		        },
 				statusCode: {
 					401: function() {
 						alert("falha de autenticação");
