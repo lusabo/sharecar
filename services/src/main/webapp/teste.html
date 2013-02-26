@@ -26,8 +26,8 @@
 			$.ajax({
 				url: "api/route",
 				type: "get",
-				username: ".",
-				password: ".",
+				username: "aaaaa",
+				password: "bbbbb",
 				//data: null,
 				success: function(){
 					alert("success");
@@ -37,7 +37,7 @@
 						alert("falha de autenticação");
 					},
 					403: function() {
-						alert("falha de autenticação");
+						alert("não autorizado");
 					}
 				}
 			});
