@@ -22,8 +22,13 @@
 
 	<filter-mapping>
 		<filter-name>Resteasy Filter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
+
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/api</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>resteasy.scan</param-name>
@@ -33,7 +38,7 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>restricted area</web-resource-name>
-			<url-pattern>/route</url-pattern>
+			<url-pattern>/api/route</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>*</role-name>
