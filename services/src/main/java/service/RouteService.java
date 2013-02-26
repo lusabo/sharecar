@@ -42,6 +42,8 @@ public class RouteService {
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> findAll() throws Exception {
+		
+//		throw new AuthenticationException();
 		return routeBC.find(getCurrentUser());
 	}
 

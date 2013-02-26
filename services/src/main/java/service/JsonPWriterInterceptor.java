@@ -20,7 +20,24 @@ public class JsonPWriterInterceptor implements MessageBodyWriterInterceptor {
 
 	@Override
 	public void write(MessageBodyWriterContext context) throws IOException, WebApplicationException {
+
+		// context.getAttribute("callback");
+
 		String callback = request.getUri().getQueryParameters().getFirst("callback");
+
+		// HttpServletRequest requestx = Beans.getReference(HttpServletRequest.class);
+		//
+		// Enumeration<String> enumeration;
+		//
+		// enumeration = requestx.getAttributeNames();
+		// while (enumeration.hasMoreElements()) {
+		// System.out.println(enumeration.nextElement());
+		// }
+		//
+		// enumeration = requestx.getParameterNames();
+		// while (enumeration.hasMoreElements()) {
+		// System.out.println(enumeration.nextElement());
+		// }
 
 		if (callback != null) {
 			context.getOutputStream().write(callback.getBytes());
