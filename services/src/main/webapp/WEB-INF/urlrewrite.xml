@@ -21,6 +21,23 @@
 	</rule>
 
 	<rule>
+		<from>^/teste$</from>
+		<to>/teste.html</to>
+	</rule>
+
+	<!--
+	<rule>
+		<from>^(?:(?!\.\w+).)*$</from>
+		<to>$1.html</to>
+	</rule>
+
+	<rule>
+		<from>(/api/.+)$</from>
+		<to>$0</to>
+	</rule>
+	-->
+
+	<rule>
 		<from>^/$</from>
 		<to type="redirect">%{context-path}/home</to>
 	</rule>

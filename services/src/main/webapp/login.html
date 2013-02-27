@@ -30,15 +30,15 @@
   </head>
   <body>
 		<div id="mapa"></div>
-		<form class="form" action="api/auth" method="POST">
+		<form class="form" action="j_security_check" method="POST">
 			<h1><span class="log-in">Log in</span></h1>
 		    <p class="float">
 		        <label for="login"><i class="icon-user"></i>CPF</label>
-		        <input type="text" name="username" placeholder="CPF" maxlength="11">
+		        <input id="login" type="text" name="j_username" placeholder="CPF" maxlength="11">
 		    </p>
 		    <p class="float">
 		        <label for="password"><i class="icon-lock"></i>Senha</label>
-		        <input type="password" name="password" placeholder="SENHA" class="showpassword"> 
+		        <input id="password" type="password" name="j_password" placeholder="SENHA" class="showpassword"> 
 		    </p>
 		    <p class="clearfix"> 
 		        <input type="submit" name="submit" value="Entrar">

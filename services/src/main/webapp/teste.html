@@ -11,7 +11,7 @@
 			$.ajax({
 				url: "api/auth",
 				type: "post",
-				//data: null,
+				data: "{'username': 'guest', 'password': '123456'}",
 				success: function(){
 					alert("success");
 				},
