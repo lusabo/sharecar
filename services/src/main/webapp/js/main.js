@@ -65,6 +65,16 @@ function loadRoutesTable() {
                 tr += '</a>';
                 tr += '</td>';
                 tr += '<td>' + val.description + '</td>';
+                tr += '<td width="24px">';
+                tr += '<a href="#" name="sched-' + val.id + '" route="' + val.id + '">';
+                tr += '<img src="img/calendar.png" style="height: 24px; width: 24px;" border="0" title="Disponibilizar rota">';
+                tr += '</a>';
+                tr += '</td>';
+                tr += '<td width="24px">';
+                tr += '<a href="#" name="del-' + val.id + '" route="' + val.id + '">';
+                tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
+                tr += '</a>';
+                tr += '</td>';
                 tr += '</tr>';
                 $("#table-rotas > tbody:last").append(tr);
             });
@@ -225,6 +235,17 @@ function saveRoute(name){
 	});
 }
 
+function deleteRoute(routeId){
+	deleteOverlays(pathsArray);
+	$.ajax({
+		type: "DELETE",
+		url : "api/route/" + routeId,
+		success: function () {
+			loadRoutesTable();
+			alert('Rota removida com sucesso.');
+		}
+	});
+}
 // Funções Utilitárias
 
 /*

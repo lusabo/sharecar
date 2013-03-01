@@ -23,6 +23,10 @@ public class RouteBC {
 	public Route load(Integer id) throws Exception {
 		return routeDAO.load(id);
 	}
+	
+	public void delete(Integer id) throws Exception {
+		routeDAO.delete(id);
+	}
 
 	// public List<Route> findAll() throws Exception {
 	// return routeDAO.findAll();

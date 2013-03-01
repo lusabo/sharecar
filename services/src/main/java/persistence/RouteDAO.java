@@ -147,6 +147,17 @@ public class RouteDAO implements Serializable {
 
 		return result;
 	}
+	
+	@Transactional
+	public void delete(Integer id) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from routes where id = ?");
+		
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setInt(1, id);
+		pstmt.execute();
+		pstmt.close();
+	}
 
 	private String parse(List<Coordinate> coords) {
 		String geometria = "LINESTRING(";

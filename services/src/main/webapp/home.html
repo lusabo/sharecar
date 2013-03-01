@@ -19,6 +19,18 @@
 
     	  // JQuery
     	  
+       	$("#dialog").dialog({
+	       	autoOpen: false,
+	    		buttons: [{ 
+	    			text: "Salvar", 
+	    			click: function() { } 
+	        }],
+	       	height: 400,
+	       	modal: true,
+	       	title: "Dia e Hora da Rota",
+	       	width: 450
+       	});           	  
+    	  
     	  $("#accordion").accordion({
     	    heightStyle: "fill",
     	    active: 1
@@ -65,6 +77,14 @@
     	  $("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
     		  loadRoute($(this).attr("route"))
     	  });
+
+    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='sched-']", "click", function () {
+    	  	$("#dialog").dialog("open");
+    	  });
+
+    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='del-']", "click", function () {
+    		  	deleteRoute($(this).attr("route"));
+    	  });
     	  
     	  // Alterando o ponto de chegada a rota é renderizada
     	  var ptoPartida = new google.maps.places.Autocomplete($("#start")[0]);
@@ -80,7 +100,7 @@
         	 //saveRoute($("#route-name").val(), $("#start").val(), $("#end").val(), $("input:checked[name=weekday]"), $("#hour").val());
     		  saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
 				});
-          
+ 	
     	});
       </script>
    </head>
@@ -95,32 +115,12 @@
                <input id="start" style="width: 100%" value=""  required /><br /> 
                <label for="end">Ponto de Chegada:</label><br /> 
                <input id="end" style="width: 100%" value="" required /><br />
-
-               <p>
-                  <label for="weekday">Dia da Semana</label><br/>
-               		<div id="weekday">
-                  	<input type="checkbox" id="weekday1" name="weekday" value="1"/><label for="weekday1" style="font-size:10pt; width:50px;">Dom</label>
-                  	<input type="checkbox" id="weekday2" name="weekday" value="2"/><label for="weekday2" style="font-size:10pt; width:50px;">Seg</label>
-                  	<input type="checkbox" id="weekday3" name="weekday" value="3"/><label for="weekday3" style="font-size:10pt; width:50px;">Ter</label>
-                  	<input type="checkbox" id="weekday4" name="weekday" value="4"/><label for="weekday4" style="font-size:10pt; width:50px;">Qua</label>
-                  	<input type="checkbox" id="weekday5" name="weekday" value="5"/><label for="weekday5" style="font-size:10pt; width:50px;">Qui</label>
-                  	<input type="checkbox" id="weekday6" name="weekday" value="6"/><label for="weekday6" style="font-size:10pt; width:50px;">Sex</label>
-                  	<input type="checkbox" id="weekday7" name="weekday" value="7"/><label for="weekday7" style="font-size:10pt; width:50px;">Sáb</label>
-               		</div>
-               </p>
-               
-               <p>
-                  <label>Horário</label><br/>	
-                  <input id="hour" name="hour" value="08:00" style="width: 60px" readonly />
-               </p>
-               
-               <input type="button" id="btSalvar" value="Salvar" />
-               
-               <br /><br />
+							 <input type="button" id="btSalvar" value="Salvar" />
+               <br/><br/>
                <table id="table-rotas" class="table table-bordered">
                   <thead>
                      <tr>
-                        <th class="ui-widget-header" colspan="2">Minhas Rotas</th>
+                        <th class="ui-widget-header" colspan="4">Minhas Rotas</th>
                      </tr>
                   </thead>
                   <tbody></tbody>
@@ -175,5 +175,24 @@
          </div>
       </div>
       <div id="mapa"></div>
+      <div id="dialog">
+	     	<p>
+					<label for="weekday">Dia da Semana</label><br/>
+					<div id="weekday">
+						<input type="checkbox" id="weekday1" name="weekday" value="1"/><label for="weekday1" style="font-size:10pt; width:50px;">Dom</label>
+						<input type="checkbox" id="weekday2" name="weekday" value="2"/><label for="weekday2" style="font-size:10pt; width:50px;">Seg</label>
+						<input type="checkbox" id="weekday3" name="weekday" value="3"/><label for="weekday3" style="font-size:10pt; width:50px;">Ter</label>
+						<input type="checkbox" id="weekday4" name="weekday" value="4"/><label for="weekday4" style="font-size:10pt; width:50px;">Qua</label>
+						<input type="checkbox" id="weekday5" name="weekday" value="5"/><label for="weekday5" style="font-size:10pt; width:50px;">Qui</label>
+						<input type="checkbox" id="weekday6" name="weekday" value="6"/><label for="weekday6" style="font-size:10pt; width:50px;">Sex</label>
+						<input type="checkbox" id="weekday7" name="weekday" value="7"/><label for="weekday7" style="font-size:10pt; width:50px;">Sáb</label>
+					</div>
+				</p>
+				<p>
+	   			<label>Horário</label><br/>	
+	   			<input id="hour" name="hour" value="08:00" style="width: 60px" readonly />
+				</p>
+				
+      </div>
    </body>
 </html>

@@ -6,14 +6,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-
-import org.jboss.logging.LoggingClass;
 
 import br.gov.frameworkdemoiselle.security.SecurityContext;
 import br.gov.frameworkdemoiselle.util.Beans;
@@ -52,6 +50,13 @@ public class RouteService {
 	@Produces(JSON_MEDIA_TYPE)
 	public Route find(@PathParam("id") Integer id) throws Exception {
 		return routeBC.load(id);
+	}
+	
+	@DELETE
+	@Path("/{id}")
+	@Produces(JSON_MEDIA_TYPE)
+	public void delete(@PathParam("id") Integer id) throws Exception {
+		routeBC.delete(id);
 	}
 
 	@GET
