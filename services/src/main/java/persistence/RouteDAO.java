@@ -112,7 +112,7 @@ public class RouteDAO implements Serializable {
 
 			route.setId(rs.getInt("id"));
 			route.setDescription(rs.getString("description"));
-			route.setUser(new User(rs.getString("username")));
+			//route.setUser(new User(rs.getString("username")));
 
 			result.add(route);
 		}
@@ -138,7 +138,7 @@ public class RouteDAO implements Serializable {
 
 			result.setId(rs.getInt("id"));
 			result.setDescription(rs.getString("description"));
-			result.setUser(new User(rs.getString("username")));
+			//result.setUser(new User(rs.getString("username")));
 			result.setCoords(parse(rs.getString("json")));
 		}
 

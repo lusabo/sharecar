@@ -18,8 +18,10 @@ public class DDL {
 	@Transactional
 	public void dropAndCreate() throws Exception {
 		dropTableIfExists("routes");
+		dropTableIfExists("users");
 		dropTableIfExists("schedules");
 		createTableRoutes();
+		createTableUsers();
 		createTableSchedules();
 	}
 
@@ -54,6 +56,22 @@ public class DDL {
 		sql.append("CONSTRAINT routes_pk PRIMARY KEY (id) ");
 		sql.append("); ");
 
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.execute();
+		pstmt.close();
+	}
+	
+	
+	private void createTableUsers() throws Exception {
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("CREATE TABLE users ( ");
+		sql.append("	id serial NOT NULL, ");
+		sql.append("	username character varying(11) NOT NULL, ");
+		sql.append("	fullname character varying(255) NULL, ");
+		sql.append("CONSTRAINT users_pk PRIMARY KEY (id) ");
+		sql.append("); ");
+		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.execute();
 		pstmt.close();
