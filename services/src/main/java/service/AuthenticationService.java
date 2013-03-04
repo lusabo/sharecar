@@ -23,7 +23,7 @@ public class AuthenticationService {
 
 	@POST
 	public void login(@FormParam("username") String username, @FormParam("password") String password)
-			throws AuthenticationException, Exception {
+			throws AuthenticationException {
 
 		Credentials credentials = Beans.getReference(Credentials.class);
 		credentials.setUsername(username);
@@ -31,10 +31,14 @@ public class AuthenticationService {
 
 		securityContext.login();
 
-		String currentUsername = securityContext.getUser().getId();
+		String currentUsername = securityContext.getCurrentUser().getName();
 
-		if (userBC.load(currentUsername) == null) {
-			userBC.insert(new User(currentUsername));
+		try {
+			if (userBC.load(currentUsername) == null) {
+				userBC.insert(new User(currentUsername));
+			}
+		} catch (Exception e) {
+			System.out.println(":::: ERRO ::::");
 		}
 
 		if (!securityContext.isLoggedIn()) {
