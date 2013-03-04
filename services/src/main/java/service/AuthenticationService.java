@@ -1,6 +1,7 @@
 package service;
 
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,5 +29,10 @@ public class AuthenticationService {
 		if (!securityContext.isLoggedIn()) {
 			throw new AuthenticationException();
 		}
+	}
+
+	@DELETE
+	public void logout() throws AuthenticationException {
+		securityContext.logout();
 	}
 }

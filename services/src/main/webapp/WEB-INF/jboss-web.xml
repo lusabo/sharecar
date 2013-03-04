@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+	<security-domain>sharecarLDAP</security-domain>
+
+	<!--
+	<valve>
+		<class-name>org.apache.catalina.authenticator.SingleSignOn
+		</class-name>
+		<param>
+			<param-name>maxEmptyLife</param-name>
+			<param-value>0</param-value>
+		</param>
+	</valve>
+	-->
+
+</jboss-web>

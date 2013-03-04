@@ -1,0 +1,18 @@
+                <security-domain name="sharecarLDAP" cache-type="default">
+                    <authentication>
+                        <login-module code="LdapExtended" flag="required">
+                            <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
+                            <module-option name="java.naming.provider.url" value="ldap://10.200.238.209:389"/>
+                            <module-option name="java.naming.security.authentication" value="simple"/>
+                            <module-option name="bindDN" value="uid=webdesdr,ou=Servicos,ou=corp,dc=serpro,dc=gov,dc=br"/>
+                            <module-option name="bindCredential" value="webdesdr"/>
+                            <module-option name="baseCtxDN" value="dc=serpro,dc=gov,dc=br"/>
+                            <module-option name="baseFilter" value="(uid={0})"/>
+                            <module-option name="rolesCtxDN" value="dc=serpro,dc=gov,dc=br"/>
+                            <module-option name="roleFilter" value="(member={1})"/>
+                            <module-option name="roleAttributeID" value="cn"/>
+                            <module-option name="throwValidateError" value="true"/>
+                            <module-option name="searchScope" value="ONELEVEL_SCOPE"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
