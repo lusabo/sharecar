@@ -100,7 +100,31 @@
         	 //saveRoute($("#route-name").val(), $("#start").val(), $("#end").val(), $("input:checked[name=weekday]"), $("#hour").val());
     		  saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
 				});
- 	
+
+  
+				$("#logout").click(function(){
+					$.ajax({
+						type: "DELETE",
+						url: "api/auth",
+						statusCode: {
+							200: function() {
+						  	alert("login ok");
+						  },
+						  401: function(){
+								alert("não autorizado");
+							}
+						},
+						error: function(e){
+							console.log(e);
+						},
+						success: function(){
+							window.location = "login";
+						}						
+					});
+				});
+	  
+    
+  	 	
     	});
       </script>
    </head>
@@ -171,6 +195,7 @@
                     </tr>
                   </tbody>
                </table>
+               <input id="logout" type="button" value="Sair">
             </div>
          </div>
       </div>
