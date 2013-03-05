@@ -4,10 +4,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-@Provider
-public class AuthenticationException extends Exception implements ExceptionMapper<AuthenticationException> {
+import br.gov.frameworkdemoiselle.security.AuthenticationException;
 
-	private static final long serialVersionUID = 1L;
+@Provider
+public class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
 
 	@Override
 	public Response toResponse(AuthenticationException exception) {
