@@ -241,6 +241,17 @@ function addCircle(location, _radius){
 	circlesArray.push(circle);
 }
 
+function openSearchDialog(){
+	$("#dialog-buscar").dialog("open").dialog("option", "title", "Buscar Carona").dialog({
+		buttons: [{
+			text: "Pesquisar", 
+			click: function() { 
+				loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
+			}
+		}]
+	});
+}
+
 // Função utilitária para remover rotas e marcadores do mapa
 function deleteOverlays(_array) {
 	

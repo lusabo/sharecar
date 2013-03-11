@@ -43,14 +43,7 @@
 		});
 	
 		$("#buscar").click(function(){
-			$("#dialog-buscar").dialog("open").dialog("option", "title", "Buscar Carona").dialog({
-				buttons: [{
-					text: "Pesquisar", 
-					click: function() { 
-						loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
-					}
-				}]
-			});
+			openSearchDialog();
 		});
 
 		$("#logout").click(function(){
@@ -103,6 +96,7 @@
 		// Ao clicar no mapa é adicionado um marcador
   	google.maps.event.addListener(map, 'click', function(event) {
   		addMarker(event.latLng, $("#radius").val());
+  		openSearchDialog();
 		});		  
 
 		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
@@ -121,7 +115,7 @@
 <body>
 	<div class="navbar" style="margin-bottom: 0px;">
 		<div class="navbar-inner">
-			<a class="brand" href="#" style="font-size: 30pt; font-weight: bold; text-shadow: 2px -2px #ccc">
+			<a class="brand" href="home" style="font-size: 30pt; font-weight: bold; text-shadow: 2px -2px #ccc">
 				<span	style="color: #22228c">Share</span><span style="color: #005c00">Car</span>
 			</a>
 			<ul class="nav" >
