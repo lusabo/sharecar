@@ -1,73 +1,67 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Google Maps JavaScript API v3 Example: Map Simple</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
- 		<link rel="stylesheet" type="text/css" href="css/login.css" />
-    <script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <script>
-    	$(function(){
-				$("#login").click(function(){
-					$.ajax({
-						type: "POST",
-						url: "api/auth",
-						data: $("form").serialize(),
-						statusCode: {
-							200: function() {
-						  	alert("login ok");
-						  },
-						  401: function(){
-								alert("não autorizado");
-							}
-						},
-						error: function(e){
-							alert("não autorizado");
-						},
-						success: function(){
-							window.location = "home";
-						}						
-					});
-				});
-      });
-        
-      var map;
-      function initialize() {
-        var mapOptions = {
-          zoom: 10,
-          center: new google.maps.LatLng(-34.397, 150.644),
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          disableDefaultUI: true,
-          draggable: false
-        };
-        map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+<head>
+	<title>ShareCar</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/login.css" />
+	<script	src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
+	<script src="js/main.js" type="text/javascript"></script>
+</head>
+<body>
+	<div id="map"></div>
+	<form class="form">
+		<h1>
+			<span class="log-in">Log in</span>
+		</h1>
+		<p class="float">
+			<label for="username"><i class="icon-user"></i>CPF</label> <input
+				id="username" type="text" name="username" placeholder="CPF"
+				maxlength="11">
+		</p>
+		<p class="float">
+			<label for="password"><i class="icon-lock"></i>Senha</label> <input
+				id="password" type="password" name="password" placeholder="SENHA"
+				class="showpassword">
+		</p>
+		<p class="clearfix">
+			<input id="login" type="button" name="submit" value="Entrar">
+			<br />
+			<br /> <span id="msg" style="color: red; font-size: 10pt"></span>
+		</p>
+	</form>
+</body>
+<script>
+ 	$(function(){
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                map.setCenter(pos);
-            });
-        }
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-  </head>
-  <body>
-		<div id="mapa"></div>
-		<form class="form">
-			<h1><span class="log-in">Log in</span></h1>
-		    <p class="float">
-		        <label for="username"><i class="icon-user"></i>CPF</label>
-		        <input id="username" type="text" name="username" placeholder="CPF" maxlength="11">
-		    </p>
-		    <p class="float">
-		        <label for="password"><i class="icon-lock"></i>Senha</label>
-		        <input id="password" type="password" name="password" placeholder="SENHA" class="showpassword"> 
-		    </p>
-		    <p class="clearfix"> 
-		        <input id="login" type="button" name="submit" value="Entrar">
-		    </p>       
-		</form>
-  </body>
+		$.ajaxSetup({
+			statusCode : {
+ 				401 : function() {
+ 					$("#msg").text("Login e/ou Senha Inválidos.");
+ 				},
+ 				500 : function() {
+ 					$("#msg").text("Falha no processo de autenticação.");
+ 				}
+ 			}
+ 		});
+ 	 	
+		// Carrega o mapa centralizado conforme localização do usuário.
+		loadMapCenteredWithUserGeolocation('map', false, true);
+
+ 	 	// Envia os dados do formulário de login para o serviço de autenticação.
+ 		$("#login").click(function(){
+			$.ajax({
+				type: "POST",
+				url: "api/auth",
+				data: $("form").serialize(),
+				success: function(){
+					window.location = "home";
+				}						
+			});
+		});
+		
+ 	});
+</script>
+
 </html>

@@ -1,223 +1,206 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>ShareCar</title>
-      <link href="css/jquery-ui-1.9.2.custom.css" rel="stylesheet" media="screen" />
-      <link href="css/main.css" rel="stylesheet" media="screen" />
-      <script src="https://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=geometry,places" type="text/javascript"></script>
-      <script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
-      <script src="js/jquery-ui-1.9.2.custom.js" type="text/javascript"></script>
-      <script src="js/globalize.js" type="text/javascript"></script>
-      <script src="js/globalize-de.js" type="text/javascript"></script>
-      <script src="js/timespinner.js" type="text/javascript"></script>
-      <script src="js/main.js" type="text/javascript"></script>
-      <script>
-      $(function () {
+<head>
+	<title>ShareCar</title>
+	<link href="css/main.css" rel="stylesheet" media="screen" />
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+	<link href="css/jquery-ui-1.10.1.custom.min.css" rel="stylesheet" media="screen"/>
+	
+	<script src="js/jquery-1.9.1.min.js" type="text/javascript"></script>
+	<script src="js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+	<script src="js/globalize.js" type="text/javascript"></script>
+	<script src="js/globalize-de.js" type="text/javascript"></script>
+	<script src="js/timespinner.js" type="text/javascript"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
+	<script src="js/main.js" type="text/javascript"></script>
+	
+	<script>
+	$(function(){
+		
+		// Carrega o mapa centralizado conforme localização do usuário.
+		loadMapCenteredWithUserGeolocation('map', false, true);
+		
+		$("#dialog-criar, #dialog-listar, #dialog-buscar").dialog({
+			autoOpen: false,
+			width: 410
+		});
+	
+		$("#criar").click(function(){
+			$("#dialog-criar").dialog("open").dialog("option", "title", "Criar Rota").dialog({
+				buttons: [{
+					text: "Salvar", 
+					click: function() { 
+						saveRoute($("#route-name").val());
+					}
+				}]
+			});
+		});	
+	
+		$("#listar").click(function(){
+			loadRoutesTable();
+			$("#dialog-listar").dialog("open").dialog("option", "title", "Minhas Rotas");
+		});
+	
+		$("#buscar").click(function(){
+			$("#dialog-buscar").dialog("open").dialog("option", "title", "Buscar Carona").dialog({
+				buttons: [{
+					text: "Pesquisar", 
+					click: function() { 
+						loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
+					}
+				}]
+			});
+		});
 
-    	  loadMapCenteredWithUserGeolocation();
-    	  loadRoutesTable();
-
-    	  // JQuery
-    	  
-       	$("#dialog").dialog({
-	       	autoOpen: false,
-	    		buttons: [{ 
-	    			text: "Salvar", 
-	    			click: function() { } 
-	        }],
-	       	height: 400,
-	       	modal: true,
-	       	title: "Dia e Hora da Rota",
-	       	width: 450
-       	});           	  
-    	  
-    	  $("#accordion").accordion({
-    	    heightStyle: "fill",
-    	    active: 1
-    	  });
-    	  
-    	  $("#slider").slider({
-    	    value: 100,
-    	    min: 50,
-    	    max: 1000,
-    	    step: 50,
-    	    slide: function (event, ui) {
-        	  if(circlesArray.length > 0){
-    	      	$("#radius").val(ui.value);
-    	      	circlesArray[0].setRadius(ui.value);
-        	  } else {
-							return false;
-            }
-    	    }
-    	  });
-    	  
-    	  $("#radius").val($("#slider").slider("value"));
-
-    	  $("#radio, #weekday").buttonset();
-
-    	  $("#bt-pesquisar").button().click(function(){
-    		  loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
-				});
-
-    	  Globalize.culture("de-DE");
-    	  $("#hora-ini, #hora-fim, #hour").timespinner();
-
-    		
-    		// Ao clicar no mapa é adicionado um marcador
-    	  google.maps.event.addListener(map, 'click', function(event) {
-    	  	addMarker(event.latLng, $("#radius").val());
-    	  });
-
-				// Ao alterar a rota
-    		google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
-				// console.log(directionsDisplay.getDirections());
-    	  });
-
-    	  // Mostra a rota no mapa após clicar no ícone da tabela de rotas
-    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
-    		  loadRoute($(this).attr("route"))
-    	  });
-
-    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='sched-']", "click", function () {
-    	  	$("#dialog").dialog("open");
-    	  });
-
-    	  $("#table-rotas, #table-pesquisa").delegate("a[name^='del-']", "click", function () {
-    		  	deleteRoute($(this).attr("route"));
-    	  });
-    	  
-    	  // Alterando o ponto de chegada a rota é renderizada
-    	  var ptoPartida = new google.maps.places.Autocomplete($("#start")[0]);
-    	  var ptoChegada = new google.maps.places.Autocomplete($("#end")[0]);
-    	  google.maps.event.addListener(ptoChegada, 'place_changed', function () {
-    		  showRouteBetweenPoints($("#start").val(), $("#end").val());
-    	  });
-
-    	  // Salva a rota
-    	  // TODO: Ajustar para quando o usuário alterar a rota
-    	  // TODO: Verificar campos obrigatórios
-    	  $("#btSalvar").click(function () {
-        	 //saveRoute($("#route-name").val(), $("#start").val(), $("#end").val(), $("input:checked[name=weekday]"), $("#hour").val());
-    		  saveRoute($("#route-name").val(), $("#start").val(), $("#end").val());
-				});
-
-  
-				$("#logout").click(function(){
-					$.ajax({
-						type: "DELETE",
-						url: "api/auth",
-						statusCode: {
-							200: function() {
-						  	alert("login ok");
-						  },
-						  401: function(){
-								alert("não autorizado");
-							}
-						},
-						error: function(e){
-							console.log(e);
-						},
-						success: function(){
-							window.location = "home";
-						}						
-					});
-				});
+		$("#logout").click(function(){
+			$.ajax({
+				type: "DELETE",
+				url: "api/auth",
+				error: function(e){
+					alert('Erro: Olhe o console');
+					console.log(e);
+				},
+				success: function(){
+					window.location = "home";
+				}						
+			});
+		});		
+	
+		// Componentes dos divs
+		var ptoPartida = new google.maps.places.Autocomplete($("#start")[0]);
+	  var ptoChegada = new google.maps.places.Autocomplete($("#end")[0]);
 	  
-    
-  	 	
-    	});
-      </script>
-   </head>
-   <body>
-      <div id="formulario">
-         <div id="accordion">
-            <h3>Criar Rota</h3>
-            <div>
-               <label for="route-name">Nome:</label><br /> 
-               <input id="route-name" style="width: 100%" value="" required/><br /> 
-               <label for="start">Ponto de Partida:</label><br /> 
-               <input id="start" style="width: 100%" value=""  required /><br /> 
-               <label for="end">Ponto de Chegada:</label><br /> 
-               <input id="end" style="width: 100%" value="" required /><br />
-							 <input type="button" id="btSalvar" value="Salvar" />
-               <br/><br/>
-               <table id="table-rotas" class="table table-bordered">
-                  <thead>
-                     <tr>
-                        <th class="ui-widget-header" colspan="4">Minhas Rotas</th>
-                     </tr>
-                  </thead>
-                  <tbody></tbody>
-               </table>
-            </div>
-            <h3>Buscar Carona</h3>
-            <div>
-               <p>
-                  <label for="endereco">Marque no mapa sua localização</label>
-                  <textarea id="endereco" style="width:390px; height: 50px; font-size: 10pt" readonly></textarea>
-               </p>
-               
-               <p>
-                  <label for="raio">Raio</label>
-                  <input type="text" id="radius" name="radius" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
-               </p>
-               <div id="slider"></div>
-               
-               <p>
-                  <label for="radio">Dia da Semana</label><br/>
-               		<div id="radio">
-                  	<input type="radio" id="radio1" name="radio" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
-                  	<input type="radio" id="radio2" name="radio" /><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
-                  	<input type="radio" id="radio3" name="radio" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
-                  	<input type="radio" id="radio4" name="radio" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
-                  	<input type="radio" id="radio5" name="radio" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
-                  	<input type="radio" id="radio6" name="radio" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
-                  	<input type="radio" id="radio7" name="radio" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
-               		</div>
-               </p>
-               
-               <p>
-                  <label>Intervalo de Horário</label><br/>	
-                  <input id="hora-ini" name="hora-ini" value="08:00" style="width: 60px" readonly /> e <input id="hora-fim" name="hora-fim" value="09:00" style="width: 60px" readonly />
-               </p>
-               
-               <input id="bt-pesquisar" type="button" value="Pesquisar" />
-               <br/><br/>
-               <table id="table-pesquisa" class="table table-bordered">
-                  <thead>
-                     <tr>
-                        <th class="ui-widget-header" colspan="3">Rotas Encontradas</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                 		<tr>
-                       <td colspan="3">Nenhuma rota</th>
-                    </tr>
-                  </tbody>
-               </table>
-               <input id="logout" type="button" value="Sair">
-            </div>
-         </div>
-      </div>
-      <div id="mapa"></div>
-      <div id="dialog">
-	     	<p>
-					<label for="weekday">Dia da Semana</label><br/>
-					<div id="weekday">
-						<input type="checkbox" id="weekday1" name="weekday" value="1"/><label for="weekday1" style="font-size:10pt; width:50px;">Dom</label>
-						<input type="checkbox" id="weekday2" name="weekday" value="2"/><label for="weekday2" style="font-size:10pt; width:50px;">Seg</label>
-						<input type="checkbox" id="weekday3" name="weekday" value="3"/><label for="weekday3" style="font-size:10pt; width:50px;">Ter</label>
-						<input type="checkbox" id="weekday4" name="weekday" value="4"/><label for="weekday4" style="font-size:10pt; width:50px;">Qua</label>
-						<input type="checkbox" id="weekday5" name="weekday" value="5"/><label for="weekday5" style="font-size:10pt; width:50px;">Qui</label>
-						<input type="checkbox" id="weekday6" name="weekday" value="6"/><label for="weekday6" style="font-size:10pt; width:50px;">Sex</label>
-						<input type="checkbox" id="weekday7" name="weekday" value="7"/><label for="weekday7" style="font-size:10pt; width:50px;">Sáb</label>
-					</div>
-				</p>
-				<p>
-	   			<label>Horário</label><br/>	
-	   			<input id="hour" name="hour" value="08:00" style="width: 60px" readonly />
-				</p>
+	  $("#radio, #weekday").buttonset();
+
+		Globalize.culture("de-DE");
+		$("#hour, #hour-ini, #hour-end").timespinner();
+
+	 	$("#slider").slider({
+ 	    value: 100,
+ 	    min: 50,
+ 	    max: 1000,
+ 	    step: 50,
+ 	    slide: function (event, ui) {
+     	  if(circlesArray.length > 0){
+ 	      	$("#radius").val(ui.value);
+ 	      	circlesArray[0].setRadius(ui.value);
+     	  } else {
+						return false;
+        }
+ 	    }
+ 	  });
+	 	  
+ 	  $("#radius").val($("#slider").slider("value"));
+
+ 	  $("#table-pesquisa").hide();
+		
+		// Listerners
+		google.maps.event.addListener(ptoChegada, 'place_changed', function () {
+		  showRouteBetweenPoints($("#start").val(), $("#end").val());
+	  });
+
+		// Ao clicar no mapa é adicionado um marcador
+  	google.maps.event.addListener(map, 'click', function(event) {
+  		addMarker(event.latLng, $("#radius").val());
+		});		  
+
+		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
+			deleteRoute($(this).attr("route"));
+	  });
+
+  	// Mostra a rota no mapa após clicar no ícone da tabela de rotas
+  	$("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
+  		loadRoute($(this).attr("route"));
+		});		  
+	 	
+	});
+	</script>	
+	
+</head>
+<body>
+	<div class="navbar" style="margin-bottom: 0px;">
+		<div class="navbar-inner">
+			<a class="brand" href="#" style="font-size: 30pt; font-weight: bold; text-shadow: 2px -2px #ccc">
+				<span	style="color: #22228c">Share</span><span style="color: #005c00">Car</span>
+			</a>
+			<ul class="nav" >
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Rotas<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a id="criar" href="#">Criar Rota</a></li>
+						<li><a id="listar" href="#">Minhas Rotas</a></li>
+					</ul></li>
+				<li><a id="buscar" href="#">Buscar Carona</a></li>
+			</ul>
+			<ul class="nav pull-right" >
+				<li><a id="logout" href="#">Sair</a></li>
+			</ul>			
+		</div>
+	</div>
+
+	<div id="map"></div>
+
+	<div id="dialog-criar">
+		
+		<label>Nome</label> 
+		<input id="route-name" type="text" placeholder="Digite nome da rota" class="span5">
+		 
+		<label>Origem</label> 
+		<input id="start" type="text" class="span5"> 
+		
+		<label>Destino</label> 
+		<input id="end" type="text" class="span5"> 
+		
+		<label>Marques os dias da semana que você faz essa rota</label>
+		<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
+			<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1" /><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
+			<input type="checkbox" id="weekday2" name="weekday" value="2" class="span1" /><label for="weekday2" style="font-size: 10pt; width: 51px;">Seg</label> 
+			<input type="checkbox" id="weekday3" name="weekday" value="3" class="span1" /><label for="weekday3" style="font-size: 10pt; width: 51px;">Ter</label> 
+			<input type="checkbox" id="weekday4" name="weekday" value="4" class="span1" /><label for="weekday4" style="font-size: 10pt; width: 51px;">Qua</label> 
+			<input type="checkbox" id="weekday5" name="weekday" value="5" class="span1" /><label for="weekday5" style="font-size: 10pt; width: 51px;">Qui</label> 
+			<input type="checkbox" id="weekday6" name="weekday" value="6" class="span1" /><label for="weekday6" style="font-size: 10pt; width: 51px;">Sex</label> 
+			<input type="checkbox" id="weekday7" name="weekday" value="7" class="span1" /><label for="weekday7" style="font-size: 10pt; width: 51px;">Sáb</label>
+		</div>
+		
+		<label>Horário</label>
+		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
+		
+	</div>
+
+	<div id="dialog-listar" style="padding-left: 0; padding-right: 0;">
+    <table id="table-rotas" class="table table-bordered">
+      <tbody></tbody>
+   </table>
+	</div>
+	<div id="dialog-buscar">
+	
+		<label>Marque no mapa sua localização</label>
+		<textarea id="endereco" class="span5" style="height: 50px; font-size: 10pt" readonly></textarea>
 				
-      </div>
-   </body>
+		Raio
+		<input type="text" id="radius" name="radius" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
+		<div id="slider"></div>
+
+		<label>Dia da Semana</label>
+		<div id="radio" class="span5" style="margin-left: 0px; padding-top: 0px;">
+			<input type="radio" id="radio1" name="radio" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
+			<input type="radio" id="radio2" name="radio" /><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
+			<input type="radio" id="radio3" name="radio" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
+			<input type="radio" id="radio4" name="radio" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
+			<input type="radio" id="radio5" name="radio" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
+			<input type="radio" id="radio6" name="radio" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
+			<input type="radio" id="radio7" name="radio" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
+		</div>
+
+		<label>Intervalo de Horário</label>
+		<input id="hour-ini" name="hour-ini" value="08:00" style="width: 55px" readonly /> e <input id="hour-end" name="hour-end" value="09:00" style="width: 55px" readonly />
+		<br/><br/>
+		
+		<table id="table-pesquisa" class="table table-bordered">
+			<tbody>
+			</tbody>
+		</table>
+</div>
+</body>
+
 </html>

@@ -1,25 +1,16 @@
-html {
-	height: 100%;
-}
-
-body {
+html, body, #map {
 	margin: 0;
 	padding: 0;
 	height: 100%;
 }
 
-#formulario {
-	width: 29.9%;
-	min-height: 100%;
-	float: left;
-	border-right: 1px solid #ccc;
+#map img { 
+  max-width: none;
 }
 
-#mapa {
-	width: 70%;
-	min-height: 100%;
-	float: right;
-}
+#map label { 
+  width: auto; display:inline; 
+} 
 
 table {
   max-width: 100%;

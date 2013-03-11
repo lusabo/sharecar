@@ -19,7 +19,7 @@
 }
 
 
-html,body,#mapa {
+html,body,#map {
   font-family: 'Lato', Calibri, Arial, sans-serif;
 	margin: 0;
 	padding: 0;
@@ -168,7 +168,7 @@ html,body,#mapa {
     top: 1px;
 }
 
-/* Fallback fro broswers that don't support box shadows */
+/* Fallback for broswers that don't support box shadows */
 .no-boxshadow .form input[type=button]:hover {
     background: #ffb347;
 }
