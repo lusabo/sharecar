@@ -2,14 +2,14 @@ package entity;
 
 import java.util.Calendar;
 
-public enum WeekDay {
+public enum Weekday {
 
 	SUNDAY(Calendar.SUNDAY), MONDAY(Calendar.MONDAY), TUESDAY(Calendar.TUESDAY), WEDNESDAY(Calendar.WEDNESDAY), THURSDAY(
 			Calendar.THURSDAY), FRIDAY(Calendar.FRIDAY), SATURDAY(Calendar.SATURDAY);
 
 	private int valor;
 
-	private WeekDay(int valor) {
+	private Weekday(int valor) {
 		this.valor = valor;
 	}
 
@@ -17,7 +17,7 @@ public enum WeekDay {
 		return valor;
 	}
 
-	public static WeekDay valueOf(int valor) {
-		return WeekDay.values()[valor - 1];
+	public static Weekday valueOf(int valor) {
+		return Weekday.values()[valor - 1];
 	}
 }

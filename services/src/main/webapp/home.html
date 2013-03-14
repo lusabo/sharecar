@@ -13,6 +13,11 @@
 	<script src="js/globalize-de.js" type="text/javascript"></script>
 	<script src="js/timespinner.js" type="text/javascript"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry,places" type="text/javascript"></script>
+	
+	<script src="js/Coord.js" type="text/javascript"></script>
+	<script src="js/Weekday.js" type="text/javascript"></script>
+	<script src="js/Route.js" type="text/javascript"></script>
+	<script src="js/Schedule.js" type="text/javascript"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 	
 	<script>
@@ -21,27 +26,39 @@
 		// Carrega o mapa centralizado conforme localização do usuário.
 		loadMapCenteredWithUserGeolocation('map', false, true);
 		
-		$("#dialog-criar, #dialog-listar, #dialog-buscar").dialog({
+		$("#dialog-criar, #dialog-sched, #dialog-buscar").dialog({
 			autoOpen: false,
 			width: 410
 		});
-	
+
+		//OK
 		$("#criar").click(function(){
+			var route = new Route();
+			route._findAll(loadRoutesTable);
 			$("#dialog-criar").dialog("open").dialog("option", "title", "Criar Rota").dialog({
 				buttons: [{
 					text: "Salvar", 
 					click: function() { 
-						saveRoute($("#route-name").val());
+						route._insert($("#route-name").val(), google.maps.geometry.encoding.decodePath(directionsDisplay.getDirections().routes[0].overview_polyline.points),  success, error);
+						route._findAll(loadRoutesTable);
 					}
 				}]
 			});
-		});	
-	
-		$("#listar").click(function(){
-			loadRoutesTable();
-			$("#dialog-listar").dialog("open").dialog("option", "title", "Minhas Rotas");
 		});
-	
+
+		//OK
+		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
+			deleteOverlays(pathsArray);
+			var route = new Route();
+			route._delete($(this).attr("route"), success, error);
+			route._findAll(loadRoutesTable);
+	  });		
+
+		$("#table-rotas").delegate("a[name^='sched-']", "click", function () {
+			var route = new Route();
+			route._load($(this).attr("route"), openRouteSchedDialog);
+	  });
+		
 		$("#buscar").click(function(){
 			openSearchDialog();
 		});
@@ -99,13 +116,10 @@
   		openSearchDialog();
 		});		  
 
-		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
-			deleteRoute($(this).attr("route"));
-	  });
-
   	// Mostra a rota no mapa após clicar no ícone da tabela de rotas
   	$("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
-  		loadRoute($(this).attr("route"));
+  	  var route = new Route();
+  	  route._load($(this).attr("route"), showRouteOnMap);
 		});		  
 	 	
 	});
@@ -122,7 +136,7 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Rotas<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a id="criar" href="#">Criar Rota</a></li>
-						<li><a id="listar" href="#">Minhas Rotas</a></li>
+						<!-- li><a id="listar" href="#">Minhas Rotas</a></li -->
 					</ul></li>
 				<li><a id="buscar" href="#">Buscar Carona</a></li>
 			</ul>
@@ -145,27 +159,29 @@
 		<label>Destino</label> 
 		<input id="end" type="text" class="span5"> 
 		
-		<label>Marques os dias da semana que você faz essa rota</label>
-		<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
-			<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1" /><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
-			<input type="checkbox" id="weekday2" name="weekday" value="2" class="span1" /><label for="weekday2" style="font-size: 10pt; width: 51px;">Seg</label> 
-			<input type="checkbox" id="weekday3" name="weekday" value="3" class="span1" /><label for="weekday3" style="font-size: 10pt; width: 51px;">Ter</label> 
-			<input type="checkbox" id="weekday4" name="weekday" value="4" class="span1" /><label for="weekday4" style="font-size: 10pt; width: 51px;">Qua</label> 
-			<input type="checkbox" id="weekday5" name="weekday" value="5" class="span1" /><label for="weekday5" style="font-size: 10pt; width: 51px;">Qui</label> 
-			<input type="checkbox" id="weekday6" name="weekday" value="6" class="span1" /><label for="weekday6" style="font-size: 10pt; width: 51px;">Sex</label> 
-			<input type="checkbox" id="weekday7" name="weekday" value="7" class="span1" /><label for="weekday7" style="font-size: 10pt; width: 51px;">Sáb</label>
-		</div>
-		
-		<label>Horário</label>
-		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
-		
-	</div>
-
-	<div id="dialog-listar" style="padding-left: 0; padding-right: 0;">
     <table id="table-rotas" class="table table-bordered">
+    	<thead>
+    		<tr><th colspan="4">Minhas Rotas</th></tr>
+    	</thead>
       <tbody></tbody>
    </table>
 	</div>
+
+	<div id="dialog-sched">
+		<label>Marques os dias da semana que você faz essa rota</label>
+			<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
+				<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1"/><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
+				<input type="checkbox" id="weekday2" name="weekday" value="2" class="span1"/><label for="weekday2" style="font-size: 10pt; width: 51px;">Seg</label> 
+				<input type="checkbox" id="weekday3" name="weekday" value="3" class="span1"/><label for="weekday3" style="font-size: 10pt; width: 51px;">Ter</label> 
+				<input type="checkbox" id="weekday4" name="weekday" value="4" class="span1"/><label for="weekday4" style="font-size: 10pt; width: 51px;">Qua</label> 
+				<input type="checkbox" id="weekday5" name="weekday" value="5" class="span1"/><label for="weekday5" style="font-size: 10pt; width: 51px;">Qui</label> 
+				<input type="checkbox" id="weekday6" name="weekday" value="6" class="span1"/><label for="weekday6" style="font-size: 10pt; width: 51px;">Sex</label> 
+				<input type="checkbox" id="weekday7" name="weekday" value="7" class="span1"/><label for="weekday7" style="font-size: 10pt; width: 51px;">Sáb</label>
+			</div>
+		<label>Horário</label>
+		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
+	</div>
+	
 	<div id="dialog-buscar">
 	
 		<label>Marque no mapa sua localização</label>

@@ -23,7 +23,7 @@ public class Route implements Serializable {
 
 	private List<Coordinate> coords;
 
-	private Set<Schedule> periodos;
+	private Set<Schedule> periods;
 
 	public Route() {
 	}
@@ -39,7 +39,6 @@ public class Route implements Serializable {
 		return id;
 	}
 
-	// @JsonIgnore
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -61,12 +60,12 @@ public class Route implements Serializable {
 	}
 
 	@JsonSerialize(include = NON_NULL)
-	public Set<Schedule> getPeriodos() {
-		return periodos;
+	public Set<Schedule> getPeriods() {
+		return periods;
 	}
 
-	public void setPeriodos(Set<Schedule> periodos) {
-		this.periodos = periodos;
+	public void setPeriodss(Set<Schedule> periods) {
+		this.periods = periods;
 	}
 
 	@JsonSerialize(include = NON_NULL)

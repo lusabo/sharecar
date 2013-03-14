@@ -1,16 +1,3 @@
-// Classes
-var Coord = function(lat, lng) {
-	this.lat = lat;
-	this.lng = lng;
-};
-
-var Route = function(description, coords, weekday, hour) {
-	this.description = description;
-	this.coords = coords;
-	this.weekday = weekday;
-	this.hour = hour;
-};
-
 // Variáveis globais
 var directionsDisplay = new google.maps.DirectionsRenderer({draggable : true});
 var directionsService = new google.maps.DirectionsService();
@@ -59,94 +46,102 @@ function showRouteBetweenPoints(start, end) {
 	});
 }
 
-// Salva a rota desenhada pelo usuário
-function saveRoute(name){
+// Carrega a tabela com as rotas salvas do usuário
+function loadRoutesTable(data) {
+	$('#table-rotas tbody > tr').remove();
+	$.each( data,
+			function (key, val) {
+		       	var tr = '';
+		        tr += '<tr>';
+		        tr += '<td width="24px">';
+		        tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
+		        tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+		        tr += '</a>';
+		        tr += '</td>';
+		        tr += '<td>' + val.description + '</td>';
+		        tr += '<td width="24px">';
+		        tr += '<a href="#" name="sched-' + val.id + '" route="' + val.id + '">';
+		        tr += '<img src="img/calendar.png" style="height: 24px; width: 24px;" border="0" title="Agendar rota">';
+		        tr += '</a>';
+		        tr += '</td>';
+		        tr += '<td width="24px">';
+		        tr += '<a href="#" name="del-' + val.id + '" route="' + val.id + '">';
+		        tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
+		        tr += '</a>';
+		        tr += '</td>';
+		        tr += '</tr>';
+		        $("#table-rotas > tbody:last").append(tr);
+    		});
+}
 
-	// Pega a rota atual, mesmo depois de ter sido mudada manualmente
-	var coords = google.maps.geometry.encoding.decodePath(directionsDisplay.getDirections().routes[0].overview_polyline.points);
-	var coordenadas = new Array();
-	
-	for (var i = 0; i < coords.length; i++) {
-		coordenadas.push(new Coord(coords[i].lat(), coords[i].lng()));
+
+// Mostra determinada rota no mapa 
+function showRouteOnMap(route) {
+	deleteOverlays(pathsArray);
+	directionsDisplay.setMap(null);
+	var polyOptions = {
+			strokeColor : "#8D8DFF",
+			strokeOpacity : 1.0,
+			strokeWeight : 4
+	};
+	var poly = new google.maps.Polyline(polyOptions);
+	var path = new Array();
+	var bounds = new google.maps.LatLngBounds();
+	$.each(route.coords, function(key, val) {
+		path.push(new google.maps.LatLng(val.lat, val.lng));
+		bounds.extend(new google.maps.LatLng(val.lat, val.lng));
+	});
+	poly.setPath(path);
+	poly.setMap(map);
+	pathsArray.push(poly);
+	map.fitBounds(bounds);
+}
+
+function openRouteSchedDialog(route){
+	$("#dialog-sched").dialog("open").dialog("option", "title", route.description).dialog({
+		buttons: [{
+			text: "Salvar", 
+			click: function() {
+				$('input:checked[name=weekday]').each(function(){
+					var schedule = new Schedule();
+					schedule._insert($(this).val(), $("#hour").val(), route, success, error);
+				});
+			}
+		}]
+	});
+}
+
+// Funções utilitárias
+function deleteOverlays(_array) {
+	if (_array) {
+		for (i in _array) {
+			_array[i].setMap(null);
+		}
+		_array.length = 0;
 	}
-	
-	var route = new Route(name, coordenadas);
+}
 
+function success(msg){
+	alert(msg);
+}
+
+function error(msg){
+	alert(msg);
+}
+
+/*******************************************/
+function saveSched(routeId, weekday, hour){
+	var schedule = new Schedule(routeId, weekday, hour);
 	$.ajax({
 		type: "PUT",
 		url: "api/route",
-		data: JSON.stringify(route),
+		data: JSON.stringify(schedule),
 		dataType: "json",
 		contentType: "application/json;charset=UTF-8",
 		success: function () {
-			alert('Rota salva com sucesso.');
-			loadRoutesTable();
+			//loadSchedTable();
 		}
-	});
-}
-
-// Carrega a tabela com as rotas salvas do usuário
-function loadRoutesTable() {
-	
-    $('#table-rotas tbody > tr').remove();
-    $.ajax({
-        type: "GET",
-        url: "api/route",
-        dataType: "json",
-        success: function (data) {
-            $.each( data,
-            function (key, val) {
-                var tr = '';
-                tr += '<tr>';
-                tr += '<td width="24px">';
-                tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-                tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
-                tr += '</a>';
-                tr += '</td>';
-                tr += '<td>' + val.description + '</td>';
-                tr += '<td width="24px">';
-                tr += '<a href="#" name="del-' + val.id + '" route="' + val.id + '">';
-                tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
-                tr += '</a>';
-                tr += '</td>';
-                tr += '</tr>';
-                $("#table-rotas > tbody:last").append(tr);
-            });
-        }
-    });
-}
-
-
-// Carrega a rota selecionada no mapa 
-function loadRoute(routeId) {
-
-	deleteOverlays(pathsArray);
-	directionsDisplay.setMap(null);
-	$.ajax({
-		type : "GET",
-		url : "api/route/" + routeId,
-		dataType : "json",
-		success : function(data) {
-
-			var polyOptions = {
-				strokeColor : "#8D8DFF",
-				strokeOpacity : 1.0,
-				strokeWeight : 4
-			};
-			var poly = new google.maps.Polyline(polyOptions);
-			var path = new Array();
-			var bounds = new google.maps.LatLngBounds();
-
-			$.each(data.coords, function(key, val) {
-				path.push(new google.maps.LatLng(val.lat, val.lng));
-				bounds.extend(new google.maps.LatLng(val.lat, val.lng));
-			});
-			poly.setPath(path);
-			poly.setMap(map);
-			pathsArray.push(poly);
-			map.fitBounds(bounds);
-		}
-	});
+	});	
 }
 
 // Busca pekas rotas
@@ -176,19 +171,7 @@ function loadSearchRoutesTable(lat, lng, radius){
 	$("#table-pesquisa").show();
 }
 
-// Apaga a rota
-function deleteRoute(routeId){
-	
-	deleteOverlays(pathsArray);
-	$.ajax({
-		type: "DELETE",
-		url : "api/route/" + routeId,
-		success: function () {
-			loadRoutesTable();
-			alert('Rota removida com sucesso.');
-		}
-	});
-}
+
 
 // Adiciona um marcador no mapa com o raio definido pelo usuário
 function addMarker(location, _radius) {
@@ -252,16 +235,7 @@ function openSearchDialog(){
 	});
 }
 
-// Função utilitária para remover rotas e marcadores do mapa
-function deleteOverlays(_array) {
-	
-	if (_array) {
-		for (i in _array) {
-			_array[i].setMap(null);
-		}
-		_array.length = 0;
-	}
-}
+
 
 function getAddress(lat, lng) {
 	var geocoder = new google.maps.Geocoder();
@@ -274,3 +248,5 @@ function getAddress(lat, lng) {
 		}
 	});
 }
+
+

@@ -59,6 +59,8 @@
 			<url-pattern>/home</url-pattern>
 			<url-pattern>/api/route</url-pattern>
 			<url-pattern>/api/route/*</url-pattern>
+			<url-pattern>/api/schedule</url-pattern>
+			<url-pattern>/api/schedule/*</url-pattern>			
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>*</role-name>
