@@ -7,7 +7,7 @@ function Schedule(){
 
 Schedule.prototype._insert = function(weekday, time, route, _success, _error) {
 	
-	this.weekday = new Weekday(weekday);
+	this.weekday = weekday;
 	this.time = time;
 	this.route = route;
 

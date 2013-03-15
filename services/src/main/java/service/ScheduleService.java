@@ -7,10 +7,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
-import entity.Route;
-import entity.Schedule;
-
 import business.ScheduleBC;
+import entity.Schedule;
 
 @Path("/schedule")
 public class ScheduleService {
@@ -21,6 +19,7 @@ public class ScheduleService {
 	@PUT
 	@Consumes(JSON_MEDIA_TYPE)
 	public void create(Schedule schedule) throws Exception {
+		System.out.println("P1: " + schedule.toString());
 		scheduleBC.insert(schedule);
 	}
 	

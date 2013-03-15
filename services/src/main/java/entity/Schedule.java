@@ -1,11 +1,19 @@
 package entity;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import service.serializer.TimeDeserializer;
+import service.serializer.TimeSerializer;
+import service.serializer.WeekdayDeserializer;
+import service.serializer.WeekdaySerializer;
 
 @JsonPropertyOrder({ "id", "weekday", "time", "route" })
 public class Schedule implements Serializable {
@@ -20,12 +28,11 @@ public class Schedule implements Serializable {
 
 	private Route route;
 
-	public Schedule() {
-	}
+	public Schedule() {}
 
-	public Schedule(Route route, Weekday weekday, Date time) {
+	public Schedule(Route route, int weekday, Date time) {
 		this.route = route;
-		this.weekday = weekday;
+		this.weekday = Weekday.valueOf(weekday);
 		this.time = time;
 	}
 
@@ -38,18 +45,22 @@ public class Schedule implements Serializable {
 		this.id = id;
 	}
 
+	@JsonSerialize(using = WeekdaySerializer.class, include = NON_NULL)
 	public Weekday getWeekday() {
 		return weekday;
 	}
 
-	public void setWeekday(Weekday weekday) {
-		this.weekday = weekday;
+	@JsonDeserialize(using = WeekdayDeserializer.class)
+	public void setWeekday(int weekday) {
+		this.weekday = Weekday.valueOf(weekday);
 	}
 
+	@JsonSerialize(using = TimeSerializer.class, include = NON_NULL)
 	public Date getTime() {
 		return time;
 	}
 
+	@JsonDeserialize(using = TimeDeserializer.class)
 	public void setTime(Date time) {
 		this.time = time;
 	}
