@@ -24,6 +24,9 @@ public class ScheduleDAO implements Serializable{
 	@Inject
 	private Connection connection;
 	
+	@Inject
+	private RouteDAO routeDAO;
+	
 	@Transactional
 	public void insert(Schedule schedule) throws Exception{
 		StringBuffer sql = new StringBuffer();
@@ -41,7 +44,7 @@ public class ScheduleDAO implements Serializable{
 	
 	public List<Schedule> find(Route route) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select id, weekday, hour from schedules ");
+		sql.append("select id, weekday, hour, route_id from schedules ");
 		sql.append("where route_id = ? order by 2, 3");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
@@ -56,6 +59,7 @@ public class ScheduleDAO implements Serializable{
 			schedule.setId(rs.getInt("id"));
 			schedule.setWeekday(rs.getInt("weekday"));
 			schedule.setHour(rs.getTime("hour"));
+			schedule.setRoute(routeDAO.load(rs.getInt("route_id")));
 			
 			result.add(schedule);
 		}

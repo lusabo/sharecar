@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -39,4 +40,10 @@ public class ScheduleService {
 		return scheduleBC.find(routeBC.load(routeId));
 	}	
 
+	@DELETE
+	@Path("/{id}")
+	@Produces(JSON_MEDIA_TYPE)
+	public void delete(@PathParam("id") Integer id) throws Exception {
+		scheduleBC.delete(id);
+	}	
 }

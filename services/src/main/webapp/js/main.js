@@ -74,6 +74,7 @@ function loadRoutesTable(data) {
     		});
 }
 
+// Carrega a tabela com os horários da rota
 function loadSchedulesTable(data){
 	$('#table-schedules tbody > tr').remove();
 	$.each( data,
@@ -83,7 +84,7 @@ function loadSchedulesTable(data){
 		        tr += '<td>' + val.weekday + '</td>';
 		        tr += '<td>' + (val.hour).substr(0,5) + '</td>';
 		        tr += '<td width="24px">';
-		        tr += '<a href="#" name="del-sched-' + val.id + '" route="' + val.id + '">';
+		        tr += '<a href="#" name="del-' + val.id + '" schedule="' + val.id + '" route="' + val.route.id + '">';
 		        tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
 		        tr += '</a>';
 		        tr += '</td>';
@@ -117,14 +118,14 @@ function showRouteOnMap(route) {
 function openRouteSchedDialog(route){
 	var schedule = new Schedule();
 	schedule._load(route.id, loadSchedulesTable);
-	$("#dialog-sched").dialog("open").dialog("option", "title", route.description).dialog({
+	$("#dialog-sched").dialog("open").dialog("option", "title", "Rota: " + route.description).dialog({
 		buttons: [{
 			text: "Salvar", 
 			click: function() {
 				$('input:checked[name=weekday]').each(function(){
 					schedule._insert($(this).val(), $("#hour").val(), route, success, error);
-					schedule._load(route.id, loadSchedulesTable);
 				});
+				schedule._load(route.id, loadSchedulesTable);
 			}
 		}]
 	});
@@ -149,20 +150,6 @@ function error(msg){
 }
 
 /*******************************************/
-function saveSched(routeId, weekday, hour){
-	var schedule = new Schedule(routeId, weekday, hour);
-	$.ajax({
-		type: "PUT",
-		url: "api/route",
-		data: JSON.stringify(schedule),
-		dataType: "json",
-		contentType: "application/json;charset=UTF-8",
-		success: function () {
-			//loadSchedTable();
-		}
-	});	
-}
-
 // Busca pekas rotas
 function loadSearchRoutesTable(lat, lng, radius){
 	$('#table-pesquisa tbody > tr').remove();

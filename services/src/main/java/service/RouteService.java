@@ -32,13 +32,6 @@ public class RouteService {
 		routeBC.insert(route, getCurrentUser());
 	}
 
-//	@POST
-//	@Path("/{id}")
-//	@Consumes(JSON_MEDIA_TYPE)
-//	public void update(@PathParam("id") Integer id, Route route) throws Exception {
-//		routeBC.insert(route, getCurrentUser());
-//	}
-
 	@GET
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> findAll() throws Exception {
@@ -51,7 +44,7 @@ public class RouteService {
 	public Route find(@PathParam("id") Integer id) throws Exception {
 		return routeBC.load(id);
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Produces(JSON_MEDIA_TYPE)

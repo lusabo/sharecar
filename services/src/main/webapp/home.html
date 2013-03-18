@@ -51,7 +51,14 @@
 			var route = new Route();
 			route._delete($(this).attr("route"), success, error);
 			route._findAll(loadRoutesTable);
+	  });	
+
+		$("#table-schedules").delegate("a[name^='del-']", "click", function () {
+			var schedule = new Schedule();
+			schedule._delete($(this).attr("schedule"), success, error);
+			schedule._load($(this).attr("route"), loadSchedulesTable);
 	  });		
+		  	
 
 		$("#table-rotas").delegate("a[name^='sched-']", "click", function () {
 			var route = new Route();
