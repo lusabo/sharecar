@@ -3,12 +3,17 @@ package persistence;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
+import entity.Route;
 import entity.Schedule;
+import entity.User;
 
 
 @PersistenceController
@@ -28,9 +33,46 @@ public class ScheduleDAO implements Serializable{
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setInt(1, schedule.getRoute().getId());
 		pstmt.setInt(2, schedule.getWeekday().getValor());
-		pstmt.setString(3, schedule.getTime().toString());
+		pstmt.setTime(3, schedule.getHour());
 
 		pstmt.execute();
 		pstmt.close();
 	}
+	
+	public List<Schedule> find(Route route) throws Exception {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select id, weekday, hour from schedules ");
+		sql.append("where route_id = ? order by 2, 3");
+
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setInt(1, route.getId());
+
+		ResultSet rs = pstmt.executeQuery();
+		List<Schedule> result = new ArrayList<Schedule>();
+
+		while (rs.next()) {
+
+			Schedule schedule = new Schedule();
+			schedule.setId(rs.getInt("id"));
+			schedule.setWeekday(rs.getInt("weekday"));
+			schedule.setHour(rs.getTime("hour"));
+			
+			result.add(schedule);
+		}
+		
+		rs.close();
+		pstmt.close();
+		return result;
+	}
+	
+	@Transactional
+	public void delete(Integer id) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from schedules where id = ?");
+		
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setInt(1, id);
+		pstmt.execute();
+		pstmt.close();
+	}	
 }

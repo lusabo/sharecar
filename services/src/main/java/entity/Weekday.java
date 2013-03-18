@@ -4,8 +4,8 @@ import java.util.Calendar;
 
 public enum Weekday {
 
-	SUNDAY(Calendar.SUNDAY), MONDAY(Calendar.MONDAY), TUESDAY(Calendar.TUESDAY), WEDNESDAY(Calendar.WEDNESDAY), THURSDAY(
-			Calendar.THURSDAY), FRIDAY(Calendar.FRIDAY), SATURDAY(Calendar.SATURDAY);
+	DOMINGO(Calendar.SUNDAY), SEGUNDA(Calendar.MONDAY), TERÇA(Calendar.TUESDAY), QUARTA(Calendar.WEDNESDAY), QUINTA(
+			Calendar.THURSDAY), SEXTA(Calendar.FRIDAY), SÁBADO(Calendar.SATURDAY);
 
 	private int valor;
 

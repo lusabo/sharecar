@@ -1,14 +1,14 @@
 function Schedule(){
 	this.id;
 	this.weekday;
-	this.time;
+	this.hour;
 	this.route;
 }
 
-Schedule.prototype._insert = function(weekday, time, route, _success, _error) {
+Schedule.prototype._insert = function(weekday, hour, route, _success, _error) {
 	
 	this.weekday = weekday;
-	this.time = time;
+	this.hour = hour + ":00";
 	this.route = route;
 
 	$.ajax({
@@ -25,4 +25,31 @@ Schedule.prototype._insert = function(weekday, time, route, _success, _error) {
 		} 
 	});
 
+};
+
+Schedule.prototype._delete = function(_id, _success, _error) {
+	$.ajax({
+		async: false,
+		type: "DELETE",
+		url : "api/schedule/" + _id,
+		success: function(){
+			_success('delete ok');
+		},
+		error: function(){
+			_error('delete erro');
+		} 
+	});
+};
+
+Schedule.prototype._load = function(_id, _callback){
+	$.ajax({
+		
+		type : "GET",
+		url : "api/schedule?routeId=" + _id,
+		dataType : "json",
+		success: function(data){
+			_callback(data);
+		}
+	});
+	
 };

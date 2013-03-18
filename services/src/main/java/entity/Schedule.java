@@ -3,19 +3,17 @@ package entity;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Time;
 
 import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import service.serializer.TimeDeserializer;
-import service.serializer.TimeSerializer;
 import service.serializer.WeekdayDeserializer;
 import service.serializer.WeekdaySerializer;
 
-@JsonPropertyOrder({ "id", "weekday", "time", "route" })
+@JsonPropertyOrder({ "id", "weekday", "hour", "route" })
 public class Schedule implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -24,16 +22,16 @@ public class Schedule implements Serializable {
 
 	private Weekday weekday;
 
-	private Date time;
+	private Time hour;
 
 	private Route route;
 
 	public Schedule() {}
 
-	public Schedule(Route route, int weekday, Date time) {
+	public Schedule(Route route, int weekday, Time time) {
 		this.route = route;
 		this.weekday = Weekday.valueOf(weekday);
-		this.time = time;
+		this.hour = time;
 	}
 
 	@JsonSerialize(include = Inclusion.NON_NULL)
@@ -55,14 +53,12 @@ public class Schedule implements Serializable {
 		this.weekday = Weekday.valueOf(weekday);
 	}
 
-	@JsonSerialize(using = TimeSerializer.class, include = NON_NULL)
-	public Date getTime() {
-		return time;
+	public Time getHour() {
+		return hour;
 	}
 
-	@JsonDeserialize(using = TimeDeserializer.class)
-	public void setTime(Date time) {
-		this.time = time;
+	public void setHour(Time hour) {
+		this.hour = hour;
 	}
 
 	public Route getRoute() {
@@ -79,7 +75,7 @@ public class Schedule implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((route == null) ? 0 : route.hashCode());
-		result = prime * result + ((time == null) ? 0 : time.hashCode());
+		result = prime * result + ((hour == null) ? 0 : hour.hashCode());
 		result = prime * result + ((weekday == null) ? 0 : weekday.hashCode());
 		return result;
 	}
@@ -103,10 +99,10 @@ public class Schedule implements Serializable {
 				return false;
 		} else if (!route.equals(other.route))
 			return false;
-		if (time == null) {
-			if (other.time != null)
+		if (hour == null) {
+			if (other.hour != null)
 				return false;
-		} else if (!time.equals(other.time))
+		} else if (!hour.equals(other.hour))
 			return false;
 		if (weekday != other.weekday)
 			return false;

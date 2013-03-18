@@ -57,7 +57,7 @@
 			var route = new Route();
 			route._load($(this).attr("route"), openRouteSchedDialog);
 	  });
-		
+
 		$("#buscar").click(function(){
 			openSearchDialog();
 		});
@@ -179,6 +179,14 @@
 			</div>
 		<label>Horário</label>
 		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
+		<br/><br/>
+		
+    <table id="table-schedules" class="table table-bordered">
+    	<thead>
+    		<tr><th colspan="3">Horários</th></tr>
+    	</thead>
+      <tbody></tbody>
+   </table>
 	</div>
 	
 	<div id="dialog-buscar">

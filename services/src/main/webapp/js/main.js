@@ -74,6 +74,23 @@ function loadRoutesTable(data) {
     		});
 }
 
+function loadSchedulesTable(data){
+	$('#table-schedules tbody > tr').remove();
+	$.each( data,
+			function (key, val) {
+		       	var tr = '';
+		        tr += '<tr>';
+		        tr += '<td>' + val.weekday + '</td>';
+		        tr += '<td>' + (val.hour).substr(0,5) + '</td>';
+		        tr += '<td width="24px">';
+		        tr += '<a href="#" name="del-sched-' + val.id + '" route="' + val.id + '">';
+		        tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
+		        tr += '</a>';
+		        tr += '</td>';
+		        tr += '</tr>';
+		        $("#table-schedules > tbody:last").append(tr);
+    		});	
+}
 
 // Mostra determinada rota no mapa 
 function showRouteOnMap(route) {
@@ -98,13 +115,15 @@ function showRouteOnMap(route) {
 }
 
 function openRouteSchedDialog(route){
+	var schedule = new Schedule();
+	schedule._load(route.id, loadSchedulesTable);
 	$("#dialog-sched").dialog("open").dialog("option", "title", route.description).dialog({
 		buttons: [{
 			text: "Salvar", 
 			click: function() {
 				$('input:checked[name=weekday]').each(function(){
-					var schedule = new Schedule();
 					schedule._insert($(this).val(), $("#hour").val(), route, success, error);
+					schedule._load(route.id, loadSchedulesTable);
 				});
 			}
 		}]
