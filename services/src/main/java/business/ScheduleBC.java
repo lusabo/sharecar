@@ -25,6 +25,10 @@ public class ScheduleBC {
 	public void delete(Integer id) throws Exception {
 		scheduleDAO.delete(id);
 	}
+	
+	public void delete(Route route) throws Exception {
+		scheduleDAO.delete(route);
+	}
 
 	public List<Schedule> find(Route route) throws Exception {
 		return scheduleDAO.find(route);

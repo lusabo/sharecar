@@ -149,12 +149,12 @@ public class RouteDAO implements Serializable {
 	}
 	
 	@Transactional
-	public void delete(Integer id) throws Exception{
+	public void delete(Route route) throws Exception{
 		StringBuffer sql = new StringBuffer();
 		sql.append("delete from routes where id = ?");
 		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-		pstmt.setInt(1, id);
+		pstmt.setInt(1, route.getId());
 		pstmt.execute();
 		pstmt.close();
 	}

@@ -48,6 +48,7 @@
 		//OK
 		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
 			deleteOverlays(pathsArray);
+			$("#dialog-sched").dialog("destroy");
 			var route = new Route();
 			route._delete($(this).attr("route"), success, error);
 			route._findAll(loadRoutesTable);
@@ -130,6 +131,18 @@
 	 	
 	});
 	</script>	
+	<style>
+	
+    .erro{
+        color: red;
+        font-size: 0.8em;
+    }
+    .sucesso{
+        color: green;
+        font-size: 0.8em;
+    }
+	
+	</style>
 	
 </head>
 <body>
@@ -139,11 +152,7 @@
 				<span	style="color: #22228c">Share</span><span style="color: #005c00">Car</span>
 			</a>
 			<ul class="nav" >
-				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Rotas<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><a id="criar" href="#">Criar Rota</a></li>
-						<!-- li><a id="listar" href="#">Minhas Rotas</a></li -->
-					</ul></li>
+				<li><a id="criar" href="#">Criar Rota</a></li>
 				<li><a id="buscar" href="#">Buscar Carona</a></li>
 			</ul>
 			<ul class="nav pull-right" >
@@ -164,6 +173,8 @@
 		
 		<label>Destino</label> 
 		<input id="end" type="text" class="span5"> 
+		
+		<div id="route-message"></div>
 		
     <table id="table-rotas" class="table table-bordered">
     	<thead>
@@ -187,6 +198,8 @@
 		<label>Horário</label>
 		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
 		<br/><br/>
+		
+		<div id="sched-message"></div>
 		
     <table id="table-schedules" class="table table-bordered">
     	<thead>

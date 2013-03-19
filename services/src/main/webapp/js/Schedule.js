@@ -19,10 +19,10 @@ Schedule.prototype._insert = function(weekday, hour, route, _success, _error) {
 		dataType: "json",
 		contentType: "application/json;charset=UTF-8",
 		success: function(){
-			_success('insert schedule ok');
+			_success($("#sched-message"),'Horário cadastrado com sucesso.');
 		},
 		error: function(){
-			_error('insert schedule erro');
+			_error($("#sched-message"),'Erro ao cadastrar horário.');
 		} 
 	});
 

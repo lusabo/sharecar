@@ -49,7 +49,9 @@ public class RouteService {
 	@Path("/{id}")
 	@Produces(JSON_MEDIA_TYPE)
 	public void delete(@PathParam("id") Integer id) throws Exception {
-		routeBC.delete(id);
+		Route route = new Route();
+		route.setId(id);
+		routeBC.delete(route);
 	}
 
 	@GET

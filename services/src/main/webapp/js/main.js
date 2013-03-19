@@ -118,7 +118,8 @@ function showRouteOnMap(route) {
 function openRouteSchedDialog(route){
 	var schedule = new Schedule();
 	schedule._load(route.id, loadSchedulesTable);
-	$("#dialog-sched").dialog("open").dialog("option", "title", "Rota: " + route.description).dialog({
+	$("#dialog-sched").dialog("open").dialog({
+		title: "Rota: " + route.description,
 		buttons: [{
 			text: "Salvar", 
 			click: function() {
@@ -141,12 +142,13 @@ function deleteOverlays(_array) {
 	}
 }
 
-function success(msg){
-	alert(msg);
+function success(target, msg){
+	console.log(target);
+	$(target).addClass("sucesso").text(msg);
 }
 
-function error(msg){
-	alert(msg);
+function error(target, msg){
+	$(target).addClass("erro").text(msg);
 }
 
 /*******************************************/

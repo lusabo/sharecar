@@ -29,10 +29,10 @@ Route.prototype._insert = function(_description, _coords, _success, _error) {
 		dataType: "json",
 		contentType: "application/json;charset=UTF-8",
 		success: function(){
-			_success('insert ok');
+			_success($("#route-message"),'Rota cadastrada com sucesso.');
 		},
 		error: function(){
-			_error('insert erro');
+			_error($("#route-message"),'Erro ao cadastrar rota.');
 		} 
 	});
 	

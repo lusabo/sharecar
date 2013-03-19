@@ -5,7 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import persistence.RouteDAO;
+import persistence.ScheduleDAO;
 import br.gov.frameworkdemoiselle.stereotype.BusinessController;
+import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
@@ -15,6 +17,9 @@ public class RouteBC {
 
 	@Inject
 	private RouteDAO routeDAO;
+	
+	@Inject
+	private ScheduleBC scheduleBC;
 
 	public void insert(Route route, User user) throws Exception {
 		routeDAO.insert(route, user);
@@ -24,8 +29,10 @@ public class RouteBC {
 		return routeDAO.load(id);
 	}
 
-	public void delete(Integer id) throws Exception {
-		routeDAO.delete(id);
+	@Transactional
+	public void delete(Route route) throws Exception {
+		scheduleBC.delete(route);
+		routeDAO.delete(route);
 	}
 
 	public List<Route> find(User user) throws Exception {

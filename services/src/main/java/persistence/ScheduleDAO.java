@@ -79,4 +79,15 @@ public class ScheduleDAO implements Serializable{
 		pstmt.execute();
 		pstmt.close();
 	}	
+	
+	@Transactional
+	public void delete(Route route) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("delete from schedules where route_id = ?");
+		
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setInt(1, route.getId());
+		pstmt.execute();
+		pstmt.close();
+	}
 }
