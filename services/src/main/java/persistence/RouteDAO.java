@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
+import entity.Weekday;
 
 @PersistenceController
 public class RouteDAO implements Serializable {
@@ -94,15 +96,23 @@ public class RouteDAO implements Serializable {
 	// return result;
 	// }
 
-	public List<Route> find(Coordinate coord, Integer radius, User user) throws Exception {
+	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select id, description, username from routes ");
-		//sql.append("where username != ? and ");
-		sql.append("where intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " " + coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
+		sql.append("select routes.id, routes.description, routes.username ");
+		sql.append("from routes inner join schedules on (routes.id = schedules.route_id) ");
+		sql.append("where schedules.hour between ? and ? ");
+		sql.append("and schedules.weekday = ? ");
+		sql.append("and intersects(geom,buffer(geomfromtext('POINT(" + coord.getLatitude() + " " + coord.getLongitude() + ")',4326),round(((? * 0.00001)/1.11),5),8))");
+
+		//sql.append("and username != ? and ");
 		
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setTime(1, hourini);
+		pstmt.setTime(2, hourend);
+		pstmt.setInt(3, weekday.getValor());
+		pstmt.setInt(4, radius);
+
 		//pstmt.setString(1, user.getUsername());
-		pstmt.setInt(1, radius);
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();

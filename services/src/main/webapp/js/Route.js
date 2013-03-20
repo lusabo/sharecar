@@ -44,10 +44,10 @@ Route.prototype._delete = function(_id, _success, _error) {
 		type: "DELETE",
 		url : "api/route/" + _id,
 		success: function(){
-			_success('delete ok');
+			_success($("#route-message"),'Rota removida com sucesso.');
 		},
 		error: function(){
-			_error('delete erro');
+			_error($("#route-message"),'Erro ao remover rota.');
 		} 
 	});
 };

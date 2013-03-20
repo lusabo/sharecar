@@ -2,6 +2,7 @@ package service;
 
 import static service.Constants.JSON_MEDIA_TYPE;
 
+import java.sql.Time;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import business.RouteBC;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
+import entity.Weekday;
 
 @Path("/route")
 public class RouteService {
@@ -55,11 +57,12 @@ public class RouteService {
 	}
 
 	@GET
-	@Path("/{lat}/{lng}/{radius}")
+	@Path("/{lat}/{lng}/{radius}/{weekday}/{hourini}/{hourend}")
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
-			@PathParam("radius") Integer radius) throws Exception {
-		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser());
+			@PathParam("radius") Integer radius, @PathParam("weekday") Integer weekday,
+			@PathParam("hourini") Time hourini, @PathParam("hourend") Time hourend) throws Exception {
+		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday), hourini, hourend);
 	}
 
 	private User getCurrentUser() {

@@ -1,5 +1,6 @@
 package business;
 
+import java.sql.Time;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
+import entity.Weekday;
 
 @BusinessController
 public class RouteBC {
@@ -39,7 +41,8 @@ public class RouteBC {
 		return routeDAO.find(user);
 	}
 
-	public List<Route> find(Coordinate coord, Integer radius, User user) throws Exception {
-		return routeDAO.find(coord, radius, user);
+	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
+		return routeDAO.find(coord, radius, user, weekday, hourini, hourend);
 	}
+	
 }

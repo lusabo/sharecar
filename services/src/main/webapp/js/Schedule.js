@@ -34,10 +34,10 @@ Schedule.prototype._delete = function(_id, _success, _error) {
 		type: "DELETE",
 		url : "api/schedule/" + _id,
 		success: function(){
-			_success('delete schedule ok');
+			_success($("#sched-message"),'Horário removido com sucesso.');
 		},
 		error: function(){
-			_error('delete schedule erro');
+			_error($("#sched-message"),'Erro ao remover horário.');
 		} 
 	});
 };

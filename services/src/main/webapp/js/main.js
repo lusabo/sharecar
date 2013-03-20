@@ -143,7 +143,6 @@ function deleteOverlays(_array) {
 }
 
 function success(target, msg){
-	console.log(target);
 	$(target).addClass("sucesso").text(msg);
 }
 
@@ -153,11 +152,11 @@ function error(target, msg){
 
 /*******************************************/
 // Busca pekas rotas
-function loadSearchRoutesTable(lat, lng, radius){
+function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
 	$('#table-pesquisa tbody > tr').remove();
 	$.ajax({
 		type: "GET",
-		url : "api/route/" + lat + "/" + lng + "/" + radius,
+		url : "api/route/" + lat + "/" + lng + "/" + radius + "/" + weekday + "/" + hourini + ":00/" + hourend + ":00",
 		dataType : 'json',
 		success : function(data) {
 			$.each(data, function (key, val) {
@@ -236,14 +235,17 @@ function openSearchDialog(){
 	$("#dialog-buscar").dialog("open").dialog("option", "title", "Buscar Carona").dialog({
 		buttons: [{
 			text: "Pesquisar", 
-			click: function() { 
-				loadSearchRoutesTable(markersArray[0].position.lat(), markersArray[0].position.lng(), $("#radius").val());
+			click: function() {
+				loadSearchRoutesTable(markersArray[0].position.lat(), 
+									  markersArray[0].position.lng(), 
+									  $("#radius").val(), 
+									  $("input:radio[name=radio]:checked").val(),
+									  $("#hour-ini").val(),
+									  $("#hour-end").val());
 			}
 		}]
 	});
 }
-
-
 
 function getAddress(lat, lng) {
 	var geocoder = new google.maps.Geocoder();

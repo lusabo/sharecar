@@ -48,7 +48,7 @@
 		//OK
 		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
 			deleteOverlays(pathsArray);
-			$("#dialog-sched").dialog("destroy");
+			$("#dialog-sched").dialog("close");
 			var route = new Route();
 			route._delete($(this).attr("route"), success, error);
 			route._findAll(loadRoutesTable);
@@ -220,13 +220,13 @@
 
 		<label>Dia da Semana</label>
 		<div id="radio" class="span5" style="margin-left: 0px; padding-top: 0px;">
-			<input type="radio" id="radio1" name="radio" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
-			<input type="radio" id="radio2" name="radio" /><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
-			<input type="radio" id="radio3" name="radio" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
-			<input type="radio" id="radio4" name="radio" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
-			<input type="radio" id="radio5" name="radio" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
-			<input type="radio" id="radio6" name="radio" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
-			<input type="radio" id="radio7" name="radio" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
+			<input type="radio" id="radio1" name="radio" value="1" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
+			<input type="radio" id="radio2" name="radio" value="2" /><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
+			<input type="radio" id="radio3" name="radio" value="3" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
+			<input type="radio" id="radio4" name="radio" value="4" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
+			<input type="radio" id="radio5" name="radio" value="5" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
+			<input type="radio" id="radio6" name="radio" value="6" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
+			<input type="radio" id="radio7" name="radio" value="7" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
 		</div>
 
 		<label>Intervalo de Horário</label>
@@ -234,6 +234,9 @@
 		<br/><br/>
 		
 		<table id="table-pesquisa" class="table table-bordered">
+		  <thead>
+    		<tr><th colspan="3">Rotas disponíveis</th></tr>
+    	</thead>
 			<tbody>
 			</tbody>
 		</table>
