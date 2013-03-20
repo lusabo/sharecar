@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import br.gov.frameworkdemoiselle.security.Credentials;
+import br.gov.frameworkdemoiselle.security.LoggedIn;
 import br.gov.frameworkdemoiselle.security.SecurityContext;
 import br.gov.frameworkdemoiselle.util.Beans;
 import business.UserBC;
@@ -49,12 +50,11 @@ public class AuthenticationService {
 	public void logout() {
 		securityContext.logout();
 	}
-	
+
 	@GET
+	@LoggedIn
 	@Produces(JSON_MEDIA_TYPE)
 	public User getUser() {
-		User user = new User();
-		user.setUsername(securityContext.getCurrentUser().getName());
-		return user;
+		return (User) securityContext.getCurrentUser();
 	}
 }
