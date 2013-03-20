@@ -98,7 +98,7 @@ public class RouteDAO implements Serializable {
 
 	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select routes.id, routes.description, routes.username ");
+		sql.append("select distinct routes.id, routes.description, routes.username ");
 		sql.append("from routes inner join schedules on (routes.id = schedules.route_id) ");
 		sql.append("where schedules.hour between ? and ? ");
 		sql.append("and schedules.weekday = ? ");
