@@ -26,8 +26,8 @@ public class UserDAO implements Serializable {
 		sql.append("values (?, ?)");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-		pstmt.setString(1, user.getUsername());
-		pstmt.setString(2, user.getFullname());
+		pstmt.setString(1, user.getName());
+		pstmt.setString(2, user.getDisplayName());
 
 		pstmt.execute();
 		pstmt.close();
@@ -47,8 +47,8 @@ public class UserDAO implements Serializable {
 		if (rs.next()) {
 			result = new User();
 			result.setId(rs.getInt("id"));
-			result.setUsername(rs.getString("username"));
-			result.setFullname(rs.getString("fullname"));
+			result.setName(rs.getString("username"));
+			result.setDisplayName(rs.getString("fullname"));
 		}
 
 		rs.close();

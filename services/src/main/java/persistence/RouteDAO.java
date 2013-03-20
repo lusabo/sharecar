@@ -37,7 +37,7 @@ public class RouteDAO implements Serializable {
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setString(1, rota.getDescription());
-		pstmt.setString(2, user.getUsername());
+		pstmt.setString(2, user.getName());
 		pstmt.setString(3, parse(rota.getCoords()));
 
 		pstmt.execute();
@@ -54,7 +54,7 @@ public class RouteDAO implements Serializable {
 		sql.append("where username = ? ");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-		pstmt.setString(1, user.getUsername());
+		pstmt.setString(1, user.getName());
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();
