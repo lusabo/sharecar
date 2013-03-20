@@ -61,10 +61,7 @@ public class LDAPAuthenticator implements Authenticator {
 			ldapContext = createContext(username, credentials.getPassword());
 			ldapContext.close();
 
-			principal = new User(credentials.getUsername());
-			principal.setDisplayName(searchResult.getAttributes().get("cn").get().toString());
-			principal.setEmail(searchResult.getAttributes().get("mail").get().toString());
-			principal.setTelephoneNumber(searchResult.getAttributes().get("telephoneNumber").get().toString());
+			principal = createUser(searchResult);
 
 		} catch (Exception cause) {
 			cause.printStackTrace();
@@ -76,6 +73,17 @@ public class LDAPAuthenticator implements Authenticator {
 	public void unAuthenticate() {
 		principal = null;
 		Beans.getReference(HttpSession.class).invalidate();
+	}
+
+	private User createUser(SearchResult searchResult) throws NamingException {
+		User result = new User();
+
+		principal.setName(searchResult.getAttributes().get("uid").get().toString());
+		principal.setDisplayName(searchResult.getAttributes().get("cn").get().toString());
+		principal.setEmail(searchResult.getAttributes().get("mail").get().toString());
+		principal.setTelephoneNumber(searchResult.getAttributes().get("telephoneNumber").get().toString());
+
+		return result;
 	}
 
 	@Override
@@ -97,34 +105,6 @@ public class LDAPAuthenticator implements Authenticator {
 		env.put(Context.SECURITY_CREDENTIALS, password);
 		env.put(Context.REFERRAL, "follow");
 
-		// <module-option name="java.naming.factory.initial" value="com.sun.jndi.ldap.LdapCtxFactory"/>
-		// <module-option name="java.naming.provider.url" value="ldap://10.200.238.209:389"/>
-		// <module-option name="java.naming.security.authentication" value="simple"/>
-		// <module-option name="bindDN" value="uid=webdesdr,ou=Servicos,ou=corp,dc=serpro,dc=gov,dc=br"/>
-		// <module-option name="bindCredential" value="webdesdr"/>
-		// <module-option name="baseCtxDN" value="dc=serpro,dc=gov,dc=br"/>
-		// <module-option name="baseFilter" value="(uid={0})"/>
-		// <module-option name="rolesCtxDN" value="dc=serpro,dc=gov,dc=br"/>
-		// <module-option name="roleFilter" value="(member={1})"/>
-		// <module-option name="roleAttributeID" value="cn"/>
-		// <module-option name="throwValidateError" value="true"/>
-		// <module-option name="searchScope" value="ONELEVEL_SCOPE"/>
-
-		// if (this.conf.isServerSSL()) {
-		// env.put(Context.SECURITY_PROTOCOL, "ssl");
-		// }
-
 		return new InitialLdapContext(env, null);
 	}
-
-	// private SearchResult searchByUsername(final String username) throws NamingException, IOException {
-	// SearchResult result = null;
-	//
-	// for (final SearchResult searchResult : this.searchByFilter(username, false)) {
-	// result = searchResult;
-	// break;
-	// }
-	//
-	// return result;
-	// }
 }
