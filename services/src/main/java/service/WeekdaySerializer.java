@@ -1,4 +1,4 @@
-package service.serializer;
+package service;
 
 import java.io.IOException;
 

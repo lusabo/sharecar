@@ -10,8 +10,8 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import service.serializer.WeekdayDeserializer;
-import service.serializer.WeekdaySerializer;
+import service.WeekdayDeserializer;
+import service.WeekdaySerializer;
 
 @JsonPropertyOrder({ "id", "weekday", "hour", "route" })
 public class Schedule implements Serializable {

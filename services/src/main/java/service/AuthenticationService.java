@@ -1,10 +1,14 @@
 package service;
 
+import static service.Constants.JSON_MEDIA_TYPE;
+
 import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import br.gov.frameworkdemoiselle.security.Credentials;
 import br.gov.frameworkdemoiselle.security.SecurityContext;
@@ -44,5 +48,13 @@ public class AuthenticationService {
 	@DELETE
 	public void logout() {
 		securityContext.logout();
+	}
+	
+	@GET
+	@Produces(JSON_MEDIA_TYPE)
+	public User getUser() {
+		User user = new User();
+		user.setUsername(securityContext.getCurrentUser().getName());
+		return user;
 	}
 }

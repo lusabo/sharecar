@@ -21,6 +21,14 @@
 	
 	<script>
 	$(function(){
+
+		$.ajax({
+			type: "GET",
+			url: "api/auth",
+			success: function(data){
+				$("#user").text(data.username);
+			}						
+		});		
 		
 		// Carrega o mapa centralizado conforme localização do usuário.
 		loadMapCenteredWithUserGeolocation('map', false, true);
@@ -156,6 +164,7 @@
 				<li><a id="buscar" href="#">Buscar Carona</a></li>
 			</ul>
 			<ul class="nav pull-right" >
+				<li id="user"></li>
 				<li><a id="logout" href="#">Sair</a></li>
 			</ul>			
 		</div>
