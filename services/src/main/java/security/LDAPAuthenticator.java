@@ -21,7 +21,7 @@ import br.gov.frameworkdemoiselle.util.Beans;
 import entity.User;
 
 @SessionScoped
-public class ServiceAuthenticator implements Authenticator {
+public class LDAPAuthenticator implements Authenticator {
 
 	private static final long serialVersionUID = 1L;
 
