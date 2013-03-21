@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
@@ -28,67 +29,70 @@ public class LDAPAuthenticator implements Authenticator {
 	@Inject
 	private Credentials credentials;
 
-	private User principal;
+	private Principal user;
 
 	@Inject
 	private LDAPConfig ldapConfig;
 
 	@Override
 	public void authenticate() throws AuthenticationException {
-
 		try {
-			LdapContext ldapContext = createContext();
+			SearchControls controls = createSearchControls();
+			String filter = createFilter();
+			SearchResult searchResult = createSearchResult(controls, filter);
 
-			final SearchControls controls = new SearchControls();
-			controls.setSearchScope(ldapConfig.getSearchScope());
-
-			String filter = ldapConfig.getBaseFilter();
-			filter = filter.replaceAll("\\{0\\}", credentials.getUsername());
-
-			final NamingEnumeration<SearchResult> naming = ldapContext.search(ldapConfig.getBaseCtxDN(), filter,
-					controls);
+			LdapContext ldapContext = createContext(searchResult.getNameInNamespace(), credentials.getPassword());
 			ldapContext.close();
 
-			SearchResult searchResult = null;
-
-			while (naming.hasMoreElements()) {
-				searchResult = naming.next();
-				break;
-			}
-
-			final String username = searchResult.getNameInNamespace();
-
-			ldapContext = createContext(username, credentials.getPassword());
-			ldapContext.close();
-
-			principal = createUser(searchResult);
+			user = createUser(searchResult.getAttributes());
 
 		} catch (Exception cause) {
-			cause.printStackTrace();
 			throw new AuthenticationException(cause);
 		}
 	}
 
+	private SearchControls createSearchControls() {
+		final SearchControls result = new SearchControls();
+		result.setSearchScope(ldapConfig.getSearchScope());
+
+		return result;
+	}
+
+	private String createFilter() {
+		String result = ldapConfig.getBaseFilter();
+		result = result.replaceAll("\\{0\\}", credentials.getUsername());
+
+		return result;
+	}
+
+	private SearchResult createSearchResult(SearchControls controls, String filter) throws NamingException {
+		LdapContext ldapContext = createContext();
+		final NamingEnumeration<SearchResult> naming = ldapContext.search(ldapConfig.getBaseCtxDN(), filter, controls);
+		ldapContext.close();
+
+		return naming.hasMoreElements() ? naming.next() : null;
+	}
+
 	@Override
 	public void unAuthenticate() {
-		principal = null;
+		user = null;
 		Beans.getReference(HttpSession.class).invalidate();
 	}
 
-	private User createUser(SearchResult searchResult) throws NamingException {
+	private Principal createUser(Attributes attributes) throws NamingException {
 		User result = new User();
 
-		principal.setName(searchResult.getAttributes().get("uid").get().toString());
-		principal.setDisplayName(searchResult.getAttributes().get("cn").get().toString());
-		principal.setEmail(searchResult.getAttributes().get("mail").get().toString());
-		principal.setTelephoneNumber(searchResult.getAttributes().get("telephoneNumber").get().toString());
+		result.setName(attributes.get("uid").get().toString());
+		result.setDisplayName(attributes.get("cn").get().toString());
+		result.setEmail(attributes.get("mail").get().toString());
+		result.setTelephoneNumber(attributes.get("telephoneNumber").get().toString());
 
 		return result;
 	}
 
 	@Override
 	public Principal getUser() {
-		return principal;
+		return user;
 	}
 
 	private LdapContext createContext() throws NamingException {
