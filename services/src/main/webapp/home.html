@@ -23,11 +23,19 @@
 	<script>
 	$(function(){
 
+		$.ajaxSetup({
+			statusCode : {
+				401 : function() {
+					window.location = "login";
+				}
+			}
+		});		
+
 		$.ajax({
 			type: "GET",
 			url: "api/auth",
 			success: function(data){
-				$("#user").text(data.displayName);
+				$("#user > a").text(data.displayName);
 			}						
 		});		
 		
@@ -156,7 +164,7 @@
 				<li><a id="buscar" href="#">Buscar Carona</a></li>
 			</ul>
 			<ul class="nav pull-right" >
-				<li id="user"></li>
+				<li id="user"><a href="#"></a></li>
 				<li><a id="logout" href="#">Sair</a></li>
 			</ul>			
 		</div>

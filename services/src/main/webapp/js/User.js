@@ -1,18 +1,9 @@
-$.ajaxSetup({
-	statusCode : {
-		401 : function() {
-			$("#msg").text("Login e/ou Senha Inválidos.");
-		},
-		500 : function() {
-			$("#msg").text("Falha no processo de autenticação.");
-		}
-	}
-});
-
 function User() {
 	this.id;
-	this.username;
-	this.fullname;
+	this.name;
+	this.displayName;
+	this.email;
+	this.telephoneNumber;
 }
 
 User.prototype._login = function(username, password) {
@@ -33,7 +24,7 @@ User.prototype._logoff = function() {
 		type: "DELETE",
 		url: "api/auth",
 		success: function(){
-			window.location = "home";
+			window.location = "login";
 		}						
 	});
 };

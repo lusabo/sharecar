@@ -70,18 +70,18 @@ public class LDAPAuthenticator implements Authenticator {
 	}
 
 	@Override
-	public void unAuthenticate() {
+	public void unAuthenticate(){
 		principal = null;
 		Beans.getReference(HttpSession.class).invalidate();
 	}
 
 	private User createUser(SearchResult searchResult) throws NamingException {
 		User result = new User();
-
-		principal.setName(searchResult.getAttributes().get("uid").get().toString());
-		principal.setDisplayName(searchResult.getAttributes().get("cn").get().toString());
-		principal.setEmail(searchResult.getAttributes().get("mail").get().toString());
-		principal.setTelephoneNumber(searchResult.getAttributes().get("telephoneNumber").get().toString());
+		
+		result.setName(searchResult.getAttributes().get("uid").get().toString());
+		result.setDisplayName(searchResult.getAttributes().get("cn").get().toString());
+		result.setEmail(searchResult.getAttributes().get("mail").get().toString());
+		result.setTelephoneNumber(searchResult.getAttributes().get("telephoneNumber").get().toString());
 
 		return result;
 	}

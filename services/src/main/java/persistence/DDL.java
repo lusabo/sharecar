@@ -67,8 +67,10 @@ public class DDL {
 		
 		sql.append("CREATE TABLE users ( ");
 		sql.append("	id serial NOT NULL, ");
-		sql.append("	username character varying(11) NOT NULL, ");
-		sql.append("	fullname character varying(255) NULL, ");
+		sql.append("	name character varying(11) NOT NULL, ");
+		sql.append("	displayname character varying(255) NULL, ");
+		sql.append("	email character varying(255) NULL, ");
+		sql.append("	telephonenumber character varying(255) NULL, ");
 		sql.append("CONSTRAINT users_pk PRIMARY KEY (id) ");
 		sql.append("); ");
 		
