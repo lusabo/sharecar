@@ -49,9 +49,14 @@ function showRouteBetweenPoints(start, end) {
 // Carrega a tabela com as rotas salvas do usuário
 function loadRoutesTable(data) {
 	$('#table-rotas tbody > tr').remove();
-	$.each( data,
+	var tr = '';
+	if(data.length == 0){
+		tr = '<tr><td colspan="4">Nenhuma rota cadastrada.</td></tr>';
+        $("#table-rotas > tbody:last").append(tr);
+	} else {
+		$.each( data,
 			function (key, val) {
-		       	var tr = '';
+				tr = '';
 		        tr += '<tr>';
 		        tr += '<td width="24px">';
 		        tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
@@ -72,14 +77,20 @@ function loadRoutesTable(data) {
 		        tr += '</tr>';
 		        $("#table-rotas > tbody:last").append(tr);
     		});
+	}
 }
 
 // Carrega a tabela com os horários da rota
 function loadSchedulesTable(data){
 	$('#table-schedules tbody > tr').remove();
-	$.each( data,
+	var tr = '';
+	if(data.length == 0){
+		tr = '<tr><td colspan="3">Rota sem horário disponibilizado.</td></tr>';
+        $("#table-schedules > tbody:last").append(tr);
+	} else {	
+		$.each( data,
 			function (key, val) {
-		       	var tr = '';
+		       	tr = '';
 		        tr += '<tr>';
 		        tr += '<td>' + val.weekday + '</td>';
 		        tr += '<td>' + (val.hour).substr(0,5) + '</td>';
@@ -90,7 +101,8 @@ function loadSchedulesTable(data){
 		        tr += '</td>';
 		        tr += '</tr>';
 		        $("#table-schedules > tbody:last").append(tr);
-    		});	
+    		});
+	}
 }
 
 // Mostra determinada rota no mapa 
@@ -159,20 +171,25 @@ function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
 		url : "api/route/" + lat + "/" + lng + "/" + radius + "/" + weekday + "/" + hourini + ":00/" + hourend + ":00",
 		dataType : 'json',
 		success : function(data) {
-			$.each(data, function (key, val) {
-												var tr = '';
-												tr += '<tr>';
-												tr += '<td width="24px">';
-												tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-												tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
-												tr += '</a>';
-												tr += '</td>';
-												tr += '<td>' + val.description + '</td>';
-												tr += '<td> Fulano </td>';
-												tr += '</tr>';
-												$("#table-pesquisa > tbody:last").append(tr);
-											 }
-			);
+			var tr = '';
+			if(data.length == 0){
+				tr = '<tr><td colspan="3">Nenhuma rota encontrada</td></tr>';
+		        $("#table-pesquisa > tbody:last").append(tr);
+			} else {	
+				$.each(data, function (key, val) {
+					tr = '';
+					tr += '<tr>';
+					tr += '<td width="24px">';
+					tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
+					tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+					tr += '</a>';
+					tr += '</td>';
+					tr += '<td>' + val.description + '</td>';
+					tr += '<td> Fulano </td>';
+					tr += '</tr>';
+					$("#table-pesquisa > tbody:last").append(tr);
+				});
+			}
 		}
 	});
 	$("#table-pesquisa").show();
@@ -236,12 +253,16 @@ function openSearchDialog(){
 		buttons: [{
 			text: "Pesquisar", 
 			click: function() {
-				loadSearchRoutesTable(markersArray[0].position.lat(), 
+				if (markersArray.length == 0){
+					alert("Você deve selecionar um ponto no mapa!");
+				} else {
+					loadSearchRoutesTable(markersArray[0].position.lat(), 
 									  markersArray[0].position.lng(), 
 									  $("#radius").val(), 
 									  $("input:radio[name=radio]:checked").val(),
 									  $("#hour-ini").val(),
 									  $("#hour-end").val());
+				}
 			}
 		}]
 	});
