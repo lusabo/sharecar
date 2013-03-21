@@ -27,22 +27,24 @@ public class AuthenticationService {
 	private UserBC userBC;
 
 	@POST
-	public void login(@FormParam("username") String username, @FormParam("password") String password) {
-
+	public void login(@FormParam("username") String username, @FormParam("password") String password) throws Exception {
 		Credentials credentials = Beans.getReference(Credentials.class);
 		credentials.setUsername(username);
 		credentials.setPassword(password);
 
 		securityContext.login();
-		// TODO Ver melhor forma para testar se o usuário já existe, verificar se precisa atualizar os dados	
-		String currentUsername = securityContext.getCurrentUser().getName();
 
-		try {
-			if (userBC.load(currentUsername) == null) {
-				userBC.insert( (User)securityContext.getCurrentUser() );
-			}
-		} catch (Exception e) {
-			System.out.println(":::: ERRO ::::");
+		User currentUser = (User) securityContext.getCurrentUser();
+		User persistedUser = userBC.load(currentUser.getName());
+
+		if (persistedUser == null) {
+			userBC.insert(currentUser);
+
+		} else if (!currentUser.equals(persistedUser)) {
+			currentUser.setId(persistedUser.getId());
+
+			// TODO Criar o método update
+			// userBC.update(currentUser);
 		}
 	}
 

@@ -11,6 +11,7 @@ public class NotLoggedInExceptionMapper implements ExceptionMapper<NotLoggedInEx
 
 	@Override
 	public Response toResponse(NotLoggedInException exception) {
+		// return Response.status(401).header("WWW-Authenticate", "Basic realm=realm").build();
 		return Response.status(401).build();
 	}
 }

@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import br.gov.frameworkdemoiselle.security.LoggedIn;
 import br.gov.frameworkdemoiselle.security.SecurityContext;
 import br.gov.frameworkdemoiselle.util.Beans;
 import business.RouteBC;
@@ -35,6 +36,7 @@ public class RouteService {
 	}
 
 	@GET
+	@LoggedIn
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> findAll() throws Exception {
 		return routeBC.find(getCurrentUser());
@@ -62,11 +64,11 @@ public class RouteService {
 	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
 			@PathParam("radius") Integer radius, @PathParam("weekday") Integer weekday,
 			@PathParam("hourini") Time hourini, @PathParam("hourend") Time hourend) throws Exception {
-		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday), hourini, hourend);
+		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday),
+				hourini, hourend);
 	}
 
 	private User getCurrentUser() {
-		SecurityContext securityContext = Beans.getReference(SecurityContext.class);
-		return new User(securityContext.getCurrentUser().getName());
+		return (User) Beans.getReference(SecurityContext.class);
 	}
 }
