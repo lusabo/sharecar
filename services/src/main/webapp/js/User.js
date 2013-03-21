@@ -14,6 +14,9 @@ User.prototype._login = function(username, password) {
 		data : {"username":username,"password":password},
 		success : function() {
 			window.location = "home";
+		},
+		error: function(){
+			$("#msg").text("Login e/ou Senha inválidos.");
 		}
 	});
 };
