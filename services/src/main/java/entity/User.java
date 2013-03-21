@@ -72,24 +72,53 @@ public class User implements Principal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((telephoneNumber == null) ? 0 : telephoneNumber.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		User other = (User) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (displayName == null) {
+			if (other.displayName != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!displayName.equals(other.displayName)) {
 			return false;
+		}
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		} else if (!email.equals(other.email)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (telephoneNumber == null) {
+			if (other.telephoneNumber != null) {
+				return false;
+			}
+		} else if (!telephoneNumber.equals(other.telephoneNumber)) {
+			return false;
+		}
 		return true;
 	}
 }
