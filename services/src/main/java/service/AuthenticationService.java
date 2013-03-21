@@ -34,12 +34,12 @@ public class AuthenticationService {
 		credentials.setPassword(password);
 
 		securityContext.login();
-
+		// TODO Ver melhor forma para testar se o usuário já existe, verificar se precisa atualizar os dados	
 		String currentUsername = securityContext.getCurrentUser().getName();
 
 		try {
 			if (userBC.load(currentUsername) == null) {
-				userBC.insert(new User(currentUsername));
+				userBC.insert( (User)securityContext.getCurrentUser() );
 			}
 		} catch (Exception e) {
 			System.out.println(":::: ERRO ::::");
@@ -47,6 +47,7 @@ public class AuthenticationService {
 	}
 
 	@DELETE
+	@LoggedIn
 	public void logout() {
 		securityContext.logout();
 	}

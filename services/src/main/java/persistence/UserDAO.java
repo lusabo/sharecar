@@ -22,12 +22,14 @@ public class UserDAO implements Serializable {
 	@Transactional
 	public void insert(User user) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("insert into users (username, fullname) ");
-		sql.append("values (?, ?)");
+		sql.append("insert into users (name, displayname, email, telephonenumber) ");
+		sql.append("values (?, ?, ?, ?)");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setString(1, user.getName());
 		pstmt.setString(2, user.getDisplayName());
+		pstmt.setString(3, user.getEmail());
+		pstmt.setString(4, user.getTelephoneNumber());
 
 		pstmt.execute();
 		pstmt.close();
@@ -35,8 +37,8 @@ public class UserDAO implements Serializable {
 
 	public User loadByUsername(String username) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select id, username, fullname ");
-		sql.append("from users where username = ?");
+		sql.append("select id, name, displayname, email, telephonenumber ");
+		sql.append("from users where name = ?");
 
 		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
 		pstmt.setString(1, username);
@@ -47,8 +49,10 @@ public class UserDAO implements Serializable {
 		if (rs.next()) {
 			result = new User();
 			result.setId(rs.getInt("id"));
-			result.setName(rs.getString("username"));
-			result.setDisplayName(rs.getString("fullname"));
+			result.setName(rs.getString("name"));
+			result.setDisplayName(rs.getString("displayname"));
+			result.setEmail(rs.getString("email"));
+			result.setTelephoneNumber(rs.getString("telephonenumber"));
 		}
 
 		rs.close();

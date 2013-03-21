@@ -198,3 +198,10 @@ html,body,#map {
     vertical-align: middle;
     margin: -1px 5px 0 1px;
 }
+
+#msg {
+	color: red; 
+	font-size: 10pt; 
+	padding-left: 2px; 
+	padding-top: 5px;
+}
