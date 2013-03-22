@@ -15,6 +15,10 @@ public class UserBC {
 	public void insert(User user) throws Exception {
 		userDAO.insert(user);
 	}
+	
+	public void update(User user) throws Exception {
+		userDAO.update(user);
+	}
 
 	public User load(String username) throws Exception {
 		return userDAO.loadByUsername(username);

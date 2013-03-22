@@ -4,13 +4,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import persistence.ScheduleDAO;
+import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 import entity.Route;
 import entity.Schedule;
-import entity.User;
-
-import persistence.ScheduleDAO;
-
-import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 
 @BusinessController
 public class ScheduleBC {

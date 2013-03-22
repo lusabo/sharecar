@@ -69,6 +69,6 @@ public class RouteService {
 	}
 
 	private User getCurrentUser() {
-		return (User) Beans.getReference(SecurityContext.class);
+		return (User) Beans.getReference(SecurityContext.class).getCurrentUser();
 	}
 }

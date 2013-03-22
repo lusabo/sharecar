@@ -42,9 +42,7 @@ public class AuthenticationService {
 
 		} else if (!currentUser.equals(persistedUser)) {
 			currentUser.setId(persistedUser.getId());
-
-			// TODO Criar o método update
-			// userBC.update(currentUser);
+			userBC.update(currentUser);
 		}
 	}
 

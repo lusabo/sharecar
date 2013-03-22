@@ -15,6 +15,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
+import business.UserBC;
 import entity.Coordinate;
 import entity.Route;
 import entity.User;
@@ -26,8 +27,10 @@ public class RouteDAO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	// @Name("default")
 	private Connection connection;
+	
+	@Inject
+	private UserBC userBC;
 
 	@Transactional
 	public void insert(Route rota, User user) throws Exception {
@@ -73,30 +76,7 @@ public class RouteDAO implements Serializable {
 		return result;
 	}
 
-	// public List<Route> findAll() throws Exception {
-	// StringBuffer sql = new StringBuffer();
-	// sql.append("select id, description from routes");
-	//
-	// PreparedStatement pstmt = connection.prepareStatement(sql.toString());
-	//
-	// ResultSet rs = pstmt.executeQuery();
-	// List<Route> result = new ArrayList<Route>();
-	//
-	// while (rs.next()) {
-	// Route route = new Route();
-	//
-	// route.setId(rs.getInt("id"));
-	// route.setDescription(rs.getString("description"));
-	//
-	// result.add(route);
-	// }
-	// rs.close();
-	// pstmt.close();
-	//
-	// return result;
-	// }
-
-	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
+		public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select distinct routes.id, routes.description, routes.username ");
 		sql.append("from routes inner join schedules on (routes.id = schedules.route_id) ");
@@ -112,7 +92,7 @@ public class RouteDAO implements Serializable {
 		pstmt.setInt(3, weekday.getValor());
 		pstmt.setInt(4, radius);
 
-		//pstmt.setString(1, user.getUsername());
+		//pstmt.setString(5, user.getUsername());
 
 		ResultSet rs = pstmt.executeQuery();
 		List<Route> result = new ArrayList<Route>();
@@ -122,7 +102,7 @@ public class RouteDAO implements Serializable {
 
 			route.setId(rs.getInt("id"));
 			route.setDescription(rs.getString("description"));
-			//route.setUser(new User(rs.getString("username")));
+			route.setUser(userBC.load(rs.getString("username")));
 
 			result.add(route);
 		}
@@ -145,10 +125,9 @@ public class RouteDAO implements Serializable {
 
 		if (rs.next()) {
 			result = new Route();
-
 			result.setId(rs.getInt("id"));
 			result.setDescription(rs.getString("description"));
-			//result.setUser(new User(rs.getString("username")));
+			result.setUser(userBC.load(rs.getString("username")));
 			result.setCoords(parse(rs.getString("json")));
 		}
 

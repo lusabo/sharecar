@@ -13,7 +13,6 @@ import br.gov.frameworkdemoiselle.stereotype.PersistenceController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Route;
 import entity.Schedule;
-import entity.User;
 
 
 @PersistenceController

@@ -58,20 +58,20 @@ function loadRoutesTable(data) {
 			function (key, val) {
 				tr = '';
 		        tr += '<tr>';
-		        tr += '<td width="24px">';
+		        tr += '<td width="20px">';
 		        tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-		        tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+		        tr += '<img src="img/map.png" style="height: 20px; width: 20px;" border="0" title="Ver rota no mapa">';
 		        tr += '</a>';
 		        tr += '</td>';
 		        tr += '<td>' + val.description + '</td>';
-		        tr += '<td width="24px">';
+		        tr += '<td width="20px">';
 		        tr += '<a href="#" name="sched-' + val.id + '" route="' + val.id + '">';
-		        tr += '<img src="img/calendar.png" style="height: 24px; width: 24px;" border="0" title="Agendar rota">';
+		        tr += '<img src="img/calendar.png" style="height: 20px; width: 20px;" border="0" title="Agendar rota">';
 		        tr += '</a>';
 		        tr += '</td>';
-		        tr += '<td width="24px">';
+		        tr += '<td width="20px">';
 		        tr += '<a href="#" name="del-' + val.id + '" route="' + val.id + '">';
-		        tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
+		        tr += '<img src="img/delete.png" style="height: 20px; width: 20px;" border="0" title="Apagar rota">';
 		        tr += '</a>';
 		        tr += '</td>';
 		        tr += '</tr>';
@@ -94,9 +94,9 @@ function loadSchedulesTable(data){
 		        tr += '<tr>';
 		        tr += '<td>' + val.weekday + '</td>';
 		        tr += '<td>' + (val.hour).substr(0,5) + '</td>';
-		        tr += '<td width="24px">';
+		        tr += '<td width="20px">';
 		        tr += '<a href="#" name="del-' + val.id + '" schedule="' + val.id + '" route="' + val.route.id + '">';
-		        tr += '<img src="img/delete.png" style="height: 24px; width: 24px;" border="0" title="Apagar rota">';
+		        tr += '<img src="img/delete.png" style="height: 20px; width: 20px;" border="0" title="Apagar rota">';
 		        tr += '</a>';
 		        tr += '</td>';
 		        tr += '</tr>';
@@ -131,6 +131,18 @@ function openRouteSchedDialog(route){
 	var schedule = new Schedule();
 	schedule._load(route.id, loadSchedulesTable);
 	$("#dialog-sched").dialog("open").dialog({
+		open: function(){
+			console.log('open');
+			$("#sched-message").text("");
+		},
+		create: function(){
+			console.log('create');
+			$("#sched-message").text("");
+		},
+		focus: function(){
+			console.log('focus');
+			$("#sched-message").text("");
+		},		
 		title: "Rota: " + route.description,
 		buttons: [{
 			text: "Salvar", 
@@ -140,7 +152,11 @@ function openRouteSchedDialog(route){
 				});
 				schedule._load(route.id, loadSchedulesTable);
 			}
-		}]
+		}],
+		close: function() {
+			$("#frm-sched").each(function() {this.reset();});
+			$("#sched-message").text("");
+		}
 	});
 }
 
@@ -179,13 +195,12 @@ function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
 				$.each(data, function (key, val) {
 					tr = '';
 					tr += '<tr>';
-					tr += '<td width="24px">';
+					tr += '<td width="20px">';
 					tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-					tr += '<img src="img/map.png" style="height: 24px; width: 24px;" border="0" title="Ver rota no mapa">';
+					tr += '<img src="img/map.png" style="height: 20px; width: 20px;" border="0" title="Ver rota no mapa">';
 					tr += '</a>';
 					tr += '</td>';
-					tr += '<td>' + val.description + '</td>';
-					tr += '<td> Fulano </td>';
+					tr += '<td>' + val.user.displayName + '<br/>' + val.user.telephoneNumber + '<br/>' + val.user.email + '</td>';
 					tr += '</tr>';
 					$("#table-pesquisa > tbody:last").append(tr);
 				});
@@ -225,7 +240,12 @@ function addMarker(location, _radius) {
 	google.maps.event.addListener(marker, 'dragend', function (position) {
 		addCircle(position.latLng, radius);
 		getAddress(position.latLng.lat(), position.latLng.lng());
-		loadSearchRoutesTable(position.latLng.lat(), position.latLng.lng(), radius);
+		loadSearchRoutesTable(position.latLng.lat(), 
+				  position.latLng.lng(), 
+				  $("#radius").val(), 
+				  $("input:radio[name=radio]:checked").val(),
+				  $("#hour-ini").val(),
+				  $("#hour-end").val());
 	});
 }
 

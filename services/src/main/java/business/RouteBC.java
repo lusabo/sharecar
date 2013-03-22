@@ -6,7 +6,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import persistence.RouteDAO;
-import persistence.ScheduleDAO;
 import br.gov.frameworkdemoiselle.stereotype.BusinessController;
 import br.gov.frameworkdemoiselle.transaction.Transactional;
 import entity.Coordinate;
@@ -42,7 +41,7 @@ public class RouteBC {
 	}
 
 	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
-		return routeDAO.find(coord, radius, user, weekday, hourini, hourend);
+		return routeDAO.find(coord, radius, user, weekday, hourini, hourend); 
 	}
 	
 }

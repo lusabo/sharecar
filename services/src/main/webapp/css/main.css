@@ -22,12 +22,20 @@ table {
 .table {
   width: 100%;
   margin-bottom: 20px;
+  font-size: 0.8em;
 }
 
-.table th,
-.table td {
+.table th {
   padding: 8px;
-  line-height: 20px;
+  line-height: 16px;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+
+.table td {
+  padding: 4px;
+  line-height: 16px;
   text-align: left;
   vertical-align: top;
   border-top: 1px solid #dddddd;
@@ -35,6 +43,7 @@ table {
 
 .table th {
   font-weight: bold;
+  background-color: #ccc;
 }
 
 .table thead th {

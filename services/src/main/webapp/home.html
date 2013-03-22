@@ -47,22 +47,25 @@
 			width: 410
 		});
 
-		//OK
 		$("#criar").click(function(){
 			var route = new Route();
 			route._findAll(loadRoutesTable);
 			$("#dialog-criar").dialog("open").dialog("option", "title", "Criar Rota").dialog({
+				position: { my: "left top", at: "left bottom", of: window },
 				buttons: [{
 					text: "Salvar", 
 					click: function() { 
 						route._insert($("#route-name").val(), google.maps.geometry.encoding.decodePath(directionsDisplay.getDirections().routes[0].overview_polyline.points),  success, error);
 						route._findAll(loadRoutesTable);
 					}
-				}]
+				}],
+				close: function() {
+					$("#frm-criar").each(function() {this.reset();});
+					$("#route-message").text("");
+				}
 			});
 		});
 
-		//OK
 		$("#table-rotas").delegate("a[name^='del-']", "click", function () {
 			deleteOverlays(pathsArray);
 			$("#dialog-sched").dialog("close");
@@ -173,7 +176,7 @@
 	<div id="map"></div>
 
 	<div id="dialog-criar">
-		
+		<form id="frm-criar">
 		<label>Nome</label> 
 		<input id="route-name" type="text" placeholder="Digite nome da rota" class="span5">
 		 
@@ -182,6 +185,7 @@
 		
 		<label>Destino</label> 
 		<input id="end" type="text" class="span5"> 
+		</form>
 		
 		<div id="route-message"></div>
 		
@@ -195,6 +199,7 @@
 	</div>
 
 	<div id="dialog-sched">
+		<form id="frm-sched">
 		<label>Marques os dias da semana que você faz essa rota</label>
 			<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
 				<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1"/><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
@@ -208,7 +213,7 @@
 		<label>Horário</label>
 		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
 		<br/><br/>
-		
+		</form>
 		<div id="sched-message"></div>
 		
     <table id="table-schedules" class="table table-bordered">
@@ -246,7 +251,7 @@
 		
 		<table id="table-pesquisa" class="table table-bordered">
 		  <thead>
-    		<tr><th colspan="3">Rotas disponíveis</th></tr>
+    		<tr><th colspan="2">Rotas disponíveis</th></tr>
     	</thead>
 			<tbody>
 			</tbody>
