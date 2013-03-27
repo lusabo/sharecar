@@ -10,7 +10,7 @@ import entity.User;
 public class UserBC {
 
 	@Inject
-	UserDAO userDAO;
+	private UserDAO userDAO;
 	
 	public void insert(User user) throws Exception {
 		userDAO.insert(user);

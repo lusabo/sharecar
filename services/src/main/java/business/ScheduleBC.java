@@ -13,7 +13,7 @@ import entity.Schedule;
 public class ScheduleBC {
 
 	@Inject
-	ScheduleDAO scheduleDAO;
+	private ScheduleDAO scheduleDAO;
 
 	public void insert(Schedule schedule) throws Exception {
 		scheduleDAO.insert(schedule);
