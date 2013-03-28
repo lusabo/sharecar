@@ -33,17 +33,6 @@ public class AuthenticationService {
 		credentials.setPassword(password);
 
 		securityContext.login();
-
-		User currentUser = (User) securityContext.getCurrentUser();
-		User persistedUser = userBC.load(currentUser.getName());
-
-		if (persistedUser == null) {
-			userBC.insert(currentUser);
-
-		} else if (!currentUser.equals(persistedUser)) {
-			currentUser.setId(persistedUser.getId());
-			userBC.update(currentUser);
-		}
 	}
 
 	@DELETE
