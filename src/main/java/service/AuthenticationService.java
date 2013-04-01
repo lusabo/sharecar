@@ -14,7 +14,6 @@ import br.gov.frameworkdemoiselle.security.Credentials;
 import br.gov.frameworkdemoiselle.security.LoggedIn;
 import br.gov.frameworkdemoiselle.security.SecurityContext;
 import br.gov.frameworkdemoiselle.util.Beans;
-import business.UserBC;
 import entity.User;
 
 @Path("/auth")
@@ -22,9 +21,6 @@ public class AuthenticationService {
 
 	@Inject
 	private SecurityContext securityContext;
-
-	@Inject
-	private UserBC userBC;
 
 	@POST
 	public void login(@FormParam("username") String username, @FormParam("password") String password) throws Exception {

@@ -13,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import br.gov.frameworkdemoiselle.security.LoggedIn;
 import br.gov.frameworkdemoiselle.security.SecurityContext;
@@ -59,11 +60,10 @@ public class RouteService {
 	}
 
 	@GET
-	@Path("/{lat}/{lng}/{radius}/{weekday}/{hourini}/{hourend}")
 	@Produces(JSON_MEDIA_TYPE)
-	public List<Route> find(@PathParam("lat") Double latitude, @PathParam("lng") Double longitude,
-			@PathParam("radius") Integer radius, @PathParam("weekday") Integer weekday,
-			@PathParam("hourini") Time hourini, @PathParam("hourend") Time hourend) throws Exception {
+	public List<Route> find(@QueryParam("lat") Double latitude, @QueryParam("lng") Double longitude,
+			@QueryParam("radius") Integer radius, @QueryParam("weekday") Integer weekday,
+			@QueryParam("hourini") Time hourini, @QueryParam("hourend") Time hourend) throws Exception {
 		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday),
 				hourini, hourend);
 	}
