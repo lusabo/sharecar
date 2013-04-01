@@ -25,6 +25,10 @@
 		<to>/mobile.html</to>
 	</rule>
 
+	<rule>
+		<from>^/teste$</from>
+		<to>/teste.html</to>
+	</rule>
 	<!--
 	<rule>
 		<from>^(?:(?!\.\w+).)*$</from>

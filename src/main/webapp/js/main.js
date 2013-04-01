@@ -184,7 +184,7 @@ function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
 	$('#table-pesquisa tbody > tr').remove();
 	$.ajax({
 		type: "GET",
-		url : "api/route/" + lat + "/" + lng + "/" + radius + "/" + weekday + "/" + hourini + ":00/" + hourend + ":00",
+		url : "api/route?lat=" + lat + "&lng=" + lng + "&radius=" + radius + "&weekday=" + weekday + "&hourini=" + hourini + ":00&hourend=" + hourend + ":00",
 		dataType : 'json',
 		success : function(data) {
 			var tr = '';
