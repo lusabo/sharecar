@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
+
+	<context-root>sharecar-services</context-root>
+
 	<!--
 	<security-domain>sharecarLDAP</security-domain>
 
