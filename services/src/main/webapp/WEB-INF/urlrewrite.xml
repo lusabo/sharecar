@@ -19,6 +19,11 @@
 		<from>^/home$</from>
 		<to>/home.html</to>
 	</rule>
+	
+	<rule>
+		<from>^/mobile$</from>
+		<to>/mobile.html</to>
+	</rule>
 
 	<!--
 	<rule>

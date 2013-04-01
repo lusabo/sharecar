@@ -14,7 +14,7 @@ public class DDL {
 	@Inject
 	private Connection connection;
 
-	@Startup
+	//@Startup
 	@Transactional
 	public void dropAndCreate() throws Exception {
 		dropTableIfExists("routes");
