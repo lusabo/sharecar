@@ -12,7 +12,7 @@ function Route() {
 }
 
 Route.prototype._insert = function(_description, _coords, _success, _error) {
-
+	
 	var coordinates = new Array();
 
 	for ( var i = 0; i < _coords.length; i++) {
@@ -22,7 +22,7 @@ Route.prototype._insert = function(_description, _coords, _success, _error) {
 	this.description = _description;
 	this.coords = coordinates;
 
-	$.ajax({
+	return $.ajax({
 		type : "PUT",
 		url : "api/route",
 		data : JSON.stringify(this),
@@ -35,7 +35,6 @@ Route.prototype._insert = function(_description, _coords, _success, _error) {
 			_error($("#route-message"), 'Erro ao cadastrar rota.');
 		}
 	});
-
 };
 
 Route.prototype._delete = function(_id, _success, _error) {
@@ -66,7 +65,7 @@ Route.prototype._load = function(_id, _callback) {
 };
 
 Route.prototype._findAll = function(_callback) {
-	
+
 	$.ajax({
 		type : "GET",
 		url : "api/route",
