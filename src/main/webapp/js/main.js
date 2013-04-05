@@ -130,7 +130,7 @@ function showRouteOnMap(route) {
 
 function openRouteSchedDialog(route){
 	var schedule = new Schedule();
-	schedule._load(route.id, loadSchedulesTable);
+	schedule._findByRoute(route.id, loadSchedulesTable);
 	$("#dialog-sched").dialog("open").dialog({
 		open: function(){
 			console.log('open');
@@ -179,6 +179,10 @@ function success(target, msg){
 function error(target, msg){
 	$(target).addClass("erro").text(msg);
 	return false;
+}
+
+function returnObj(obj){
+	return obj;
 }
 
 /*******************************************/
@@ -346,7 +350,7 @@ function loadRoutesTable(data){
 							"mData" : "id", 
 							"bSortable" : false,
 							"mRender" : function ( data ) {
-									return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+									return '<a href="#" name="del-' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
 						    }
 						 }
 		             	 ],
@@ -370,7 +374,6 @@ function loadRoutesTable(data){
 
 
 function loadSchedulesTable(data){
-	console.log(data);
 	var oTable = $('#table-schedules').dataTable({
 		"aaSorting": [[0,'asc']],
 		"bRetrieve": true,
@@ -390,16 +393,19 @@ function loadSchedulesTable(data){
 		},
 		"iDisplayLength" : 4,
 		"aaData" : data,
-		"aoColumnDefs" : [ 
-		                 { "aTargets" : [0], "mData" : "id", "bVisible": false },		                  
-	              		 { "aTargets" : [1], "mData" : "weekday", "sTitle" : "Dia" , "iDataSort": 0},
-	              		 { "aTargets" : [2], "mData" : "hour", "sTitle" : "Horário", "mRender" : function( data ){ return data.substr(0,5); } },	
+		"aoColumnDefs" : [
+		                 { "aTargets" : [0], "mData" : "weekdayId", "bVisible": false},		                  
+	              		 { "aTargets" : [1], "mData" : "weekday", "sTitle" : "Horários disponíveis", "iDataSort": 0},
+	              		 { "aTargets" : [2], "mData" : "hour", "sTitle" : "Horário",  "bSortable": false, "mRender" : function( data ){ return data.substr(0,5); } },	
 		              	 { "aTargets" : [3], 
 							"sWidth" : "20px",
 							"mData" : "id", 
-							"bSortable" : false,
+							"bSortable": false,
 							"mRender" : function ( data ) {
-									return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+								/*var schedule = new Schedule();
+								schedule._load2(data);
+								console.log(schedule.id);*/
+								return '<a href="#" name="del-' + data + '" schedule="' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
 						    }
 						 }
 		             	 ],

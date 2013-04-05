@@ -19,6 +19,10 @@ public class ScheduleBC {
 		scheduleDAO.insert(schedule);
 	}
 
+	public Schedule load(Integer id) throws Exception {
+		return scheduleDAO.load(id);
+	}
+	
 	public void delete(Integer id) throws Exception {
 		scheduleDAO.delete(id);
 	}

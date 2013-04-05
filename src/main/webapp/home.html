@@ -86,7 +86,7 @@
 		$("#table-schedules").delegate("a[name^='del-']", "click", function () {
 			var schedule = new Schedule();
 			schedule._delete($(this).attr("schedule"), success, error);
-			schedule._load($(this).attr("route"), loadSchedulesTable);
+			schedule._findByRoute($(this).attr("route"), loadSchedulesTable);
 	  });		
 		  	
 
@@ -188,7 +188,7 @@
 
 		<form id="frm-criar">
 			<label>Nome</label> 
-			<input id="route-name" type="text" placeholder="Digite nome da rota" class="span5">
+			<input id="route-name" type="text" placeholder="Digite nome da rota" class="span5" maxlength="50">
 			 
 			<label>Origem</label> 
 			<input id="start" type="text" class="span5"> 
