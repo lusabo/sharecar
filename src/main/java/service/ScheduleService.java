@@ -34,6 +34,13 @@ public class ScheduleService {
 	}
 
 	@GET
+	@Path("/{id}")
+	@Produces(JSON_MEDIA_TYPE)
+	public Schedule load(@PathParam("id") Integer id) throws Exception {
+		return scheduleBC.load(id);
+	}
+	
+	@GET
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Schedule> find(@QueryParam("routeId") Integer routeId) throws Exception {
 		return scheduleBC.find(routeBC.load(routeId));

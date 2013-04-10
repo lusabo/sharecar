@@ -89,4 +89,29 @@ public class ScheduleDAO implements Serializable{
 		pstmt.execute();
 		pstmt.close();
 	}
+	
+	public Schedule load(Integer id) throws Exception {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select id, route_id, weekday, hour ");
+		sql.append("from schedules where id = ?");
+
+		PreparedStatement pstmt = connection.prepareStatement(sql.toString());
+		pstmt.setInt(1, id);
+
+		ResultSet rs = pstmt.executeQuery();
+		Schedule result = null;
+
+		if (rs.next()) {
+			result = new Schedule();
+			result.setId(rs.getInt("id"));
+			result.setRoute(routeDAO.load(rs.getInt("route_id")));
+			result.setWeekday(rs.getInt("weekday"));
+			result.setHour(rs.getTime("hour"));
+		}
+
+		rs.close();
+		pstmt.close();
+
+		return result;
+	}	
 }

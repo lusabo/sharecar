@@ -47,7 +47,7 @@ function showRouteBetweenPoints(start, end) {
 }
 
 // Carrega a tabela com as rotas salvas do usuário
-function loadRoutesTable(data) {
+/*function loadRoutesTable(data) {
 	$('#table-rotas tbody > tr').remove();
 	var tr = '';
 	if(data.length == 0){
@@ -104,6 +104,7 @@ function loadSchedulesTable(data){
     		});
 	}
 }
+ */
 
 // Mostra determinada rota no mapa 
 function showRouteOnMap(route) {
@@ -129,7 +130,7 @@ function showRouteOnMap(route) {
 
 function openRouteSchedDialog(route){
 	var schedule = new Schedule();
-	schedule._load(route.id, loadSchedulesTable);
+	schedule._findByRoute(route.id, loadSchedulesTable);
 	$("#dialog-sched").dialog("open").dialog({
 		open: function(){
 			console.log('open');
@@ -172,10 +173,16 @@ function deleteOverlays(_array) {
 
 function success(target, msg){
 	$(target).addClass("sucesso").text(msg);
+	return true;
 }
 
 function error(target, msg){
 	$(target).addClass("erro").text(msg);
+	return false;
+}
+
+function returnObj(obj){
+	return obj;
 }
 
 /*******************************************/
@@ -300,4 +307,119 @@ function getAddress(lat, lng) {
 	});
 }
 
+function loadRoutesTable(data){
+	var oTable = $('#table-rotas').dataTable({
+		"bRetrieve": true,
+		"bDestroy" : true,
+		"bFilter" : false,
+		"bLengthChange" : false,
+		"bInfo" : false,
+		"sDom" : "<'row'<'span5'l><'span5'f>r>t<'row'<'span5'i><'span5'p>>",
+		"sPaginationType" : "bootstrap",
+		"oLanguage" : {
+			"sProcessing" : "Carregando ...",
+			"sZeroRecords" : "Você ainda não cadastrou rotas.",
+			"oPaginate" : {
+				"sNext" : "",
+				"sPrevious" : ""
+			}
+		},
+		"iDisplayLength" : 4,
+		"aaData" : data,
+		"aoColumnDefs" : [ 
+	              		 { "aTargets" : [0], "mData" : "description", "sTitle" : "Minhas Rotas" },
 
+		                 { "aTargets" : [1], 
+							"sWidth" : "20px",
+							"mData" : "id", 
+							"bSortable" : false,
+							"mRender" : function ( data ) {
+									return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/map.png" style="height: 20px; width: 20px;" title="Ver Rota"/></a>';
+							}
+						 },
+						 { "aTargets" : [2], 
+							"sWidth" : "20px",
+							"mData" : "id", 
+							"bSortable" : false,
+							"mRender" : function ( data ) {
+									return '<a href="#" name="sched-' + data + '" route="' + data + '"><img src="img/calendar.png" style="height: 20px; width: 20px;"/></a>';
+							}
+						 },
+		              	 { "aTargets" : [3], 
+							"sWidth" : "20px",
+							"mData" : "id", 
+							"bSortable" : false,
+							"mRender" : function ( data ) {
+									return '<a href="#" name="del-' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+						    }
+						 }
+		             	 ],
+		"fnHeaderCallback" : function( nHead ) {
+			$(nHead.getElementsByTagName('th')[0]).attr("colspan","4");
+			for(var i = 1; i <= 3; i++){
+				$(nHead.getElementsByTagName('th')[1]).remove();
+			}
+		},
+		"fnRowCallback" : function( nRow ) {
+				$(nRow.getElementsByTagName('td')[1]).attr("width","20px");
+				$(nRow.getElementsByTagName('td')[2]).attr("width","20px");
+				$(nRow.getElementsByTagName('td')[3]).attr("width","20px");
+		}
+					             		
+	});
+	oTable.fnClearTable();
+	oTable.fnAddData(data);
+}
+
+
+
+function loadSchedulesTable(data){
+	var oTable = $('#table-schedules').dataTable({
+		"aaSorting": [[0,'asc']],
+		"bRetrieve": true,
+		"bDestroy" : true,
+		"bFilter" : false,
+		"bLengthChange" : false,
+		"bInfo" : false,
+		"sDom" : "<'row'<'span5'l><'span5'f>r>t<'row'<'span5'i><'span5'p>>",
+		"sPaginationType" : "bootstrap",
+		"oLanguage" : {
+			"sProcessing" : "Carregando ...",
+			"sZeroRecords" : "Rota sem horário disponibilizado.",
+			"oPaginate" : {
+				"sNext" : "",
+				"sPrevious" : ""
+			}
+		},
+		"iDisplayLength" : 4,
+		"aaData" : data,
+		"aoColumnDefs" : [
+		                 { "aTargets" : [0], "mData" : "weekdayId", "bVisible": false},		                  
+	              		 { "aTargets" : [1], "mData" : "weekday", "sTitle" : "Horários disponíveis", "iDataSort": 0},
+	              		 { "aTargets" : [2], "mData" : "hour", "sTitle" : "Horário",  "bSortable": false, "mRender" : function( data ){ return data.substr(0,5); } },	
+		              	 { "aTargets" : [3], 
+							"sWidth" : "20px",
+							"mData" : "id", 
+							"bSortable": false,
+							"mRender" : function ( data ) {
+								/*var schedule = new Schedule();
+								schedule._load2(data);
+								console.log(schedule.id);*/
+								return '<a href="#" name="del-' + data + '" schedule="' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+						    }
+						 }
+		             	 ],
+		"fnHeaderCallback" : function( nHead ) {
+			$(nHead.getElementsByTagName('th')[0]).attr("colspan","3");
+			for(var i = 1; i <= 3; i++){
+				$(nHead.getElementsByTagName('th')[1]).remove();
+			}
+		},
+		"fnRowCallback" : function( nRow ) {
+				$(nRow.getElementsByTagName('td')[2]).attr("width","20px");
+		}
+					             		
+	});
+	oTable.fnClearTable();
+	oTable.fnAddData(data);
+}

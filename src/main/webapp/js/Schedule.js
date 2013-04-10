@@ -1,5 +1,6 @@
 function Schedule() {
 	this.id;
+	this.weekdayId;
 	this.weekday;
 	this.hour;
 	this.route;
@@ -46,12 +47,73 @@ Schedule.prototype._delete = function(_id, _success, _error) {
 Schedule.prototype._load = function(_id, _callback) {
 	
 	$.ajax({
-
 		type : "GET",
-		url : "api/schedule?routeId=" + _id,
+		url : "api/schedule/" + _id,
 		dataType : "json",
 		success : function(data) {
 			_callback(data);
+		}
+	});
+};
+
+Schedule.prototype._load2 = function(_id) {
+	
+	$.ajax({
+		type : "GET",
+		url : "api/schedule/" + _id,
+		dataType : "json",
+		context: this,
+		success : function(data) {
+			this.id = data.id;
+			this.weekday = data.weekday;
+			this.hour = data.hour;
+			this.route = data.route;
+		}
+	});
+};
+
+Schedule.prototype._findByRoute = function(_routeId, _callback) {
+	
+	$.ajax({
+		type : "GET",
+		url : "api/schedule?routeId=" + _routeId,
+		dataType : "json",
+		success : function(data) {
+			var aSchedule = new Array();
+			$.each(data, function(){
+				var schedule = new Schedule();
+				schedule.id = this.id;
+				schedule.weekday = this.weekday;
+				schedule.hour = this.hour;
+				schedule.route = this.route;
+				
+				switch (this.weekday) {
+					case "DOMINGO":
+						schedule.weekdayId = 1; 
+						break;
+					case "SEGUNDA":
+						schedule.weekdayId = 2; 
+						break;
+					case "TERÇA":
+						schedule.weekdayId = 3; 
+						break;
+					case "QUARTA":
+						schedule.weekdayId = 4; 
+						break;
+					case "QUINTA":
+						schedule.weekdayId = 5; 
+						break;
+					case "SEXTA":
+						schedule.weekdayId = 6; 
+						break;
+					case "SÁBADO":
+						schedule.weekdayId = 7; 
+						break;
+				}
+				
+				aSchedule.push(schedule);
+			});
+			_callback(aSchedule);
 		}
 	});
 };
