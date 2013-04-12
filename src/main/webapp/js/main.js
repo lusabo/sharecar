@@ -104,6 +104,37 @@ function loadSchedulesTable(data){
     		});
 	}
 }
+
+//Busca pekas rotas
+function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
+	$('#table-pesquisa tbody > tr').remove();
+	$.ajax({
+		type: "GET",
+		url : "api/route?lat=" + lat + "&lng=" + lng + "&radius=" + radius + "&weekday=" + weekday + "&hourini=" + hourini + ":00&hourend=" + hourend + ":00",
+		dataType : 'json',
+		success : function(data) {
+			var tr = '';
+			if(data.length == 0){
+				tr = '<tr><td colspan="3">Nenhuma rota encontrada</td></tr>';
+		        $("#table-pesquisa > tbody:last").append(tr);
+			} else {	
+				$.each(data, function (key, val) {
+					tr = '';
+					tr += '<tr>';
+					tr += '<td width="20px">';
+					tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
+					tr += '<img src="img/map.png" style="height: 20px; width: 20px;" border="0" title="Ver rota no mapa">';
+					tr += '</a>';
+					tr += '</td>';
+					tr += '<td>' + val.user.displayName + '<br/>' + val.user.telephoneNumber + '<br/>' + val.user.email + '</td>';
+					tr += '</tr>';
+					$("#table-pesquisa > tbody:last").append(tr);
+				});
+			}
+		}
+	});
+	$("#table-pesquisa").show();
+}
  */
 
 // Mostra determinada rota no mapa 
@@ -149,9 +180,12 @@ function openRouteSchedDialog(route){
 			text: "Salvar", 
 			click: function() {
 				$('input:checked[name=weekday]').each(function(){
-					schedule._insert($(this).val(), $("#hour").val(), route, success, error);
+					$.when(
+						schedule._insert($(this).val(), $("#hour").val(), route, success, error)
+					).done(function(){
+						schedule._findByRoute(route.id, loadSchedulesTable);
+					});
 				});
-				schedule._load(route.id, loadSchedulesTable);
 			}
 		}],
 		close: function() {
@@ -186,36 +220,7 @@ function returnObj(obj){
 }
 
 /*******************************************/
-// Busca pekas rotas
-function loadSearchRoutesTable(lat, lng, radius, weekday, hourini, hourend){
-	$('#table-pesquisa tbody > tr').remove();
-	$.ajax({
-		type: "GET",
-		url : "api/route?lat=" + lat + "&lng=" + lng + "&radius=" + radius + "&weekday=" + weekday + "&hourini=" + hourini + ":00&hourend=" + hourend + ":00",
-		dataType : 'json',
-		success : function(data) {
-			var tr = '';
-			if(data.length == 0){
-				tr = '<tr><td colspan="3">Nenhuma rota encontrada</td></tr>';
-		        $("#table-pesquisa > tbody:last").append(tr);
-			} else {	
-				$.each(data, function (key, val) {
-					tr = '';
-					tr += '<tr>';
-					tr += '<td width="20px">';
-					tr += '<a href="#" name="route-' + val.id + '" route="' + val.id + '">';
-					tr += '<img src="img/map.png" style="height: 20px; width: 20px;" border="0" title="Ver rota no mapa">';
-					tr += '</a>';
-					tr += '</td>';
-					tr += '<td>' + val.user.displayName + '<br/>' + val.user.telephoneNumber + '<br/>' + val.user.email + '</td>';
-					tr += '</tr>';
-					$("#table-pesquisa > tbody:last").append(tr);
-				});
-			}
-		}
-	});
-	$("#table-pesquisa").show();
-}
+
 
 
 
@@ -248,11 +253,11 @@ function addMarker(location, _radius) {
 		addCircle(position.latLng, radius);
 		getAddress(position.latLng.lat(), position.latLng.lng());
 		loadSearchRoutesTable(position.latLng.lat(), 
-				  position.latLng.lng(), 
-				  $("#radius").val(), 
-				  $("input:radio[name=radio]:checked").val(),
-				  $("#hour-ini").val(),
-				  $("#hour-end").val());
+				  			  position.latLng.lng(), 
+				  			  $("#radius").val(), 
+				  			  $("input:radio[name=radio]:checked").val(),
+				  			  $("#hour-ini").val(),
+				  			  $("#hour-end").val());
 	});
 }
 
@@ -284,11 +289,11 @@ function openSearchDialog(){
 					alert("Você deve selecionar um ponto no mapa!");
 				} else {
 					loadSearchRoutesTable(markersArray[0].position.lat(), 
-									  markersArray[0].position.lng(), 
-									  $("#radius").val(), 
-									  $("input:radio[name=radio]:checked").val(),
-									  $("#hour-ini").val(),
-									  $("#hour-end").val());
+									  	  markersArray[0].position.lng(), 
+									  	  $("#radius").val(), 
+									  	  $("input:radio[name=radio]:checked").val(),
+									  	  $("#hour-ini").val(),
+									  	  $("#hour-end").val());
 				}
 			}
 		}]
@@ -371,8 +376,6 @@ function loadRoutesTable(data){
 	oTable.fnAddData(data);
 }
 
-
-
 function loadSchedulesTable(data){
 	var oTable = $('#table-schedules').dataTable({
 		"aaSorting": [[0,'asc']],
@@ -399,14 +402,10 @@ function loadSchedulesTable(data){
 	              		 { "aTargets" : [2], "mData" : "hour", "sTitle" : "Horário",  "bSortable": false, "mRender" : function( data ){ return data.substr(0,5); } },	
 		              	 { "aTargets" : [3], 
 							"sWidth" : "20px",
-							"mData" : "id", 
-							"bSortable": false,
-							"mRender" : function ( data ) {
-								/*var schedule = new Schedule();
-								schedule._load2(data);
-								console.log(schedule.id);*/
-								return '<a href="#" name="del-' + data + '" schedule="' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
-						    }
+							"bSortable" : false,
+							"mData" : function(source){
+								return '<a href="#" name="del-' + source.id + '" schedule="' + source.id + '" route="' + source.route.id + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+							}
 						 }
 		             	 ],
 		"fnHeaderCallback" : function( nHead ) {
@@ -422,4 +421,52 @@ function loadSchedulesTable(data){
 	});
 	oTable.fnClearTable();
 	oTable.fnAddData(data);
+}
+
+function loadSearchRoutesTable(data){
+	var oTable = $('#table-search').dataTable({
+		"aaSorting": [[0,'asc']],
+		"bRetrieve": true,
+		"bDestroy" : true,
+		"bFilter" : false,
+		"bLengthChange" : false,
+		"bInfo" : false,
+		"sDom" : "<'row'<'span5'l><'span5'f>r>t<'row'<'span5'i><'span5'p>>",
+		"sPaginationType" : "bootstrap",
+		"oLanguage" : {
+			"sProcessing" : "Carregando ...",
+			"sZeroRecords" : "Nenhuma rota disponível.",
+			"oPaginate" : {
+				"sNext" : "",
+				"sPrevious" : ""
+			}
+		},
+		"iDisplayLength" : 4,
+		"aaData" : data,
+		"aoColumnDefs" : [
+		                 { "aTargets" : [0], "mData" : "weekdayId", "bVisible": false},		                  
+	              		 { "aTargets" : [1], "mData" : "weekday", "sTitle" : "Horários disponíveis", "iDataSort": 0},
+	              		 { "aTargets" : [2], "mData" : "hour", "sTitle" : "Horário",  "bSortable": false, "mRender" : function( data ){ if (data != null) return data.substr(0,5); } },	
+		              	 { "aTargets" : [3], 
+							"sWidth" : "20px",
+							"bSortable" : false,
+							"mData" : function(source){
+								return '<a href="#" name="del-' + source.id + '" schedule="' + source.id + '" route="' + source.route.id + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
+							}
+						 }
+		             	 ],
+		"fnHeaderCallback" : function( nHead ) {
+			$(nHead.getElementsByTagName('th')[0]).attr("colspan","3");
+			for(var i = 1; i <= 3; i++){
+				$(nHead.getElementsByTagName('th')[1]).remove();
+			}
+		},
+		"fnRowCallback" : function( nRow ) {
+				$(nRow.getElementsByTagName('td')[2]).attr("width","20px");
+		}
+					             		
+	});
+	oTable.fnClearTable();
+	oTable.fnAddData(data);	
+	
 }

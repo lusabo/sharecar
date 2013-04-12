@@ -12,8 +12,7 @@ Schedule.prototype._insert = function(weekday, hour, route, _success, _error) {
 	this.hour = hour + ":00";
 	this.route = route;
 
-	$.ajax({
-		async : false,
+	return $.ajax({
 		type : "PUT",
 		url : "api/schedule",
 		data : JSON.stringify(this),

@@ -187,6 +187,7 @@
 	<div id="dialog-criar">
 
 		<form id="frm-criar">
+		
 			<label>Nome</label> 
 			<input id="route-name" type="text" placeholder="Digite nome da rota" class="span5" maxlength="50">
 			 
@@ -195,81 +196,70 @@
 			
 			<label>Destino</label> 
 			<input id="end" type="text" class="span5"> 
+			
 		</form>
 		
 		<div id="route-message"></div>
 		
     <table class="table table-striped table-bordered" id="table-rotas" style="padding:0"></table>
-		
-    <!-- table id="table-rotas" class="table table-bordered">
-    	<thead>
-    		<tr><th colspan="4">Minhas Rotas</th></tr>
-    	</thead>
-      <tbody>
-      </tbody>
-   </table -->
+
 	</div>
 
 	<div id="dialog-sched">
+	
 		<form id="frm-sched">
-		<label>Marques os dias da semana que você faz essa rota</label>
-			<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
-				<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1"/><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
-				<input type="checkbox" id="weekday2" name="weekday" value="2" class="span1"/><label for="weekday2" style="font-size: 10pt; width: 51px;">Seg</label> 
-				<input type="checkbox" id="weekday3" name="weekday" value="3" class="span1"/><label for="weekday3" style="font-size: 10pt; width: 51px;">Ter</label> 
-				<input type="checkbox" id="weekday4" name="weekday" value="4" class="span1"/><label for="weekday4" style="font-size: 10pt; width: 51px;">Qua</label> 
-				<input type="checkbox" id="weekday5" name="weekday" value="5" class="span1"/><label for="weekday5" style="font-size: 10pt; width: 51px;">Qui</label> 
-				<input type="checkbox" id="weekday6" name="weekday" value="6" class="span1"/><label for="weekday6" style="font-size: 10pt; width: 51px;">Sex</label> 
-				<input type="checkbox" id="weekday7" name="weekday" value="7" class="span1"/><label for="weekday7" style="font-size: 10pt; width: 51px;">Sáb</label>
-			</div>
-		<label>Horário</label>
-		<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
-		<br/><br/>
+	
+			<label>Marques os dias da semana que você faz essa rota</label>
+				<div id="weekday" class="span5" style="margin-left: 0px; padding-top: 0px;">
+					<input type="checkbox" id="weekday1" name="weekday" value="1" class="span1"/><label for="weekday1" style="font-size: 10pt; width: 51px;">Dom</label> 
+					<input type="checkbox" id="weekday2" name="weekday" value="2" class="span1"/><label for="weekday2" style="font-size: 10pt; width: 51px;">Seg</label> 
+					<input type="checkbox" id="weekday3" name="weekday" value="3" class="span1"/><label for="weekday3" style="font-size: 10pt; width: 51px;">Ter</label> 
+					<input type="checkbox" id="weekday4" name="weekday" value="4" class="span1"/><label for="weekday4" style="font-size: 10pt; width: 51px;">Qua</label> 
+					<input type="checkbox" id="weekday5" name="weekday" value="5" class="span1"/><label for="weekday5" style="font-size: 10pt; width: 51px;">Qui</label> 
+					<input type="checkbox" id="weekday6" name="weekday" value="6" class="span1"/><label for="weekday6" style="font-size: 10pt; width: 51px;">Sex</label> 
+					<input type="checkbox" id="weekday7" name="weekday" value="7" class="span1"/><label for="weekday7" style="font-size: 10pt; width: 51px;">Sáb</label>
+				</div>
+		
+			<label>Horário</label>
+			<input id="hour" name="hour" value="08:00" style="width: 55px" readonly />
+		
 		</form>
+		
 		<div id="sched-message"></div>
 		
 		<table class="table table-striped table-bordered" id="table-schedules" style="padding:0"></table>
 		
-    <!-- table id="table-schedules" class="table table-bordered">
-    	<thead>
-    		<tr><th colspan="3">Horários</th></tr>
-    	</thead>
-      <tbody>
-	     </tbody>
-   </table -->
 	</div>
 	
 	<div id="dialog-buscar">
 	
-		<label>Marque no mapa sua localização</label>
-		<textarea id="endereco" class="span5" style="height: 50px; font-size: 10pt" readonly placeholder="Marque um ponto no mapa"></textarea>
+		<form id="frm-search">
+	
+			<label>Marque no mapa sua localização</label>
+			<textarea id="endereco" class="span5" style="height: 50px; font-size: 10pt" readonly placeholder="Marque um ponto no mapa"></textarea>
 				
-		Raio
-		<input type="text" id="radius" name="radius" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
-		<div id="slider"></div>
+			Raio
+			<input type="text" id="radius" name="radius" style="width: 55px; border: 0; color: #f6931f; font-weight: bold; text-align:center" readonly /> metros
+			<div id="slider"></div>
 
-		<label>Dia da Semana</label>
-		<div id="radio" class="span5" style="margin-left: 0px; padding-top: 0px;">
-			<input type="radio" id="radio1" name="radio" value="1" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
-			<input type="radio" id="radio2" name="radio" value="2" checked/><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
-			<input type="radio" id="radio3" name="radio" value="3" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
-			<input type="radio" id="radio4" name="radio" value="4" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
-			<input type="radio" id="radio5" name="radio" value="5" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
-			<input type="radio" id="radio6" name="radio" value="6" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
-			<input type="radio" id="radio7" name="radio" value="7" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
-		</div>
+			<label>Dia da Semana</label>
+			<div id="radio" class="span5" style="margin-left: 0px; padding-top: 0px;">
+				<input type="radio" id="radio1" name="radio" value="1" /><label for="radio1" style="font-size:10pt; width:50px;">Dom</label>
+				<input type="radio" id="radio2" name="radio" value="2" checked/><label for="radio2" style="font-size:10pt; width:50px;">Seg</label>
+				<input type="radio" id="radio3" name="radio" value="3" /><label for="radio3" style="font-size:10pt; width:50px;">Ter</label>
+				<input type="radio" id="radio4" name="radio" value="4" /><label for="radio4" style="font-size:10pt; width:50px;">Qua</label>
+				<input type="radio" id="radio5" name="radio" value="5" /><label for="radio5" style="font-size:10pt; width:50px;">Qui</label>
+				<input type="radio" id="radio6" name="radio" value="6" /><label for="radio6" style="font-size:10pt; width:50px;">Sex</label>
+				<input type="radio" id="radio7" name="radio" value="7" /><label for="radio7" style="font-size:10pt; width:50px;">Sáb</label>
+			</div>
 
-		<label>Intervalo de Horário</label>
-		<input id="hour-ini" name="hour-ini" value="08:00" style="width: 55px" readonly /> e <input id="hour-end" name="hour-end" value="09:00" style="width: 55px" readonly />
-		<br/><br/>
+			<label>Intervalo de Horário</label>
+			<input id="hour-ini" name="hour-ini" value="08:00" style="width: 55px" readonly /> e <input id="hour-end" name="hour-end" value="09:00" style="width: 55px" readonly />
 		
-		<table id="table-pesquisa" class="table table-bordered">
-		  <thead>
-    		<tr><th colspan="2">Rotas disponíveis</th></tr>
-    	</thead>
-			<tbody>
-			</tbody>
-		</table>
+		</form>
+		
+		<table class="table table-striped table-bordered" id="table-search" style="padding:0"></table>
+		
 </div>
 </body>
 

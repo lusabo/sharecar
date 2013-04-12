@@ -41,6 +41,19 @@ public class RouteBC {
 	}
 
 	public List<Route> find(Coordinate coord, Integer radius, User user, Weekday weekday, Time hourini, Time hourend) throws Exception {
+		
+		boolean empty = true;
+		empty &= coord == null;
+		empty &= radius == null;
+		empty &= user == null;
+		empty &= weekday == null;
+		empty &= hourini == null;
+		empty &= hourend == null;
+		
+		if(empty) {
+			throw new Exception("erro...");
+		}
+		
 		return routeDAO.find(coord, radius, user, weekday, hourini, hourend); 
 	}
 	

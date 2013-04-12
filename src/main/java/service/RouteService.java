@@ -31,27 +31,15 @@ public class RouteService {
 	private RouteBC routeBC;
 
 	@PUT
+	@LoggedIn
 	@Consumes(JSON_MEDIA_TYPE)
 	public void create(Route route) throws Exception {
 		routeBC.insert(route, getCurrentUser());
 	}
 
-	@GET
-	@LoggedIn
-	@Produces(JSON_MEDIA_TYPE)
-	public List<Route> findAll() throws Exception {
-		return routeBC.find(getCurrentUser());
-	}
-
-	@GET
-	@Path("/{id}")
-	@Produces(JSON_MEDIA_TYPE)
-	public Route find(@PathParam("id") Integer id) throws Exception {
-		return routeBC.load(id);
-	}
-
 	@DELETE
 	@Path("/{id}")
+	@LoggedIn
 	@Produces(JSON_MEDIA_TYPE)
 	public void delete(@PathParam("id") Integer id) throws Exception {
 		Route route = new Route();
@@ -60,15 +48,42 @@ public class RouteService {
 	}
 
 	@GET
+	@Path("/{id}")
+	@LoggedIn
+	@Produces(JSON_MEDIA_TYPE)
+	public Route load(@PathParam("id") Integer id) throws Exception {
+		return routeBC.load(id);
+	}
+
+	@GET
+	@LoggedIn
 	@Produces(JSON_MEDIA_TYPE)
 	public List<Route> find(@QueryParam("lat") Double latitude, @QueryParam("lng") Double longitude,
 			@QueryParam("radius") Integer radius, @QueryParam("weekday") Integer weekday,
 			@QueryParam("hourini") Time hourini, @QueryParam("hourend") Time hourend) throws Exception {
-		return routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday),
-				hourini, hourend);
+
+		List<Route> routes;
+
+		boolean empty = true;
+		empty &= latitude == null;
+		empty &= longitude == null;
+		empty &= radius == null;
+		empty &= weekday == null;
+		empty &= hourini == null;
+		empty &= hourend == null;
+
+		if (empty) {
+			routes = routeBC.find(getCurrentUser());
+		} else {
+			routes = routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday), hourini, hourend);
+		}
+
+		return routes;
+
 	}
 
 	private User getCurrentUser() {
 		return (User) Beans.getReference(SecurityContext.class).getCurrentUser();
 	}
+
 }
