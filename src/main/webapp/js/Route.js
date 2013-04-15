@@ -65,7 +65,7 @@ Route.prototype._load = function(_id, _callback) {
 };
 
 Route.prototype._findAll = function(_callback) {
-
+	
 	$.ajax({
 		type : "GET",
 		url : "api/route",
@@ -74,4 +74,20 @@ Route.prototype._findAll = function(_callback) {
 			_callback(data);
 		}
 	});
+};
+
+Route.prototype._find = function(_parameters, _callback) {
+	console.log(_parameters);
+	
+	$.ajax({
+		type : "GET",
+		url : "api/route?" + _parameters,
+		dataType : "json",
+		//data: _parameters,
+		success : function(data) {
+			console.log('teste1');
+			_callback(data);
+		}
+	});
+	
 };
