@@ -16,12 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import br.gov.frameworkdemoiselle.security.LoggedIn;
-import br.gov.frameworkdemoiselle.security.SecurityContext;
-import br.gov.frameworkdemoiselle.util.Beans;
 import business.RouteBC;
+import business.UserBC;
 import entity.Coordinate;
 import entity.Route;
-import entity.User;
 import entity.Weekday;
 
 @Path("/route")
@@ -29,12 +27,15 @@ public class RouteService {
 
 	@Inject
 	private RouteBC routeBC;
+	
+	@Inject
+	private UserBC userBC;
 
 	@PUT
 	@LoggedIn
 	@Consumes(JSON_MEDIA_TYPE)
 	public void create(Route route) throws Exception {
-		routeBC.insert(route, getCurrentUser());
+		routeBC.insert(route, userBC.getCurrentUser());
 	}
 
 	@DELETE
@@ -73,17 +74,13 @@ public class RouteService {
 		empty &= hourend == null;
 
 		if (empty) {
-			routes = routeBC.find(getCurrentUser());
+			routes = routeBC.find(userBC.getCurrentUser());
 		} else {
-			routes = routeBC.find(new Coordinate(latitude, longitude), radius, getCurrentUser(), Weekday.valueOf(weekday), hourini, hourend);
+			routes = routeBC.find(new Coordinate(latitude, longitude), radius, userBC.getCurrentUser(), Weekday.valueOf(weekday), hourini, hourend);
 		}
 
 		return routes;
 
-	}
-
-	private User getCurrentUser() {
-		return (User) Beans.getReference(SecurityContext.class).getCurrentUser();
 	}
 
 }

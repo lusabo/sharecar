@@ -130,8 +130,6 @@
 	 	  
  	  $("#radius").val($("#slider").slider("value"));
 
- 	  $("#table-pesquisa").hide();
-
 		// Listerners
 		google.maps.event.addListener(ptoChegada, 'place_changed', function () {
 		  showRouteBetweenPoints($("#start").val(), $("#end").val());
@@ -144,7 +142,7 @@
 		});		  
 
   	// Mostra a rota no mapa após clicar no ícone da tabela de rotas
-  	$("#table-rotas, #table-pesquisa").delegate("a[name^='route-']", "click", function () {
+  	$("#table-rotas, #table-search").delegate("a[name^='route-']", "click", function () {
   	  var route = new Route();
   	  route._load($(this).attr("route"), showRouteOnMap);
 		});		  
@@ -160,6 +158,9 @@
     .sucesso{
         color: green;
         font-size: 0.8em;
+    }
+    .table{
+    		font-size:  0.8em;
     }
 	
 	</style>
@@ -258,7 +259,7 @@
 		
 		</form>
 		
-		<table class="table table-striped table-bordered" id="table-search" style="padding:0"></table>
+		<table class="table table-striped table-bordered" id="table-search" style="padding:0; font-size: 0.7em"></table>
 		
 </div>
 </body>

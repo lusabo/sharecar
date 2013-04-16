@@ -27,6 +27,10 @@ public class UserBC {
 	public User load(String username) throws Exception {
 		return userDAO.loadByUsername(username);
 	}
+	
+	public User getCurrentUser() {
+		return (User) Beans.getReference(SecurityContext.class).getCurrentUser();
+	}
 
 	protected void afterLoginSuccessful(@Observes AfterLoginSuccessful event) throws Exception {
 		SecurityContext securityContext = Beans.getReference(SecurityContext.class);

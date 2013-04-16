@@ -73,15 +73,12 @@ function openRouteSchedDialog(route){
 	schedule._findByRoute(route.id, loadSchedulesTable);
 	$("#dialog-sched").dialog("open").dialog({
 		open: function(){
-			console.log('open');
 			$("#sched-message").text("");
 		},
 		create: function(){
-			console.log('create');
 			$("#sched-message").text("");
 		},
 		focus: function(){
-			console.log('focus');
 			$("#sched-message").text("");
 		},		
 		title: "Rota: " + route.description,
@@ -156,12 +153,15 @@ function addMarker(location, _radius) {
 	google.maps.event.addListener(marker, 'dragend', function (position) {
 		addCircle(position.latLng, radius);
 		getAddress(position.latLng.lat(), position.latLng.lng());
-		loadSearchRoutesTable(position.latLng.lat(), 
-				  			  position.latLng.lng(), 
-				  			  $("#radius").val(), 
-				  			  $("input:radio[name=radio]:checked").val(),
-				  			  $("#hour-ini").val(),
-				  			  $("#hour-end").val());
+		var route = new Route();
+		var p = "";
+		p += "lat=" + markersArray[0].position.lat();
+		p += "&lng=" + markersArray[0].position.lng();
+		p += "&radius=" + $("#radius").val();
+		p += "&weekday=" + $("input:radio[name=radio]:checked").val();
+		p += "&hourini=" + $("#hour-ini").val() + ":00";
+		p += "&hourend=" + $("#hour-end").val() + ":00";
+		route._find(p, loadSearchRoutesTable);
 	});
 }
 
@@ -332,7 +332,6 @@ function loadSchedulesTable(data){
 }
 
 function loadSearchRoutesTable(data){
-	console.log('teste');
 	var oTable = $('#table-search').dataTable({
 		"aaSorting": [[0,'asc']],
 		"bRetrieve": true,
@@ -350,18 +349,27 @@ function loadSearchRoutesTable(data){
 				"sPrevious" : ""
 			}
 		},
-		"iDisplayLength" : 4,
+		"iDisplayLength" : 3,
 		"aaData" : data,
-		"aoColumnDefs" : [//{ "aTargets" : [0], "mData" : data.user.displayName, "bVisible": true},	
-	              		  { "aTargets" : [0], "mData" : "user", "sTitle" : "Carona",  "bSortable": true, "mRender" : function( data ){ return data.displayName; } },	
-
+		"aoColumnDefs" : [{ "aTargets" : [0], "mData" : "user", "sTitle" : "Carona",  "bSortable": true, "mRender" : function( data ){ 
+							return data.displayName + "<br/>" + data.email + "<br/>" + data.telephoneNumber; 
+						  }},	
 			              { "aTargets" : [1], 
 		                    "sWidth" : "20px",
 							"bSortable" : false,
 							"mData" : function(source){
 								return '<a href="#" name="route-' + source.id + '" route="' + source.id + '"><img src="img/map.png" style="height: 20px; width: 20px;" title="Ver Rota"/></a>';
 							}
-			              }]
+			              }],
+		"fnHeaderCallback" : function( nHead ) {
+			$(nHead.getElementsByTagName('th')[0]).attr("colspan","2");
+			for(var i = 1; i <= 2; i++){
+				$(nHead.getElementsByTagName('th')[1]).remove();
+			}
+		},
+		"fnRowCallback" : function( nRow ) {
+				$(nRow.getElementsByTagName('td')[1]).attr("width","20px");
+		}
 	});
 	oTable.fnClearTable();
 	oTable.fnAddData(data);	

@@ -9,69 +9,9 @@
 	<script type="text/javascript" charset="utf-8" src="js/Route.js"></script>
 
 	<script>
-	function teste(data){
-		$('#table-rotas').dataTable({
-			"bFilter": false,
-			"bLengthChange": false,
-			"bInfo": false,
-			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sPaginationType": "bootstrap",
-			"oLanguage": {
-				"sLengthMenu": "_MENU_ records per page",
-				"sProcessing": "Carregando ...",
-				"sZeroRecords": "Você ainda não cadastrou rotas.",
-				"oPaginate": {
-					"sNext": "",
-					"sPrevious": ""
-				}
-			},
-			"iDisplayLength": 3,
-			"aaData": data,
-			"aoColumnDefs": [ 
-		              		 { "aTargets": [0], "mData": "description", "sTitle": "Minhas Rotas" },
-
-			                 { "aTargets": [1], 
-													"sWidth": "20px",
-													"mData": "id", 
-													"bSortable": false,
-													"mRender": function ( data ) {
-															return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/map.png" style="height: 20px; width: 20px;"/></a>';
-											    }
-											  },
-											  { "aTargets": [2], 
-													"sWidth": "20px",
-													"mData": "id", 
-													"bSortable": false,
-													"mRender": function ( data ) {
-															return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/calendar.png" style="height: 20px; width: 20px;"/></a>';
-											    }
-											  },
-			              		{ "aTargets": [3], 
-													"sWidth": "20px",
-													"mData": "id", 
-													"bSortable": false,
-													"mRender": function ( data ) {
-															return '<a href="#" name="route-' + data + '" route="' + data + '"><img src="img/delete.png" style="height: 20px; width: 20px;"/></a>';
-											    }
-											  }
-			             		],
-			"fnHeaderCallback": function( nHead ) {
-				$(nHead.getElementsByTagName('th')[0]).attr("colspan","4");
-				for(var i = 1; i <= 3; i++){
-					$(nHead.getElementsByTagName('th')[1]).remove();
-				}
-			},
-			"fnRowCallback": function( nRow ) {
-					$(nRow.getElementsByTagName('td')[1]).attr("width","20px");
-					$(nRow.getElementsByTagName('td')[2]).attr("width","20px");
-					$(nRow.getElementsByTagName('td')[3]).attr("width","20px");
-			}
-						             		
-		});
-	}
-
 	$(function(){
 		var route = new Route();
+		route.id = 8;
 		route._findAll(teste);
 	});
 	</script>
