@@ -47,7 +47,7 @@
 		// Carrega o mapa centralizado conforme localização do usuário.
 		loadMapCenteredWithUserGeolocation('map', false, true);
 		
-		$("#dialog-criar, #dialog-sched, #dialog-buscar").dialog({
+		$("#dialog-criar, #dialog-sched, #dialog-buscar, #dialog-email").dialog({
 			autoOpen: false,
 			width: 410
 		});
@@ -72,6 +72,17 @@
 					$("#frm-criar").each(function() {this.reset();});
 					$("#route-message").text("");
 				}
+			});
+		});
+
+		$("#mail").click(function(){
+			$("#dialog-email").dialog("open").dialog("option", "title", "Sugestões e Críticas").dialog({
+				buttons: [{
+					text: "Salvar",
+					click: function(){
+						console.log("Enviar e-mail");
+					}
+				}]
 			});
 		});
 
@@ -176,6 +187,7 @@
 			<ul class="nav" >
 				<li><a id="criar" href="#">Criar Rota</a></li>
 				<li><a id="buscar" href="#">Buscar Carona</a></li>
+				<li><a id="mail" href="#">Sugestões e Críticas</a></li>
 			</ul>
 			<ul class="nav pull-right" >
 				<li id="user"><a href="#"></a></li>
@@ -262,6 +274,13 @@
 		<table class="table table-striped table-bordered" id="table-search" style="padding:0; font-size: 0.7em"></table>
 		
 </div>
+
+<div id="dialog-email">
+	<form id="email">
+		<textarea rows="4" style="width:96%" placeholder="Digite aqui suas sugestões e críticas"></textarea>
+	</form>
+</div>
+
 </body>
 
 </html>
