@@ -44,12 +44,12 @@
 			<scope>compile</scope>
 		</dependency>
 		
-		<!-- dependency>
-			<groupId>br.gov.frameworkdemoiselle</groupId>
+		<dependency>
+			<groupId>br.gov.frameworkdemoiselle.component</groupId>
 			<artifactId>demoiselle-mail</artifactId>
 			<scope>compile</scope>
 			<version>2.0.1</version>
-		</dependency-->
+		</dependency>
 		
 		<dependency>
 			<groupId>org.tuckey</groupId>

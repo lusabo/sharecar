@@ -21,6 +21,7 @@
 	
 	<script src="js/User.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/Coord.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/Message.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/Route.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/Schedule.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
@@ -80,7 +81,8 @@
 				buttons: [{
 					text: "Salvar",
 					click: function(){
-						console.log("Enviar e-mail");
+						var message = new Message();
+						message._send("bláblá");
 					}
 				}]
 			});
