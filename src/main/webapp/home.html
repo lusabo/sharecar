@@ -61,8 +61,9 @@
 				buttons: [{
 					text: "Salvar", 
 					click: function() {
+						console.log(directionsDisplay.getDirections());
 						$.when(
-							route._insert($("#route-name").val(), google.maps.geometry.encoding.decodePath(directionsDisplay.getDirections().routes[0].overview_polyline.points),  success, error)
+							route._insert($("#route-name").val(), directionsDisplay.getDirections().routes[0].overview_path,  success, error)
 						).done(function(){
 								route._findAll(loadRoutesTable);
 							}
